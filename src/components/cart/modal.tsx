@@ -54,7 +54,7 @@ export default function CartModal() {
         <OpenCart quantity={cart?.totalQuantity} />
       </button>
       <Transition show={isOpen}>
-        <Dialog onClose={closeCart} className="relative z-50">
+        <Dialog onClose={closeCart} className="relative z-[9999]">
           <Transition.Child
             as={Fragment}
             enter="transition-all ease-in-out duration-300"
@@ -75,7 +75,7 @@ export default function CartModal() {
             leaveFrom="translate-x-0"
             leaveTo="translate-x-full"
           >
-            <Dialog.Panel className="fixed bottom-0 right-0 top-0 flex h-full w-full flex-col border-l border-neutral-200 bg-white/80 p-6 text-black backdrop-blur-xl md:w-[390px] dark:border-neutral-700 dark:bg-black/80 dark:text-white">
+            <Dialog.Panel className="fixed bottom-0 right-0 top-0 flex h-full w-full flex-col bg-red-400 p-6 text-white backdrop-blur-xl md:w-[390px] z-[99999]">
               <div className="flex items-center justify-between">
                 <p className="text-lg font-semibold">My Cart</p>
                 <button aria-label="Close cart" onClick={closeCart}>
@@ -120,7 +120,7 @@ export default function CartModal() {
                         return (
                           <li
                             key={i}
-                            className="lex w-full flex-col border-b border-neutral-300 dark:border-neutral-700"
+                            className="lex w-full flex-col border-b border-white pb-4"
                           >
                             <div className="relative flex w-full flex-row justify-between px-1 py-4">
                               <DeleteItemButton
@@ -168,7 +168,7 @@ export default function CartModal() {
                                   item.cost.totalAmount.currencyCode
                                 }
                               />
-                              <div className="ml-auto flex h-9 flex-row items-center rounded-full border border-neutral-200 dark:border-neutral-700">
+                              <div className="ml-auto flex h-9 flex-row items-center rounded-full">
                                 <EditItemQuantityButton
                                   item={item}
                                   type="minus"
@@ -190,8 +190,8 @@ export default function CartModal() {
                         );
                       })}
                   </ul>
-                  <div className="py-4 text-sm text-neutral-500 dark:text-neutral-400">
-                    <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 dark:border-neutral-700">
+                  <div className="py-4 text-sm">
+                    <div className="mb-3 flex items-center justify-between border-b border-white pb-1">
                       <p>Taxes</p>
                       <Price
                         className="text-right text-base text-black dark:text-white"
@@ -199,11 +199,11 @@ export default function CartModal() {
                         currencyCode={cart.cost.totalTaxAmount.currencyCode}
                       />
                     </div>
-                    <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 pt-1 dark:border-neutral-700">
+                    <div className="mb-3 flex items-center justify-between border-b border-white pb-1 pt-1">
                       <p>Shipping</p>
                       <p className="text-right">Calculated at checkout</p>
                     </div>
-                    <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 pt-1 dark:border-neutral-700">
+                    <div className="mb-3 flex items-center justify-between border-b border-white pb-1 pt-1">
                       <p>Total</p>
                       <Price
                         className="text-right text-base text-black dark:text-white"
@@ -230,7 +230,7 @@ function CheckoutButton() {
 
   return (
     <button
-      className="block w-full rounded-full bg-blue-600 p-3 text-center text-sm font-medium text-white opacity-90 hover:opacity-100"
+      className="block w-full rounded-full bg-white p-3 text-center text-sm font-medium text-black opacity-90 hover:opacity-100"
       type="submit"
       disabled={pending}
     >

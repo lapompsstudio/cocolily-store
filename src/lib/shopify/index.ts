@@ -24,6 +24,7 @@ import {
   getProductsQuery,
 } from "./queries/product";
 import {
+  Articles,
   Cart,
   Collection,
   Connection,
@@ -32,6 +33,9 @@ import {
   Page,
   Product,
   ShopifyAddToCartOperation,
+  ShopifyArticleByHandleOperation,
+  ShopifyArticleOperation,
+  ShopifyArticlesOperation,
   ShopifyCart,
   ShopifyCartOperation,
   ShopifyCollection,
@@ -51,6 +55,11 @@ import {
 import { headers } from "next/headers";
 import { revalidateTag } from "next/cache";
 import { getPageQuery, getPagesQuery } from "./queries/page";
+import {
+  getArticleByHandleQuery,
+  getArticleQuery,
+  getArticlesQuery,
+} from "./queries/articles";
 
 const domain = process.env.SHOPIFY_STORE_DOMAIN
   ? ensureStartWith(process.env.SHOPIFY_STORE_DOMAIN, "https://")
@@ -116,8 +125,12 @@ export async function shopifyFetch<T>({
   }
 }
 
-function removeEdgesAndNodes<T>(array: Connection<T>): T[] {
-  return array.edges.map((edge) => edge?.node);
+function removeEdgesAndNodes<T>(data: Connection<T> | T): T[] {
+  if (data && typeof data === "object" && "edges" in data) {
+    return (data as Connection<T>).edges.map((edge) => edge?.node);
+  } else {
+    return [data as T];
+  }
 }
 
 function reshapeImages(images: Connection<Image>, productTitle: string) {
@@ -465,4 +478,26 @@ export async function getPages(): Promise<Page[]> {
   });
 
   return removeEdgesAndNodes(res.body.data.pages);
+}
+
+export async function getArticles(): Promise<Articles[]> {
+  const res = await shopifyFetch<ShopifyArticlesOperation>({
+    query: getArticlesQuery,
+    cache: "no-store",
+  });
+
+  return removeEdgesAndNodes(res.body.data.articles);
+}
+
+export async function getArticleByHandle(
+  blogHandle: string,
+  handle: string
+): Promise<Articles[]> {
+  const res = await shopifyFetch<ShopifyArticleByHandleOperation>({
+    query: getArticleByHandleQuery,
+    cache: "no-store",
+    variables: { blogHandle, handle },
+  });
+
+  return removeEdgesAndNodes(res.body.data.blogByHandle.articleByHandle);
 }

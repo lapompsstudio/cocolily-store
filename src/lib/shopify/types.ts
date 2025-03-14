@@ -258,3 +258,40 @@ export type ShopifyPagesOperation = {
     pages: Connection<Page>;
   };
 };
+
+export type Articles = {
+  id: string;
+  title: string;
+  handle: string;
+  content: string;
+  contentHtml: string;
+  excerpt: string;
+  image: ArticlesImage;
+  tags: string[];
+  publishedAt: string;
+};
+
+export type ArticlesImage = {
+  src: string;
+  originalSrc: string;
+  transformedSrc: string;
+};
+
+export type ShopifyArticlesOperation = {
+  data: { articles: Connection<Articles> };
+};
+
+export type ShopifyArticleOperation = {
+  data: { article: Connection<Articles> };
+  variables: {
+    id: string;
+  };
+};
+
+export type ShopifyArticleByHandleOperation = {
+  data: { blogByHandle: { articleByHandle: Connection<Articles> } };
+  variables: {
+    blogHandle: string;
+    handle: string;
+  };
+};
