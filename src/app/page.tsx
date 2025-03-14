@@ -89,7 +89,7 @@ export default function Home() {
                   className="aspect-[4/5] overflow-hidden rounded-lg object-cover group-hover:scale-105 transition-transform"
                 />
                 <h3 className="mt-4 text-lg font-bold group-hover:underline">
-                  Women\&apos;s Collection
+                  Women&rsquo;s Collection
                 </h3>
               </Link>
             </div>
@@ -107,7 +107,7 @@ export default function Home() {
                   className="aspect-[4/5] overflow-hidden rounded-lg object-cover group-hover:scale-105 transition-transform"
                 />
                 <h3 className="mt-4 text-lg font-bold group-hover:underline">
-                  Men\&apos;s Collection
+                  Men&rsquo;s Collection
                 </h3>
               </Link>
             </div>
@@ -121,7 +121,7 @@ export default function Home() {
                   className="aspect-[4/5] overflow-hidden rounded-lg object-cover group-hover:scale-105 transition-transform"
                 />
                 <h3 className="mt-4 text-lg font-bold group-hover:underline">
-                  Kids\&apos;s Collection
+                  Kids&rsquo;s Collection
                 </h3>
               </Link>
             </div>
@@ -135,7 +135,7 @@ export default function Home() {
                   className="aspect-[4/5] overflow-hidden rounded-lg object-cover group-hover:scale-105 transition-transform"
                 />
                 <h3 className="mt-4 text-lg font-bold group-hover:underline">
-                  Sale\&apos;s Collection
+                  Sale&rsquo;s Collection
                 </h3>
               </Link>
             </div>
@@ -146,7 +146,7 @@ export default function Home() {
         <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
           <img src="/sale-banner.svg" alt="sale footer banner" />
           <div className="space-y-3 z-50">
-            <div className="bg-white dark:bg-black">
+            <div className="bg-white">
               <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight p-2">
                 Explore Our Sale Collection
               </h2>
@@ -160,7 +160,7 @@ export default function Home() {
           <div className="mx-auto w-full max-w-sm space-y-2 z-50">
             <Link
               href="#"
-              className="inline-flex h-10 items-center justify-center rounded-md bg-slate-200 dark:bg-black px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+              className="inline-flex h-10 items-center justify-center rounded-md bg-red-400 text-white px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
               prefetch={false}
             >
               Shop Sale
