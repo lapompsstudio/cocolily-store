@@ -10,8 +10,151 @@ module.exports = {
   ],
   theme: {
     extend: {
+      aspectRatio: {
+        wide: "16/9",
+      },
       fontFamily: {
         sans: ["var(--font-geist-sans)"],
+      },
+      fontSize: {
+        "8d": [
+          "calc((8/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.02*8/var(--bw))*100vw)",
+          },
+        ],
+        "10d": [
+          "calc((10/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.05*10/var(--bw))*100vw)",
+          },
+        ],
+        "11d": [
+          "calc((11/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.02*11/var(--bw))*100vw)",
+          },
+        ],
+        "13d": [
+          "calc((13/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.05*13/var(--bw))*100vw)",
+          },
+        ],
+        "14d": [
+          "calc((14/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.02*14/var(--bw))*100vw)",
+          },
+        ],
+        "16d": [
+          "calc((16/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.02*16/var(--bw))*100vw)",
+          },
+        ],
+        "18d": [
+          "calc((18/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.01*18/var(--bw))*100vw)",
+          },
+        ],
+        "20d": [
+          "calc((20/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.01*20/var(--bw))*100vw)",
+          },
+        ],
+        "24d": [
+          "calc((24/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.05*24/var(--bw))*100vw)",
+          },
+        ],
+        "28d": [
+          "calc((28/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.01*28/var(--bw))*100vw)",
+          },
+        ],
+        "32d": [
+          "calc((32/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.01*32/var(--bw))*100vw)",
+          },
+        ],
+        "36d": [
+          "calc((36/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.01*36/var(--bw))*100vw)",
+          },
+        ],
+        "40d": [
+          "calc((40/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.05*40/var(--bw))*100vw)",
+          },
+        ],
+        "48d": [
+          "calc((48/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.05*48/var(--bw))*100vw)",
+          },
+        ],
+        "60d": [
+          "calc((60/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.01*60/var(--bw))*100vw)",
+          },
+        ],
+        "64d": [
+          "calc((64/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.01*64/var(--bw))*100vw)",
+          },
+        ],
+        "66d": [
+          "calc((66/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.01*66/var(--bw))*100vw)",
+          },
+        ],
+        "72d": [
+          "calc((72/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.01*72/var(--bw))*100vw)",
+          },
+        ],
+        "80d": [
+          "calc((80/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.04*80/var(--bw))*100vw)",
+          },
+        ],
+        "96d": [
+          "calc((96/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.05*96/var(--bw))*100vw)",
+          },
+        ],
+        "128d": [
+          "calc((128/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.01*128/var(--bw))*100vw)",
+          },
+        ],
+        "145d": [
+          "calc((145/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.04*145/var(--bw))*100vw)",
+          },
+        ],
+        "165d": [
+          "calc((165/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.04*165/var(--bw))*100vw)",
+          },
+        ],
       },
       keyframes: {
         fadeIn: {
