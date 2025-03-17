@@ -2,11 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
-/* @media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+:root {
+  --font-span: "span", serif;
+  --bw: 1440;
+}
+
+@media (max-width: 767.98px) {
+  :root {
+    --bw: 375;
   }
-} */
+}
+
+@media (min-width: 768px) and (orientation: portrait) {
+  :root {
+    --bw: 480;
+  }
+}
+
+html.lenis-stopped {
+  overflow: hidden;
+}
+
+::-webkit-scrollbar {
+  width: 0px; /* Set a smaller width for the scrollbar */
+}
+
+/* Define the style for the scrollbar track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Set the color of the scrollbar track */
+}
+
+/* Define the style for the scrollbar thumb */
+::-webkit-scrollbar-thumb {
+  /* Set the color of the scrollbar thumb */
+  background: #d0d0d0;
+  border-radius: 0.5rem;
+}
+
+/* Define the style for the scrollbar thumb when being hovered */
+::-webkit-scrollbar-thumb:hover {
+  background: #787878; /* Set the color of the scrollbar thumb on hover */
+}
 
 @supports (font: -apple-system-body) and (-webkit-appearance: none) {
   img[loading="lazy"] {
@@ -18,4 +54,8 @@ a,
 input,
 button {
   @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-50 dark:focus-visible:ring-neutral-600 dark:focus-visible:ring-offset-neutral-900;
+}
+
+ul {
+  @apply list-disc pl-16d;
 }

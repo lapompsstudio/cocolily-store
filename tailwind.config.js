@@ -13,8 +13,15 @@ module.exports = {
       aspectRatio: {
         wide: "16/9",
       },
+      color: {
+        "ruby-red": "#DB0032",
+        ivory: "#F2ECCB",
+        "baby-pink": "#F6CDD7",
+        seashell: "#F9EFED",
+      },
       fontFamily: {
-        sans: ["var(--font-geist-sans)"],
+        sans: ["var(--font-sf-pro-text)"],
+        span: ["var(--font-span)"],
       },
       fontSize: {
         "8d": [
@@ -155,6 +162,9 @@ module.exports = {
             letterSpacing: "calc((-0.04*165/var(--bw))*100vw)",
           },
         ],
+      },
+      padding: {
+        "16d": "calc((16/var(--bw)*100vw))",
       },
       keyframes: {
         fadeIn: {

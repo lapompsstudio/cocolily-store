@@ -1,8 +1,17 @@
 import React from "react";
 import { ReactLenis } from "lenis/react";
+import Footer from "@/components/layout/footer";
+import { Navbar } from "@/components/layout/navbar";
 
 const Template = ({ children }: { children: React.ReactNode }) => {
-  return <ReactLenis root>{children}</ReactLenis>;
+  return (
+    <ReactLenis root>
+      <Navbar />
+      <main>{children}</main>
+      <Footer />
+      {/* <SplashCursor /> */}
+    </ReactLenis>
+  );
 };
 
 export default Template;
