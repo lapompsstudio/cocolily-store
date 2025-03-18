@@ -99,8 +99,11 @@ ul {
   transform-origin: 25% 50% !important;
   transition: transform 0.6s ease-in-out;
 }
+
 .logo-svg:hover .scale-logo {
   transform: scale(1);
+}
+
 @layer components {
   /* h1 {
     @apply md:landscape:text-145d font-normal leading-none text-72d;
