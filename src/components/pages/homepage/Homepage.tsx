@@ -5,6 +5,7 @@ import OurMission from "./OurMission";
 import Footer from "@/components/layout/footer";
 import EventsHomepage from "./EventsHomepage";
 import ShopOurProducts from "./ShopOurProducts";
+import Hero from "./Hero";
 
 const Homepage = () => {
   const [isRenderFooter, setIsRenderFooter] = useState<boolean>(false);
@@ -21,6 +22,7 @@ const Homepage = () => {
 
   return (
     <>
+      <Hero />
       <OurMission />
       <ShopOurProducts />
       <EventsHomepage />
