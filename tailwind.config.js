@@ -13,10 +13,13 @@ module.exports = {
       width: {
         "100d": "calc((100/var(--bw)*100vw))",
         "165d": "calc((165/var(--bw)*100vw))",
+        "544d": "calc((544/var(--bw)*100vw))",
       },
       height: {
         "74d": "calc((74/var(--bw)*100vw))",
         "111d": "calc((111/var(--bw)*100vw))",
+        "370d": "calc((370/var(--bw)*100vw))",
+        "1080d": "calc((1080/var(--bw)*100vw))",
       },
       aspectRatio: { wide: "16/9" },
       colors: {
