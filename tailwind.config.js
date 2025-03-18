@@ -45,9 +45,7 @@ module.exports = {
         ],
         "12d": [
           "calc((12/var(--bw)*100vw))",
-          {
-            letterSpacing: "calc((-0.05*12/var(--bw))*100vw)",
-          },
+          { letterSpacing: "calc((-0.05*12/var(--bw))*100vw)" },
         ],
         "13d": [
           "calc((13/var(--bw)*100vw))",
@@ -136,6 +134,28 @@ module.exports = {
         "60d": "calc((60/var(--bw)*100vw))",
         "20d": "calc((20/var(--bw)*100vw))",
         "90d": "calc((90/var(--bw)*100vw))",
+        "124d": "calc((124/var(--bw)*100vw))",
+      },
+      height: {
+        "230d": "calc((230/var(--bw)*100vw))",
+        "231d": "calc((231/var(--bw)*100vw))",
+        "315d": "calc((315/var(--bw)*100vw))",
+        "334d": "calc((334/var(--bw)*100vw))",
+        "353d": "calc((353/var(--bw)*100vw))",
+        "672d": "calc((672/var(--bw)*100vw))",
+      },
+      inset: {
+        "20d": "calc((20/var(--bw)*100vw))",
+        "33d": "calc((33/var(--bw)*100vw))",
+        "82d": "calc((82/var(--bw)*100vw))",
+      },
+      margin: {
+        "18d": "calc((18/var(--bw)*100vw))",
+        "30d": "calc((30/var(--bw)*100vw))",
+        "60d": "calc((60/var(--bw)*100vw))",
+        "67d": "calc((67/var(--bw)*100vw))",
+        "113d": "calc((113/var(--bw)*100vw))",
+        "350d": "calc((350/var(--bw)*100vw))",
       },
       height: {
         "20d": "calc((20/var(--bw)*100vw))",
@@ -197,15 +217,21 @@ module.exports = {
         "165d": "calc((165/var(--bw)*100vw))",
         "355d": "calc((355/var(--bw)*100vw))",
         "544d": "calc((544/var(--bw)*100vw))",
+        "350d": "calc((350/var(--bw)*100vw))",
       },
-      keyframes: {
-        fadeIn: {
-          from: { opacity: 0 },
-          to: {
-            opacity: 1,
-          },
-        },
+      translate: {
+        "113d": "calc((113/var(--bw)*100vw))",
+        "290d": "calc((290/var(--bw)*100vw))",
       },
+      width: {
+        "29d": "calc((29/var(--bw)*100vw))",
+        "200d": "calc((200/var(--bw)*100vw))",
+        "221d": "calc((221/var(--bw)*100vw))",
+        "224d": "calc((224/var(--bw)*100vw))",
+        "672d": "calc((672/var(--bw)*100vw))",
+      },
+
+      keyframes: { fadeIn: { from: { opacity: 0 }, to: { opacity: 1 } } },
       blink: {
         "0%": { opacity: 0.2 },
         "20%": { opacity: 1 },
