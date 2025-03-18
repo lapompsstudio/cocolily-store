@@ -10,23 +10,13 @@ module.exports = {
   ],
   theme: {
     extend: {
-      width: {
-        "100d": "calc((100/var(--bw)*100vw))",
-        "165d": "calc((165/var(--bw)*100vw))",
-        "544d": "calc((544/var(--bw)*100vw))",
-      },
-      height: {
-        "74d": "calc((74/var(--bw)*100vw))",
-        "111d": "calc((111/var(--bw)*100vw))",
-        "370d": "calc((370/var(--bw)*100vw))",
-        "1080d": "calc((1080/var(--bw)*100vw))",
-      },
       aspectRatio: { wide: "16/9" },
       colors: {
         "ruby-red": "#DB0032",
         ivory: "#F2ECCB",
         "baby-pink": "#F6CDD7",
         seashell: "#F9EFED",
+        "pale-sky-blue": "#C9D9E3",
       },
       fontFamily: {
         sans: ["var(--font-sf-pro-text)"],
@@ -40,7 +30,9 @@ module.exports = {
         ],
         "10d": [
           "calc((10/var(--bw)*100vw))",
-          { letterSpacing: "calc((-0.05*10/var(--bw))*100vw)" },
+          {
+            letterSpacing: "calc((-0.03*10/var(--bw))*100vw)",
+          },
         ],
         "11d": [
           "calc((11/var(--bw)*100vw))",
@@ -136,11 +128,44 @@ module.exports = {
       gap: {
         "90d": "calc((90/var(--bw)*100vw))",
       },
+      height: {
+        "38d": "calc((38/var(--bw)*100vw))",
+        "72d": "calc((72/var(--bw)*100vw))",
+        "74d": "calc((74/var(--bw)*100vw))",
+        "111d": "calc((111/var(--bw)*100vw))",
+        "264d": "calc((264/var(--bw)*100vw))",
+        "370d": "calc((370/var(--bw)*100vw))",
+        "1080d": "calc((1080/var(--bw)*100vw))",
+      },
+      lineHeight: {
+        1.1: "1.1",
+        1.2: "1.2",
+        1.3: "1.3",
+        1.4: "1.4",
+      },
+      margin: {
+        "20d": "calc((20/var(--bw)*100vw))",
+        "32d": "calc((32/var(--bw)*100vw))",
+        "48d": "calc((48/var(--bw)*100vw))",
+        "80d": "calc((80/var(--bw)*100vw))",
+      },
+      maxWidth: {
+        "225d": "calc((225/var(--bw)*100vw))",
+      },
       padding: {
         "12d": "calc((12/var(--bw)*100vw))",
         "16d": "calc((16/var(--bw)*100vw))",
         "20d": "calc((20/var(--bw)*100vw))",
         "22d": "calc((22/var(--bw)*100vw))",
+      },
+      space: {
+        "20d": "calc((20/var(--bw)*100vw))",
+      },
+      width: {
+        "100d": "calc((100/var(--bw)*100vw))",
+        "165d": "calc((165/var(--bw)*100vw))",
+        "355d": "calc((355/var(--bw)*100vw))",
+        "544d": "calc((544/var(--bw)*100vw))",
       },
       keyframes: {
         fadeIn: {

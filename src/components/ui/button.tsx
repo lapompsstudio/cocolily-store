@@ -31,6 +31,7 @@ const Button = ({
             "btn-primary px-22d py-12d text-ruby-red leading-none border border-ruby-red rounded-full text-12d font-semibold whitespace-nowrap flex items-center justify-center min-w-fit",
             {
               "bg-ivory": variant === "primary",
+              "bg-transparent": variant === "secondary",
               "translate-anim": isHoverTranslate,
             },
             className
@@ -46,6 +47,7 @@ const Button = ({
             "btn-primary px-22d py-12d text-ruby-red leading-none border border-ruby-red rounded-full text-12d font-semibold whitespace-nowrap flex items-center justify-center min-w-fit",
             {
               "bg-ivory": variant === "primary",
+              "bg-transparent": variant === "secondary",
               "translate-anim": isHoverTranslate,
             },
             className
