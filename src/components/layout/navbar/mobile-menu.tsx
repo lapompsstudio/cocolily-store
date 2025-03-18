@@ -7,7 +7,7 @@ import Link from "next/link";
 import { Fragment, useState } from "react";
 import Search from "./search";
 
-export default function MobileMenu({ menu }: { menu: Menu[] }) {
+export default function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const openMobileMenu = () => setIsOpen(true);
   const closeMobileMenu = () => setIsOpen(false);
@@ -55,7 +55,7 @@ export default function MobileMenu({ menu }: { menu: Menu[] }) {
                 <div className="mb-4 w-full">
                   <Search />
                 </div>
-                {menu.length > 0 ? (
+                {/* {menu.length > 0 ? (
                   <ul className="flex w-full flex-col">
                     {menu.map((item: Menu) => (
                       <li
@@ -72,7 +72,7 @@ export default function MobileMenu({ menu }: { menu: Menu[] }) {
                       </li>
                     ))}
                   </ul>
-                ) : null}
+                ) : null} */}
               </div>
             </Dialog.Panel>
           </Transition.Child>

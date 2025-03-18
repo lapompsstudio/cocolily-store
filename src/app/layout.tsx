@@ -37,6 +37,18 @@ const sfProText = localFont({
   display: "swap",
 });
 
+const abcFavorite = localFont({
+  src: [
+    {
+      path: "./fonts/ABCFavoritExtended/ABCFavoritExtended-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-abc-favorite",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Cocolily",
   description:
@@ -52,10 +64,12 @@ export default async function RootLayout({
   const cart = getCart(cartId);
   return (
     <html lang="en">
-      <body className={`${sfProText.variable} font-sans`}>
-        <head>
-          <link rel="stylesheet" href="https://use.typekit.net/bzt8czk.css" />
-        </head>
+      <head>
+        <link rel="stylesheet" href="https://use.typekit.net/bzt8czk.css" />
+      </head>
+      <body
+        className={`${sfProText.variable} ${abcFavorite.variable} font-sans antialiased`}
+      >
         <CartProvider cartPromise={cart}>{children}</CartProvider>
       </body>
     </html>
