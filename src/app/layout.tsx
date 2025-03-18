@@ -57,7 +57,9 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   const cartId = cookies().get("cartId")?.value;
   const cart = getCart(cartId);
   return (
