@@ -6,9 +6,9 @@ import { Navbar } from "@/components/layout/navbar";
 const Template = ({ children }: { children: React.ReactNode }) => {
   return (
     <ReactLenis root>
-      <Navbar />
+      {/* <Navbar /> */}
       <main>{children}</main>
-      <Footer />
+      {/* <Footer /> */}
       {/* <SplashCursor /> */}
     </ReactLenis>
   );

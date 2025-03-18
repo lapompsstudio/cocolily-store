@@ -101,4 +101,28 @@ ul {
 }
 .logo-svg:hover .scale-logo {
   transform: scale(1);
+@layer components {
+  /* h1 {
+    @apply md:landscape:text-145d font-normal leading-none text-72d;
+  } */
+
+  h2 {
+    @apply text-96d leading-none;
+  }
+
+  /* h3 {
+    @apply text-48d font-medium;
+  }
+
+  h4 {
+    @apply md:landscape:text-24d font-medium text-20d;
+  }
+
+  h5 {
+    @apply text-16d font-normal;
+  } */
+
+  p {
+    @apply text-16d;
+  }
 }
