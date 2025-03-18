@@ -13,7 +13,7 @@ module.exports = {
       aspectRatio: {
         wide: "16/9",
       },
-      color: {
+      colors: {
         "ruby-red": "#DB0032",
         ivory: "#F2ECCB",
         "baby-pink": "#F6CDD7",
@@ -22,6 +22,7 @@ module.exports = {
       fontFamily: {
         sans: ["var(--font-sf-pro-text)"],
         span: ["var(--font-span)"],
+        abc: ["var(--font-abc-favorite)"],
       },
       fontSize: {
         "8d": [
@@ -40,6 +41,12 @@ module.exports = {
           "calc((11/var(--bw)*100vw))",
           {
             letterSpacing: "calc((-0.02*11/var(--bw))*100vw)",
+          },
+        ],
+        "12d": [
+          "calc((12/var(--bw)*100vw))",
+          {
+            letterSpacing: "calc((-0.05*12/var(--bw))*100vw)",
           },
         ],
         "13d": [
@@ -163,8 +170,14 @@ module.exports = {
           },
         ],
       },
+      gap: {
+        "90d": "calc((90/var(--bw)*100vw))",
+      },
       padding: {
+        "12d": "calc((12/var(--bw)*100vw))",
         "16d": "calc((16/var(--bw)*100vw))",
+        "20d": "calc((20/var(--bw)*100vw))",
+        "22d": "calc((22/var(--bw)*100vw))",
       },
       keyframes: {
         fadeIn: {
