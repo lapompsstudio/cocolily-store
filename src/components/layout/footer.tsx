@@ -139,7 +139,7 @@ const Footer = () => {
           <h2 className="footer-text-anim text-128d font-bold font-abc text-center text-ruby-red leading-none">
             JOIN THE CELEBRATION
           </h2>
-          <p className="footer-text-anim text-ruby-red font-bold text-16d text-center mt-32d">
+          <p className="footer-text-anim text-ruby-red font-bold text-16d text-center mt-32d font-abc">
             BE PART OF COCOLILY&rsquo;S WORLD
           </p>
         </div>
@@ -194,7 +194,7 @@ const Footer = () => {
               buttonType="link"
               href="mailto:hello@cocolily.ae"
               variant="secondary"
-              className="h-72d text-16d"
+              className="h-72d text-16d font-abc"
             >
               EMAIL: HELLO@COCOLILY.AE
             </Button>
@@ -204,7 +204,7 @@ const Footer = () => {
               buttonType="link"
               href="tel:+971504181411"
               variant="secondary"
-              className="h-72d text-16d"
+              className="h-72d text-16d font-abc"
             >
               PHONE NUMBER: (+971) 50 418 1411
             </Button>
