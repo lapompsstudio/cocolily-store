@@ -1,0 +1,75 @@
+.circle-wrapper {
+  position: relative;
+  width: 454px;
+  height: 454px;
+  margin: 0 auto;
+}
+
+.circle-wrapper > svg {
+  position: absolute;
+  width: 125px;
+  height: 125px;
+  margin: auto;
+  transform: scale(0);
+}
+
+.circle-wrapper > svg:nth-child(1) {
+  top: 0%;
+  left: 0%;
+  right: 0%;
+}
+
+.circle-wrapper > svg:nth-child(2) {
+  top: 12%;
+  right: 12%;
+}
+
+.circle-wrapper > svg:nth-child(3) {
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.circle-wrapper > svg:nth-child(4) {
+  bottom: 12%;
+  right: 12%;
+}
+
+.circle-wrapper > svg:nth-child(5) {
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.circle-wrapper > svg:nth-child(6) {
+  bottom: 12%;
+  left: 12%;
+}
+
+.circle-wrapper > svg:nth-child(7) {
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.circle-wrapper > svg:nth-child(8) {
+  top: 12%;
+  left: 12%;
+}
+
+.line-wrapper > .line-circle:nth-child(1) {
+  transform-origin: center;
+  transform: rotate(21.5deg);
+}
+.line-wrapper > .line-circle:nth-child(2) {
+  transform-origin: center;
+  transform: rotate(68.6deg);
+}
+.line-wrapper > .line-circle:nth-child(3) {
+  transform-origin: center;
+  transform: rotate(111.5deg);
+}
+.line-wrapper > .line-circle:nth-child(4) {
+  transform-origin: center;
+  transform: rotate(158.5deg);
+}

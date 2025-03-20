@@ -7,10 +7,12 @@ import Image from "next/image";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import useSplitTextAnimation from "@/app/hooks/useSplitTextAnimation";
+import useColorStore from "@/store/colorStore";
 
 gsap.registerPlugin(useGSAP);
 
 const Footer = () => {
+  const { currentColor, setColor } = useColorStore();
   const containerRef = useRef<HTMLDivElement>(null);
   useSplitTextAnimation({
     selector: ".footer-text-anim",
@@ -117,12 +119,21 @@ const Footer = () => {
     },
     { scope: containerRef }
   );
+
+  useGSAP(() => {
+    gsap.to(".dynamic-bg", {
+      backgroundImage: `linear-gradient(to bottom, ${currentColor} 0%, rgba(255,255,255,0) 100%)`,
+      duration: 1,
+      ease: "power2.inOut",
+    });
+  }, [currentColor]);
+
   return (
     <footer
       ref={containerRef}
       className="footer min-h-screen relative flex w-full items-end p-20d bg-seashell overflow-hidden"
     >
-      <div className="bg-gradient-to-b from-pale-sky-blue to-pale-sky-blue/0 absolute top-0 left-0 right-0 h-264d"></div>
+      <div className="dynamic-bg absolute top-0 left-0 right-0 h-264d"></div>
       <div className="w-full">
         <div>
           <h2 className="footer-text-anim text-128d font-bold font-abc text-center text-ruby-red leading-none">

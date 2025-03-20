@@ -138,10 +138,12 @@ module.exports = {
         "90d": "calc((90/var(--bw)*100vw))",
       },
       height: {
+        "20d": "calc((20/var(--bw)*100vw))",
         "38d": "calc((38/var(--bw)*100vw))",
         "22d": "calc((22/var(--bw)*100vw))",
         "38d": "calc((38/var(--bw)*100vw))",
         "40d": "calc((40/var(--bw)*100vw))",
+        "45d": "calc((45/var(--bw)*100vw))",
         "62d": "calc((62/var(--bw)*100vw))",
         "72d": "calc((72/var(--bw)*100vw))",
         "74d": "calc((74/var(--bw)*100vw))",
@@ -150,6 +152,9 @@ module.exports = {
         "370d": "calc((370/var(--bw)*100vw))",
         "479d": "calc((479/var(--bw)*100vw))",
         "1080d": "calc((1080/var(--bw)*100vw))",
+      },
+      inset: {
+        "68d": "calc((68/var(--bw)*100vw))",
       },
       lineHeight: {
         1.1: "1.1",
@@ -173,13 +178,19 @@ module.exports = {
         "16d": "calc((16/var(--bw)*100vw))",
         "20d": "calc((20/var(--bw)*100vw))",
         "22d": "calc((22/var(--bw)*100vw))",
+        "55d": "calc((55/var(--bw)*100vw))",
+      },
+      rotate: {
+        120: "120deg",
       },
       space: {
         "20d": "calc((20/var(--bw)*100vw))",
+        "32d": "calc((32/var(--bw)*100vw))",
       },
       width: {
         "22d": "calc((22/var(--bw)*100vw))",
         "40d": "calc((40/var(--bw)*100vw))",
+        "45d": "calc((45/var(--bw)*100vw))",
         "46d": "calc((46/var(--bw)*100vw))",
         "62d": "calc((62/var(--bw)*100vw))",
         "100d": "calc((100/var(--bw)*100vw))",
@@ -203,6 +214,9 @@ module.exports = {
       animation: {
         fadeIn: "fadeIn 0.3s ease-in-out",
         blink: "blink 1.4s both infinite",
+      },
+      zIndex: {
+        preloader: 99999,
       },
     },
   },
