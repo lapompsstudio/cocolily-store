@@ -7,6 +7,7 @@ import useColorStore from "@/store/colorStore";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import EventsHomepage from "./EventsHomepage";
+import ShopOurProducts from "./ShopOurProducts";
 
 const Homepage = () => {
   const [isRenderFooter, setIsRenderFooter] = useState<boolean>(false);
@@ -32,10 +33,9 @@ const Homepage = () => {
 
   return (
     <>
-      {/* <OurMission /> */}
-      <div className="w-full h-screen bg-seashell"></div>
+      <OurMission />
+      <ShopOurProducts />
       <EventsHomepage />
-      <div className="w-full h-screen bg-[#C9D9E3] test-bg"></div>
       {isRenderFooter && <Footer />}
     </>
   );

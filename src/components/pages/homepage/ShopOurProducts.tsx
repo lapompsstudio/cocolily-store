@@ -88,6 +88,28 @@ export default function ShopOurProducts(): JSX.Element {
     },
   ];
 
+  // Handle tab change with transitions
+  const handleTabChange = (tab: "shop" | "create"): void => {
+    // If we're already on this tab, do nothing
+    if (activeTab === tab) return;
+
+    // First, add a transition class to the current active tab
+    const currentActiveButton = document.querySelector(`.button-shop.active`);
+    if (currentActiveButton) {
+      // We'll add a transitioning-out class
+      currentActiveButton.classList.add("transitioning-out");
+
+      // After animation completes, remove both classes
+      setTimeout(() => {
+        currentActiveButton.classList.remove("active");
+        currentActiveButton.classList.remove("transitioning-out");
+      }, 300); // Match this with your transition time (0.3s)
+    }
+
+    // Set the new active tab
+    setActiveTab(tab);
+  };
+
   // Handle slide change
   const handleSlideChange = (swiperInstance: SwiperType): void => {
     setActiveIndex(swiperInstance.activeIndex);
@@ -103,22 +125,22 @@ export default function ShopOurProducts(): JSX.Element {
   useEffect(() => {
     // Reset swiper when tab changes
     if (swiper && activeTab === "shop") {
-      swiper.slideTo(0, 800); // 800ms (3 seconds) transition when resetting
+      swiper.slideTo(0, 800); // 800ms transition when resetting
       setActiveIndex(0);
     }
   }, [activeTab, swiper]);
 
-  // Handle prev slide with 3-second transition
+  // Handle prev slide with 800ms transition
   const goPrev = (): void => {
     if (swiper) {
-      swiper.slidePrev(800); // 800ms (3 seconds) transition
+      swiper.slidePrev(800);
     }
   };
 
-  // Handle next slide with 3-second transition
+  // Handle next slide with 800ms transition
   const goNext = (): void => {
     if (swiper) {
-      swiper.slideNext(800); // 800ms (3 seconds) transition
+      swiper.slideNext(800);
     }
   };
 
@@ -165,7 +187,6 @@ export default function ShopOurProducts(): JSX.Element {
     ScrollTrigger.create({
       trigger: ".container-card-product",
       start: "top 75%",
-      // markers: true,
       onEnter: () => {
         gsap.to(cardSelectors, {
           clipPath: "inset(0% 0% 0% 0%)",
@@ -213,9 +234,9 @@ export default function ShopOurProducts(): JSX.Element {
           showIcon
           variant="secondary"
           className={`uppercase h-full font-abc text-16d button-shop ${
-            activeTab === "shop" ? "bg-opacity-20" : ""
+            activeTab === "shop" ? "active" : ""
           }`}
-          onClick={() => setActiveTab("shop")}
+          onClick={() => handleTabChange("shop")}
         >
           shop our products
         </Button>
@@ -223,9 +244,9 @@ export default function ShopOurProducts(): JSX.Element {
           showIcon
           variant="secondary"
           className={`uppercase h-full font-abc text-16d button-shop ${
-            activeTab === "create" ? "bg-opacity-20" : ""
+            activeTab === "create" ? "active" : ""
           }`}
-          onClick={() => setActiveTab("create")}
+          onClick={() => handleTabChange("create")}
         >
           create your own
         </Button>
