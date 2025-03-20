@@ -165,3 +165,8 @@ ul {
     @apply text-16d;
   }
 }
+
+.clipped {
+  clip-path: inset(0% 0% 100% 0%);
+  transform: translateY(100%);
+}
