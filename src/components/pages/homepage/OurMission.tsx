@@ -211,7 +211,6 @@ export default function OurMission() {
 
   return (
     <>
-      <div className="w-full h-screen"></div>
       <div className="w-full h-screen font-span bg-ruby-red container-at-cocolily overflow-hidden">
         <div className="w-full h-1080d absolute top-1/2 -translate-y-1/2 z-10 pointer-events-none">
           <div className="absolute z-20 w-544d h-370d -translate-y-full top-[0%] right-[29%] container-chocolate-box-top-at-cocolily">
