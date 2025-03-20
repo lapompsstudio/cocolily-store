@@ -59,21 +59,23 @@ button {
 ul {
   @apply list-disc pl-16d;
 }
-
 .btn-primary {
   @apply relative overflow-hidden z-0;
   transition: color 0.5s ease-in-out;
 }
+
 .btn-primary.translate-anim {
   transition:
     color 0.5s ease-in-out,
     transform 0.3s ease-in-out;
 }
+
 .btn-primary.translate-anim-icon {
   transition:
     fill 0.5s ease-in-out,
     transform 0.3s ease-in-out;
 }
+
 .btn-primary::before {
   @apply bg-ruby-red rounded-full;
   content: "";
@@ -85,12 +87,37 @@ ul {
   transition: bottom 0.3s ease-in-out;
   z-index: -1;
 }
-.btn-primary:hover {
-  @apply text-white;
-}
+
+/* Default hover behavior */
 .btn-primary:hover::before {
   bottom: 0;
 }
+
+.btn-primary:hover {
+  @apply text-white;
+}
+
+/* Active tab styling */
+.btn-primary.active::before {
+  bottom: 0;
+}
+
+.btn-primary.active {
+  @apply text-white;
+}
+
+/* Transition out effect when switching tabs */
+.btn-primary.transitioning-out::before {
+  bottom: -100%;
+  transition: bottom 0.3s ease-in-out;
+}
+
+.btn-primary.transitioning-out {
+  @apply text-ruby-red;
+  transition: color 0.3s ease-in-out;
+}
+
+/* Animation for translate */
 .btn-primary.translate-anim:hover {
   @apply text-white -translate-y-1;
 }
