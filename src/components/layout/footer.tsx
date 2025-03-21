@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect, MouseEvent } from "react";
 import Button from "../ui/button";
 import Link from "next/link";
-import Image from "next/image";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import useSplitTextAnimation from "@/app/hooks/useSplitTextAnimation";
@@ -11,20 +10,165 @@ import useColorStore from "@/store/colorStore";
 
 gsap.registerPlugin(useGSAP);
 
-const Footer = () => {
-  const { currentColor, setColor } = useColorStore();
-  const containerRef = useRef<HTMLDivElement>(null);
+// Define types for ornaments
+interface Ornament {
+  id: number;
+  src: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  loaded: boolean;
+  img: HTMLImageElement;
+}
+
+// Define types for position
+interface Position {
+  x: number;
+  y: number;
+}
+
+const Footer: React.FC = () => {
+  const { currentColor } = useColorStore();
+  const containerRef = useRef<HTMLElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [ornaments, setOrnaments] = useState<Ornament[]>([]);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [lastPosition, setLastPosition] = useState<Position>({ x: 0, y: 0 });
+
   useSplitTextAnimation({
     selector: ".footer-text-anim",
     startMd: "top 90%",
   });
 
+  // Initialize ornaments
+  useEffect(() => {
+    // Canvas sizing
+    const updateCanvasSize = (): void => {
+      if (canvasRef.current) {
+        canvasRef.current.width = window.innerWidth;
+        canvasRef.current.height = window.innerHeight;
+      }
+    };
+
+    updateCanvasSize();
+    window.addEventListener("resize", updateCanvasSize);
+
+    // Define initial ornament positions
+    const newOrnaments: Omit<Ornament, "img">[] = [
+      {
+        id: 1,
+        src: "/footer/ornament1.png",
+        x: window.innerWidth * 0.12,
+        y: window.innerHeight * 0.52,
+        width: 200,
+        height: 200,
+        loaded: false,
+      },
+      {
+        id: 2,
+        src: "/footer/ornament2.png",
+        x: window.innerWidth * 0.24,
+        y: window.innerHeight * 0.3,
+        width: 200,
+        height: 200,
+        loaded: false,
+      },
+      {
+        id: 3,
+        src: "/footer/ornament3.png",
+        x: window.innerWidth * 0.35,
+        y: window.innerHeight * 0.65,
+        width: 200,
+        height: 200,
+        loaded: false,
+      },
+      {
+        id: 4,
+        src: "/footer/ornament4.png",
+        x: window.innerWidth * 0.47,
+        y: window.innerHeight * 0.175,
+        width: 200,
+        height: 200,
+        loaded: false,
+      },
+      {
+        id: 5,
+        src: "/footer/ornament5.png",
+        x: window.innerWidth * 0.6,
+        y: window.innerHeight * 0.42,
+        width: 200,
+        height: 200,
+        loaded: false,
+      },
+      {
+        id: 6,
+        src: "/footer/ornament6.png",
+        x: window.innerWidth * 0.78,
+        y: window.innerHeight * 0.3,
+        width: 200,
+        height: 200,
+        loaded: false,
+      },
+      {
+        id: 7,
+        src: "/footer/ornament7.png",
+        x: window.innerWidth * 0.88,
+        y: window.innerHeight * 0.54,
+        width: 200,
+        height: 200,
+        loaded: false,
+      },
+    ];
+
+    // Load all images
+    const loadedOrnaments = newOrnaments.map((ornament) => {
+      const img = new Image();
+      img.src = ornament.src;
+      img.onload = () => {
+        setOrnaments((prevOrnaments) =>
+          prevOrnaments.map((o) =>
+            o.id === ornament.id ? { ...o, loaded: true } : o
+          )
+        );
+      };
+      return { ...ornament, img };
+    });
+
+    setOrnaments(loadedOrnaments as Ornament[]);
+
+    return () => {
+      window.removeEventListener("resize", updateCanvasSize);
+    };
+  }, []);
+
+  // Draw ornaments on canvas
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    ornaments.forEach((ornament) => {
+      if (ornament.loaded) {
+        ctx.drawImage(
+          ornament.img,
+          ornament.x - ornament.width / 2,
+          ornament.y - ornament.height / 2,
+          ornament.width,
+          ornament.height
+        );
+      }
+    });
+  }, [ornaments]);
+
+  // Animation effects
   useGSAP(
     () => {
-      const revealBottom = gsap.utils.toArray(".reveal-bottom");
-      const scale = 1.2;
-      const duration = 0.1;
-
       const tl = gsap.timeline({
         paused: true,
         delay: 1.2,
@@ -36,86 +180,38 @@ const Footer = () => {
         },
       });
 
-      revealBottom.forEach(() => {
-        gsap.fromTo(
-          ".reveal-bottom",
+      // Animate ornaments appearance with delay
+      ornaments.forEach((ornament, index) => {
+        tl.from(
+          `#ornament-${ornament.id}`,
           {
-            yPercent: 100,
-            clipPath: "inset(0% 0% 100% 0%)",
+            opacity: 0,
+            duration: 0.1,
+            scale: 1.2,
           },
-          {
-            yPercent: 0,
-            clipPath: "inset(0% 0% 0% 0%)",
-            duration: 1,
-            ease: "power1.inOut",
-            scrollTrigger: {
-              trigger: ".reveal-bottom",
-              start: "top-=100 bottom",
-              toggleActions: "play none none none",
-            },
-          }
+          index * 0.2
         );
       });
 
-      tl.from(".reveal-1", {
-        opacity: 0,
-        duration: duration,
-        scale: scale,
-      })
-        .from(
-          ".reveal-2",
-          {
-            opacity: 0,
-            duration: duration,
-            scale: scale,
+      // Reveal animation for bottom elements
+      gsap.fromTo(
+        ".reveal-bottom",
+        {
+          yPercent: 100,
+          clipPath: "inset(0% 0% 100% 0%)",
+        },
+        {
+          yPercent: 0,
+          clipPath: "inset(0% 0% 0% 0%)",
+          duration: 1,
+          ease: "power1.inOut",
+          scrollTrigger: {
+            trigger: ".reveal-bottom",
+            start: "top-=100 bottom",
+            toggleActions: "play none none none",
           },
-          "+=0.2"
-        )
-        .from(
-          ".reveal-3",
-          {
-            opacity: 0,
-            duration: duration,
-            scale: scale,
-          },
-          "+=0.2"
-        )
-        .from(
-          ".reveal-4",
-          {
-            opacity: 0,
-            duration: duration,
-            scale: scale,
-          },
-          "+=0.2"
-        )
-        .from(
-          ".reveal-5",
-          {
-            opacity: 0,
-            duration: duration,
-            scale: scale,
-          },
-          "+=0.2"
-        )
-        .from(
-          ".reveal-6",
-          {
-            opacity: 0,
-            duration: duration,
-            scale: scale,
-          },
-          "+=0.2"
-        )
-        .from(
-          ".reveal-7",
-          {
-            opacity: 0,
-            duration: duration,
-            scale: scale,
-          },
-          "+=0.2"
-        );
+        }
+      );
     },
     { scope: containerRef }
   );
@@ -128,13 +224,81 @@ const Footer = () => {
     });
   }, [currentColor]);
 
+  // Mouse event handlers for dragging
+  const handleMouseDown = (e: MouseEvent<HTMLElement>): void => {
+    const canvas = canvasRef.current;
+    if (!canvas || !containerRef.current) return;
+
+    const rect = containerRef.current.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    // Check if mouse is over any ornament
+    for (let i = ornaments.length - 1; i >= 0; i--) {
+      const ornament = ornaments[i];
+      const halfWidth = ornament.width / 2;
+      const halfHeight = ornament.height / 2;
+
+      if (
+        mouseX >= ornament.x - halfWidth &&
+        mouseX <= ornament.x + halfWidth &&
+        mouseY >= ornament.y - halfHeight &&
+        mouseY <= ornament.y + halfHeight
+      ) {
+        setIsDragging(true);
+        setDragIndex(i);
+        setLastPosition({ x: mouseX, y: mouseY });
+        e.preventDefault(); // Prevent default to avoid text selection
+        break;
+      }
+    }
+  };
+
+  const handleMouseMove = (e: MouseEvent<HTMLElement>): void => {
+    if (!isDragging || dragIndex === null || !containerRef.current) return;
+
+    const rect = containerRef.current.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    const dx = mouseX - lastPosition.x;
+    const dy = mouseY - lastPosition.y;
+
+    setOrnaments((prevOrnaments) =>
+      prevOrnaments.map((ornament, index) =>
+        index === dragIndex
+          ? { ...ornament, x: ornament.x + dx, y: ornament.y + dy }
+          : ornament
+      )
+    );
+
+    setLastPosition({ x: mouseX, y: mouseY });
+  };
+
+  const handleMouseUp = (): void => {
+    setIsDragging(false);
+    setDragIndex(null);
+  };
+
   return (
     <footer
       ref={containerRef}
       className="footer min-h-screen relative flex w-full items-end p-20d bg-seashell overflow-hidden"
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
+      style={{ cursor: isDragging ? "grabbing" : "grab" }}
     >
-      <div className="dynamic-bg absolute top-0 left-0 right-0 h-264d"></div>
-      <div className="w-full">
+      <div className="dynamic-bg absolute top-0 left-0 right-0 h-264d z-[1]"></div>
+
+      {/* Draggable Canvas */}
+      <canvas
+        ref={canvasRef}
+        className="absolute top-0 left-0 w-full h-full z-[30] pointer-events-none"
+      />
+
+      <div className="w-full z-[20] relative">
         <div>
           <h2 className="footer-text-anim text-128d font-bold font-abc text-center text-ruby-red leading-none">
             JOIN THE CELEBRATION
@@ -151,12 +315,14 @@ const Footer = () => {
             <div className="flex items-center relative w-355d mt-20d">
               <input
                 type="text"
-                className="bg-transparent border border-ruby-red rounded-full h-38d w-full px-22d placeholder:text-ruby-red placeholder:font-semibold text-ruby-red font-semibold text-12d"
+                className="bg-transparent border border-ruby-red rounded-full h-38d w-full px-22d placeholder:text-ruby-red placeholder:font-semibold text-ruby-red font-semibold text-12d focus-visible:outline-none focus-within:outline-none focus:outline-none"
                 placeholder="SUBMIT YOUR EMAIL"
               />
               <Button
                 buttonType="button"
-                onClick={(e) => console.log("e", e)}
+                onClick={(
+                  e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>
+                ) => console.log("e", e)}
                 className="!absolute right-0"
               >
                 SUBMIT
@@ -211,56 +377,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-
-      <Image
-        src="/footer/ornament1.png"
-        width={200}
-        height={200}
-        className="ornament reveal-7 absolute left-[7%] bottom-[34%]"
-        alt="ornament"
-      />
-      <Image
-        src="/footer/ornament2.png"
-        width={200}
-        height={200}
-        className="ornament reveal-4 absolute left-[18%] bottom-[58%]"
-        alt="ornament"
-      />
-      <Image
-        src="/footer/ornament3.png"
-        width={200}
-        height={200}
-        className="ornament reveal-3 absolute left-[29%] bottom-[22%]"
-        alt="ornament"
-      />
-      <Image
-        src="/footer/ornament4.png"
-        width={200}
-        height={200}
-        className="ornament reveal-6 absolute left-[40.5%] bottom-[70%]"
-        alt="ornament"
-      />
-      <Image
-        src="/footer/ornament5.png"
-        width={200}
-        height={200}
-        className="ornament reveal-1 absolute left-[54%] bottom-[45.5%]"
-        alt="ornament"
-      />
-      <Image
-        src="/footer/ornament6.png"
-        width={200}
-        height={200}
-        className="ornament reveal-2 absolute left-[70%] bottom-[60%]"
-        alt="ornament"
-      />
-      <Image
-        src="/footer/ornament7.png"
-        width={200}
-        height={200}
-        className="ornament reveal-5 absolute left-[81%] bottom-[33%]"
-        alt="ornament"
-      />
     </footer>
   );
 };
