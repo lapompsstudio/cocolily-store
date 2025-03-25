@@ -6,7 +6,7 @@ import Preloader from "@/components/preloader";
 const Template = ({ children }: { children: React.ReactNode }) => {
   return (
     <ReactLenis root>
-      {/* <Preloader /> */}
+      <Preloader />
       <Navbar />
       <main>{children}</main>
     </ReactLenis>
