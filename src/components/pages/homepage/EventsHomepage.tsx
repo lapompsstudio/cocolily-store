@@ -273,184 +273,239 @@ export default function EventsHomepage(): JSX.Element {
 
   // Animation when event is changed
   useGSAP(() => {
-    if (isAnimatingTrigger) {
-      // Split text for specified elements using SplitText plugin
-      let nameLines: any[] = [];
-      let descriptionLines: any[] = [];
+    const mm = gsap.matchMedia();
 
-      if (contentRefs.current.name) {
-        const nameSplit = new SplitText(contentRefs.current.name, {
-          type: "lines",
-        });
-        nameLines = nameSplit.lines;
-      }
+    mm.add(
+      {
+        isPortrait: "(orientation: portrait)",
+        isLandscape: "(orientation: landscape)",
+        md: "(min-width: 768px) and (orientation: landscape)",
+        maxXXs: "(max-width: 767.98px)",
+      },
+      (context) => {
+        if (isAnimatingTrigger) {
+          // Split text for specified elements using SplitText plugin
+          let nameLines: any[] = [];
+          let descriptionLines: any[] = [];
 
-      if (contentRefs.current.description) {
-        const descriptionSplit = new SplitText(
-          contentRefs.current.description,
-          {
-            type: "lines",
+          if (contentRefs.current.name) {
+            const nameSplit = new SplitText(contentRefs.current.name, {
+              type: "lines",
+            });
+            nameLines = nameSplit.lines;
           }
-        );
-        descriptionLines = descriptionSplit.lines;
-      }
 
-      const allLines = [...nameLines, ...descriptionLines];
+          if (contentRefs.current.description) {
+            const descriptionSplit = new SplitText(
+              contentRefs.current.description,
+              {
+                type: "lines",
+              }
+            );
+            descriptionLines = descriptionSplit.lines;
+          }
 
-      if (allLines.length > 0) {
-        // Set initial state
-        gsap.set(allLines, {
-          y: "100%",
-          clipPath: "inset(0% 0% 100% 0%)",
-        });
+          const allLines = [...nameLines, ...descriptionLines];
 
-        // Animate name lines with stagger
-        if (nameLines.length > 0) {
-          gsap.to(nameLines, {
-            y: "0%",
-            clipPath: "inset(0% 0% 0% 0%)",
-            duration: 0.8,
-            stagger: 0.1,
-            ease: "power1.inOut",
-          });
+          if (allLines.length > 0) {
+            // Set initial state
+            gsap.set(allLines, {
+              y: "100%",
+              clipPath: "inset(0% 0% 100% 0%)",
+            });
+
+            // Animate name lines with stagger
+            if (nameLines.length > 0) {
+              gsap.to(nameLines, {
+                y: "0%",
+                clipPath: "inset(0% 0% 0% 0%)",
+                duration: 0.8,
+                stagger: 0.1,
+                ease: "power1.inOut",
+              });
+            }
+
+            // Animate description lines with stagger
+            if (descriptionLines.length > 0) {
+              gsap.to(descriptionLines, {
+                y: "0%",
+                clipPath: "inset(0% 0% 0% 0%)",
+                duration: 0.8,
+                stagger: 0.05,
+                ease: "power1.inOut",
+              });
+            }
+          }
         }
-
-        // Animate description lines with stagger
-        if (descriptionLines.length > 0) {
-          gsap.to(descriptionLines, {
-            y: "0%",
-            clipPath: "inset(0% 0% 0% 0%)",
-            duration: 0.8,
-            stagger: 0.05,
-            ease: "power1.inOut",
-          });
-        }
       }
-    }
+    );
   }, [selectedEvent, isAnimatingTrigger]);
 
   // Horizontal text animation
   useGSAP(() => {
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: ".text-anim-cocolily-sweet-celebration",
-        start: "top-=1100 30%",
-        end: "bottom+=600 30%",
-        scrub: 1,
-      },
-    });
+    const mm = gsap.matchMedia();
 
-    tl.to(".text-anim-cocolily-sweet-celebration", {
-      x: "-70%",
-      ease: "power1.inOut",
-    });
+    mm.add(
+      {
+        isPortrait: "(orientation: portrait)",
+        isLandscape: "(orientation: landscape)",
+        md: "(min-width: 768px) and (orientation: landscape)",
+        maxXXs: "(max-width: 767.98px)",
+      },
+      (context) => {
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: ".text-anim-cocolily-sweet-celebration",
+            start: "top-=1100 30%",
+            end: "bottom+=600 30%",
+            scrub: 1,
+          },
+        });
+
+        tl.to(".text-anim-cocolily-sweet-celebration", {
+          x: "-70%",
+          ease: "power1.inOut",
+        });
+      }
+    );
   }, []);
 
   // Animasi warna background menggunakan currentColor dari Zustand
   useGSAP(() => {
-    // Animasikan perubahan warna background pada container utama
-    gsap.to(".events-background", {
-      backgroundColor: currentColor,
-      duration: 1,
-      ease: "power2.inOut",
-    });
+    const mm = gsap.matchMedia();
 
-    // Animasikan perubahan warna gradient
-    gsap.to(".gradient-background", {
-      backgroundImage: `linear-gradient(to top, ${currentColor}, transparent)`,
-      duration: 1,
-      ease: "power2.inOut",
-    });
+    mm.add(
+      {
+        isPortrait: "(orientation: portrait)",
+        isLandscape: "(orientation: landscape)",
+        md: "(min-width: 768px) and (orientation: landscape)",
+        maxXXs: "(max-width: 767.98px)",
+      },
+      (context) => {
+        // Animasikan perubahan warna background pada container utama
+        gsap.to(".events-background", {
+          backgroundColor: currentColor,
+          duration: 1,
+          ease: "power2.inOut",
+        });
+
+        // Animasikan perubahan warna gradient
+        gsap.to(".gradient-background", {
+          backgroundImage: `linear-gradient(to top, ${currentColor}, transparent)`,
+          duration: 1,
+          ease: "power2.inOut",
+        });
+      }
+    );
   }, [currentColor]);
 
   // Initial animation on page load
   useGSAP(() => {
-    // Split text for specified elements using SplitText plugin
-    let nameLines: any[] = [];
-    let descriptionLines: any[] = [];
-    let upNameLines: any[] = [];
+    const mm = gsap.matchMedia();
 
-    if (contentRefs.current.name) {
-      const nameSplit = new SplitText(contentRefs.current.name, {
-        type: "lines",
-      });
-      nameLines = nameSplit.lines;
-    }
-
-    if (contentRefs.current.description) {
-      const descriptionSplit = new SplitText(contentRefs.current.description, {
-        type: "lines",
-      });
-      descriptionLines = descriptionSplit.lines;
-    }
-
-    if (contentRefs.current.upName) {
-      const upNameSplit = new SplitText(contentRefs.current.upName, {
-        type: "lines",
-      });
-      upNameLines = upNameSplit.lines;
-    }
-
-    const allTextLines = [...nameLines, ...descriptionLines, ...upNameLines];
-
-    // Set initial state for the split lines
-    if (allTextLines.length > 0) {
-      gsap.set(allTextLines, {
-        y: "100%",
-        clipPath: "inset(0% 0% 100% 0%)",
-      });
-    }
-
-    // Standard elements that don't need split text
-    const otherContentElements = [
-      contentRefs.current.image,
-      contentRefs.current.locationDate,
-      contentRefs.current.buttons,
-      contentRefs.current.stats,
-      contentRefs.current.discoverBtn,
-      contentRefs.current.upComing,
-      contentRefs.current.upImage,
-      contentRefs.current.upComingLocation,
-      contentRefs.current.upRecent,
-      ".anim-indicator-events-homepage",
-      ...eventItemRefs.current.filter(Boolean), // Filter out null values
-    ].filter(Boolean); // Filter out null values
-
-    // Set initial state for standard elements
-    if (otherContentElements.length > 0) {
-      gsap.set(otherContentElements, {
-        y: "100%",
-        clipPath: "inset(0% 0% 100% 0%)",
-      });
-    }
-
-    // Create ScrollTrigger for animation
-    ScrollTrigger.create({
-      trigger: ".container-events-homepage",
-      start: "60% 90%",
-      onEnter: () => {
-        // Animate standard elements
-        if (otherContentElements.length > 0) {
-          gsap.to(otherContentElements, {
-            y: "0%",
-            duration: 0.8,
-            clipPath: "inset(0% 0% 0% 0%)",
-            ease: "power1.inOut",
-          });
-        }
-
-        // Animate text lines with stagger
-        if (allTextLines.length > 0) {
-          gsap.to(allTextLines, {
-            y: "0%",
-            clipPath: "inset(0% 0% 0% 0%)",
-            duration: 0.8,
-            stagger: 0.05,
-            ease: "power1.inOut",
-          });
-        }
+    mm.add(
+      {
+        isPortrait: "(orientation: portrait)",
+        isLandscape: "(orientation: landscape)",
+        md: "(min-width: 768px) and (orientation: landscape)",
+        maxXXs: "(max-width: 767.98px)",
       },
-    });
+      (context) => {
+        // Split text for specified elements using SplitText plugin
+        let nameLines: any[] = [];
+        let descriptionLines: any[] = [];
+        let upNameLines: any[] = [];
+
+        if (contentRefs.current.name) {
+          const nameSplit = new SplitText(contentRefs.current.name, {
+            type: "lines",
+          });
+          nameLines = nameSplit.lines;
+        }
+
+        if (contentRefs.current.description) {
+          const descriptionSplit = new SplitText(
+            contentRefs.current.description,
+            {
+              type: "lines",
+            }
+          );
+          descriptionLines = descriptionSplit.lines;
+        }
+
+        if (contentRefs.current.upName) {
+          const upNameSplit = new SplitText(contentRefs.current.upName, {
+            type: "lines",
+          });
+          upNameLines = upNameSplit.lines;
+        }
+
+        const allTextLines = [
+          ...nameLines,
+          ...descriptionLines,
+          ...upNameLines,
+        ];
+
+        // Set initial state for the split lines
+        if (allTextLines.length > 0) {
+          gsap.set(allTextLines, {
+            y: "100%",
+            clipPath: "inset(0% 0% 100% 0%)",
+          });
+        }
+
+        // Standard elements that don't need split text
+        const otherContentElements = [
+          contentRefs.current.image,
+          contentRefs.current.locationDate,
+          contentRefs.current.buttons,
+          contentRefs.current.stats,
+          contentRefs.current.discoverBtn,
+          contentRefs.current.upComing,
+          contentRefs.current.upImage,
+          contentRefs.current.upComingLocation,
+          contentRefs.current.upRecent,
+          ".anim-indicator-events-homepage",
+          ...eventItemRefs.current.filter(Boolean), // Filter out null values
+        ].filter(Boolean); // Filter out null values
+
+        // Set initial state for standard elements
+        if (otherContentElements.length > 0) {
+          gsap.set(otherContentElements, {
+            y: "100%",
+            clipPath: "inset(0% 0% 100% 0%)",
+          });
+        }
+
+        // Create ScrollTrigger for animation
+        ScrollTrigger.create({
+          trigger: ".container-events-homepage",
+          start: "60% 90%",
+          onEnter: () => {
+            // Animate standard elements
+            if (otherContentElements.length > 0) {
+              gsap.to(otherContentElements, {
+                y: "0%",
+                duration: 0.8,
+                clipPath: "inset(0% 0% 0% 0%)",
+                ease: "power1.inOut",
+              });
+            }
+
+            // Animate text lines with stagger
+            if (allTextLines.length > 0) {
+              gsap.to(allTextLines, {
+                y: "0%",
+                clipPath: "inset(0% 0% 0% 0%)",
+                duration: 0.8,
+                stagger: 0.05,
+                ease: "power1.inOut",
+              });
+            }
+          },
+        });
+      }
+    );
   }, []);
 
   // Memoize the event buttons to prevent unnecessary re-renders

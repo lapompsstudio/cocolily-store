@@ -20,6 +20,7 @@ interface Ornament {
   height: number;
   loaded: boolean;
   img: HTMLImageElement;
+  velocity: { x: number; y: number };
 }
 
 // Define types for position
@@ -36,6 +37,9 @@ const Footer: React.FC = () => {
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [lastPosition, setLastPosition] = useState<Position>({ x: 0, y: 0 });
+  const [dragStartTime, setDragStartTime] = useState<number>(0);
+  const [dragPositions, setDragPositions] = useState<Position[]>([]);
+  const animationFrameRef = useRef<number | null>(null);
 
   useSplitTextAnimation({
     selector: ".footer-text-anim",
@@ -55,70 +59,88 @@ const Footer: React.FC = () => {
     updateCanvasSize();
     window.addEventListener("resize", updateCanvasSize);
 
+    // Define ornament image sources
+    const ornamentSources = [
+      "/footer/ornament1.png",
+      "/footer/ornament2.png",
+      "/footer/ornament3.png",
+      "/footer/ornament4.png",
+      "/footer/ornament5.png",
+      "/footer/ornament6.png",
+      "/footer/ornament7.png",
+    ];
+
     // Define initial ornament positions
     const newOrnaments: Omit<Ornament, "img">[] = [
       {
         id: 1,
-        src: "/footer/ornament1.png",
+        src: ornamentSources[0],
         x: window.innerWidth * 0.12,
         y: window.innerHeight * 0.52,
         width: 200,
         height: 200,
         loaded: false,
+        velocity: { x: 0, y: 0 },
       },
       {
         id: 2,
-        src: "/footer/ornament2.png",
+        src: ornamentSources[1],
         x: window.innerWidth * 0.24,
         y: window.innerHeight * 0.3,
         width: 200,
         height: 200,
         loaded: false,
+        velocity: { x: 0, y: 0 },
       },
       {
         id: 3,
-        src: "/footer/ornament3.png",
+        src: ornamentSources[2],
         x: window.innerWidth * 0.35,
         y: window.innerHeight * 0.65,
         width: 200,
         height: 200,
         loaded: false,
+        velocity: { x: 0, y: 0 },
       },
       {
         id: 4,
-        src: "/footer/ornament4.png",
+        src: ornamentSources[3],
         x: window.innerWidth * 0.47,
         y: window.innerHeight * 0.175,
         width: 200,
         height: 200,
         loaded: false,
+        velocity: { x: 0, y: 0 },
       },
       {
         id: 5,
-        src: "/footer/ornament5.png",
+        src: ornamentSources[4],
         x: window.innerWidth * 0.6,
         y: window.innerHeight * 0.42,
         width: 200,
         height: 200,
         loaded: false,
+        velocity: { x: 0, y: 0 },
       },
       {
         id: 6,
-        src: "/footer/ornament6.png",
+        src: ornamentSources[5],
         x: window.innerWidth * 0.78,
         y: window.innerHeight * 0.3,
         width: 200,
         height: 200,
         loaded: false,
+        velocity: { x: 0, y: 0 },
       },
       {
         id: 7,
-        src: "/footer/ornament7.png",
+        src: ornamentSources[6],
         x: window.innerWidth * 0.88,
         y: window.innerHeight * 0.54,
         width: 200,
         height: 200,
         loaded: false,
+        velocity: { x: 0, y: 0 },
       },
     ];
 
@@ -140,8 +162,102 @@ const Footer: React.FC = () => {
 
     return () => {
       window.removeEventListener("resize", updateCanvasSize);
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
     };
   }, []);
+
+  // Handle physics and animation
+  useEffect(() => {
+    const animateOrnaments = () => {
+      setOrnaments((prevOrnaments) => {
+        return prevOrnaments.map((ornament) => {
+          // If currently being dragged, don't apply physics
+          if (ornament.id === dragIndex && isDragging) {
+            return ornament;
+          }
+
+          // Apply velocity and friction
+          let newX = ornament.x + ornament.velocity.x;
+          let newY = ornament.y + ornament.velocity.y;
+
+          // Apply friction
+          const friction = 0.97;
+          const newVelocityX = ornament.velocity.x * friction;
+          const newVelocityY = ornament.velocity.y * friction;
+
+          // Check for boundary collisions
+          const halfWidth = ornament.width / 2;
+          const halfHeight = ornament.height / 2;
+
+          if (newX - halfWidth < 0) {
+            newX = halfWidth;
+            ornament.velocity.x = -ornament.velocity.x * 0.8;
+          } else if (newX + halfWidth > window.innerWidth) {
+            newX = window.innerWidth - halfWidth;
+            ornament.velocity.x = -ornament.velocity.x * 0.8;
+          }
+
+          if (newY - halfHeight < 0) {
+            newY = halfHeight;
+            ornament.velocity.y = -ornament.velocity.y * 0.8;
+          } else if (newY + halfHeight > window.innerHeight) {
+            newY = window.innerHeight - halfHeight;
+            ornament.velocity.y = -ornament.velocity.y * 0.8;
+          }
+
+          // Check collisions with other ornaments
+          prevOrnaments.forEach((otherOrnament) => {
+            if (ornament.id !== otherOrnament.id) {
+              const dx = newX - otherOrnament.x;
+              const dy = newY - otherOrnament.y;
+              const distance = Math.sqrt(dx * dx + dy * dy);
+              const minDistance = (ornament.width + otherOrnament.width) / 2;
+
+              if (distance < minDistance) {
+                // Collision detected - only bounce, no image swap
+
+                // Bounce effect
+                const angle = Math.atan2(dy, dx);
+                const targetX = otherOrnament.x + Math.cos(angle) * minDistance;
+                const targetY = otherOrnament.y + Math.sin(angle) * minDistance;
+
+                newX = targetX;
+                newY = targetY;
+
+                // Apply force to both ornaments
+                ornament.velocity.x = Math.cos(angle) * 5;
+                ornament.velocity.y = Math.sin(angle) * 5;
+                otherOrnament.velocity.x = -Math.cos(angle) * 5;
+                otherOrnament.velocity.y = -Math.sin(angle) * 5;
+              }
+            }
+          });
+
+          return {
+            ...ornament,
+            x: newX,
+            y: newY,
+            velocity: {
+              x: Math.abs(newVelocityX) < 0.1 ? 0 : newVelocityX,
+              y: Math.abs(newVelocityY) < 0.1 ? 0 : newVelocityY,
+            },
+          };
+        });
+      });
+
+      animationFrameRef.current = requestAnimationFrame(animateOrnaments);
+    };
+
+    animationFrameRef.current = requestAnimationFrame(animateOrnaments);
+
+    return () => {
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current);
+      }
+    };
+  }, [isDragging, dragIndex]);
 
   // Draw ornaments on canvas
   useEffect(() => {
@@ -224,6 +340,18 @@ const Footer: React.FC = () => {
     });
   }, [currentColor]);
 
+  // Track drag positions for velocity calculation
+  const updateDragPositions = (position: Position) => {
+    setDragPositions((prev) => {
+      const newPositions = [...prev, position];
+      // Keep only the last 5 positions for velocity calculation
+      if (newPositions.length > 5) {
+        return newPositions.slice(newPositions.length - 5);
+      }
+      return newPositions;
+    });
+  };
+
   // Mouse event handlers for dragging
   const handleMouseDown = (e: MouseEvent<HTMLElement>): void => {
     const canvas = canvasRef.current;
@@ -248,6 +376,8 @@ const Footer: React.FC = () => {
         setIsDragging(true);
         setDragIndex(i);
         setLastPosition({ x: mouseX, y: mouseY });
+        setDragStartTime(Date.now());
+        setDragPositions([{ x: mouseX, y: mouseY }]);
         e.preventDefault(); // Prevent default to avoid text selection
         break;
       }
@@ -272,12 +402,84 @@ const Footer: React.FC = () => {
       )
     );
 
+    updateDragPositions({ x: mouseX, y: mouseY });
     setLastPosition({ x: mouseX, y: mouseY });
   };
 
   const handleMouseUp = (): void => {
+    if (isDragging && dragIndex !== null) {
+      // Calculate throw velocity based on last few drag positions
+      if (dragPositions.length >= 2) {
+        const lastPos = dragPositions[dragPositions.length - 1];
+        const prevPos = dragPositions[0];
+        const dragDuration = Date.now() - dragStartTime;
+
+        // Calculate velocity (pixels per frame)
+        const velocityX = (lastPos.x - prevPos.x) / (dragDuration / 16);
+        const velocityY = (lastPos.y - prevPos.y) / (dragDuration / 16);
+
+        // Apply velocity to the dragged ornament
+        setOrnaments((prevOrnaments) =>
+          prevOrnaments.map((ornament, index) =>
+            index === dragIndex
+              ? {
+                  ...ornament,
+                  velocity: {
+                    x: velocityX,
+                    y: velocityY,
+                  },
+                }
+              : ornament
+          )
+        );
+      }
+    }
+
     setIsDragging(false);
     setDragIndex(null);
+    setDragPositions([]);
+  };
+
+  // Double-click handler to change ornament images
+  const handleDoubleClick = (e: MouseEvent<HTMLElement>): void => {
+    if (!containerRef.current) return;
+
+    const rect = containerRef.current.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    // Check if mouse is over any ornament
+    for (let i = ornaments.length - 1; i >= 0; i--) {
+      const ornament = ornaments[i];
+      const halfWidth = ornament.width / 2;
+      const halfHeight = ornament.height / 2;
+
+      if (
+        mouseX >= ornament.x - halfWidth &&
+        mouseX <= ornament.x + halfWidth &&
+        mouseY >= ornament.y - halfHeight &&
+        mouseY <= ornament.y + halfHeight
+      ) {
+        // Find a random ornament to swap with
+        const otherIndex = Math.floor(Math.random() * ornaments.length);
+        if (otherIndex !== i) {
+          setOrnaments((prevOrnaments) => {
+            const newOrnaments = [...prevOrnaments];
+            // Swap the sources
+            const tempSrc = newOrnaments[i].src;
+            newOrnaments[i].src = newOrnaments[otherIndex].src;
+            newOrnaments[otherIndex].src = tempSrc;
+
+            // Update the image objects
+            newOrnaments[i].img.src = newOrnaments[i].src;
+            newOrnaments[otherIndex].img.src = newOrnaments[otherIndex].src;
+
+            return newOrnaments;
+          });
+        }
+        break;
+      }
+    }
   };
 
   return (
@@ -288,6 +490,7 @@ const Footer: React.FC = () => {
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
+      onDoubleClick={handleDoubleClick}
       style={{ cursor: isDragging ? "grabbing" : "grab" }}
     >
       <div className="dynamic-bg absolute top-0 left-0 right-0 h-264d z-[1]"></div>

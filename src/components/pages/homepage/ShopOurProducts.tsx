@@ -148,83 +148,95 @@ export default function ShopOurProducts(): JSX.Element {
   const totalSlides = Math.ceil(shopProducts.length / 3);
 
   useGSAP(() => {
-    gsap.set([".button-shop", ".text-pagination"], {
-      clipPath: "inset(0% 0% 100% 0%)",
-      yPercent: 100,
-    });
-    gsap.set([".text-pagination-left"], {
-      clipPath: "inset(0% 100% 0% 0%)",
-      xPercent: 100,
-    });
-    gsap.set([".text-pagination-right"], {
-      clipPath: "inset(0% 0% 0% 100%)",
-      xPercent: -100,
-    });
+    const mm = gsap.matchMedia();
 
-    const cardSelectors = shopProducts.map(
-      (_, index) => `.card-product-${index + 1}`
+    mm.add(
+      {
+        isPortrait: "(orientation: portrait)",
+        isLandscape: "(orientation: landscape)",
+        md: "(min-width: 768px) and (orientation: landscape)",
+        maxXXs: "(max-width: 767.98px)",
+      },
+      (context) => {
+        gsap.set([".button-shop", ".text-pagination"], {
+          clipPath: "inset(0% 0% 100% 0%)",
+          yPercent: 100,
+        });
+        gsap.set([".text-pagination-left"], {
+          clipPath: "inset(0% 100% 0% 0%)",
+          xPercent: 100,
+        });
+        gsap.set([".text-pagination-right"], {
+          clipPath: "inset(0% 0% 0% 100%)",
+          xPercent: -100,
+        });
+
+        const cardSelectors = shopProducts.map(
+          (_, index) => `.card-product-${index + 1}`
+        );
+
+        gsap.set(cardSelectors, {
+          clipPath: "inset(0% 0% 100% 0%)",
+          yPercent: 100,
+        });
+
+        ScrollTrigger.create({
+          trigger: ".button-shop",
+          start: "top 75%",
+          onEnter: () => {
+            gsap.to(".button-shop", {
+              clipPath: "inset(0% 0% 0% 0%)",
+              yPercent: 0,
+              duration: 0.8,
+              stagger: 0.1,
+              ease: "power1.inOut",
+            });
+          },
+        });
+
+        ScrollTrigger.create({
+          trigger: ".container-card-product",
+          start: "top 75%",
+          onEnter: () => {
+            gsap.to(cardSelectors, {
+              clipPath: "inset(0% 0% 0% 0%)",
+              yPercent: 0,
+              duration: 0.8,
+              stagger: 0.1,
+              ease: "power1.inOut",
+            });
+          },
+        });
+
+        ScrollTrigger.create({
+          trigger: ".container-pagination",
+          start: "top 90%",
+          onEnter: () => {
+            gsap.to(".text-pagination", {
+              clipPath: "inset(0% 0% 0% 0%)",
+              yPercent: 0,
+              duration: 0.8,
+              stagger: 0.1,
+              ease: "power1.inOut",
+            });
+            gsap.to(".text-pagination-left", {
+              clipPath: "inset(0% 0% 0% 0%)",
+              xPercent: 0,
+              duration: 0.8,
+              stagger: 0.1,
+              ease: "power1.inOut",
+            });
+            gsap.to(".text-pagination-right", {
+              clipPath: "inset(0% 0% 0% 0%)",
+              xPercent: 0,
+              duration: 0.8,
+              stagger: 0.1,
+              ease: "power1.inOut",
+            });
+          },
+        });
+      }
     );
-
-    gsap.set(cardSelectors, {
-      clipPath: "inset(0% 0% 100% 0%)",
-      yPercent: 100,
-    });
-
-    ScrollTrigger.create({
-      trigger: ".button-shop",
-      start: "top 75%",
-      onEnter: () => {
-        gsap.to(".button-shop", {
-          clipPath: "inset(0% 0% 0% 0%)",
-          yPercent: 0,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: "power1.inOut",
-        });
-      },
-    });
-
-    ScrollTrigger.create({
-      trigger: ".container-card-product",
-      start: "top 75%",
-      onEnter: () => {
-        gsap.to(cardSelectors, {
-          clipPath: "inset(0% 0% 0% 0%)",
-          yPercent: 0,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: "power1.inOut",
-        });
-      },
-    });
-
-    ScrollTrigger.create({
-      trigger: ".container-pagination",
-      start: "top 90%",
-      onEnter: () => {
-        gsap.to(".text-pagination", {
-          clipPath: "inset(0% 0% 0% 0%)",
-          yPercent: 0,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: "power1.inOut",
-        });
-        gsap.to(".text-pagination-left", {
-          clipPath: "inset(0% 0% 0% 0%)",
-          xPercent: 0,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: "power1.inOut",
-        });
-        gsap.to(".text-pagination-right", {
-          clipPath: "inset(0% 0% 0% 0%)",
-          xPercent: 0,
-          duration: 0.8,
-          stagger: 0.1,
-          ease: "power1.inOut",
-        });
-      },
-    });
   }, []);
 
   return (
