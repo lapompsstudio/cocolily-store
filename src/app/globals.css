@@ -183,7 +183,7 @@ input:focus {
   transition: fill 0.3s ease-in-out;
 }
 
-.navbar-white a {
+.navbar-white .nav-link {
   color: #fff;
   transition: color 0.3s ease-in-out;
 }

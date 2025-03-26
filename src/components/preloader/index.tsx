@@ -99,7 +99,6 @@ const Preloader = () => {
         .to(".circle-outter", {
           rotate: 270,
           duration: 1.2,
-          delay: 0.5,
           ease: "power1.inOut",
         })
         .to(
