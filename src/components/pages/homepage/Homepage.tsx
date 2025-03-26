@@ -7,9 +7,11 @@ import EventsHomepage from "./EventsHomepage";
 import ShopOurProducts from "./ShopOurProducts";
 import Hero from "./Hero";
 import CursorFollow from "@/components/ui/CursorFollow";
+import useScrollAndLenis from "@/app/hooks/useScrollAndLenis";
 
 const Homepage = () => {
   const [isRenderFooter, setIsRenderFooter] = useState<boolean>(false);
+  useScrollAndLenis(11000);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
