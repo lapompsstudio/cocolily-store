@@ -152,6 +152,7 @@ module.exports = {
         "230d": "calc((230/var(--bw)*100vw))",
         "231d": "calc((231/var(--bw)*100vw))",
         "264d": "calc((264/var(--bw)*100vw))",
+        "300d": "calc((300/var(--bw)*100vw))",
         "315d": "calc((315/var(--bw)*100vw))",
         "334d": "calc((334/var(--bw)*100vw))",
         "353d": "calc((353/var(--bw)*100vw))",
@@ -230,6 +231,7 @@ module.exports = {
         "1425d": "calc((1425/var(--bw)*100vw))",
       },
       width: {
+        "2d": "calc((2/var(--bw)*100vw))",
         "20d": "calc((20/var(--bw)*100vw))",
         "22d": "calc((22/var(--bw)*100vw))",
         "29d": "calc((29/var(--bw)*100vw))",
@@ -245,6 +247,7 @@ module.exports = {
         "221d": "calc((221/var(--bw)*100vw))",
         "224d": "calc((224/var(--bw)*100vw))",
         "290d": "calc((290/var(--bw)*100vw))",
+        "300d": "calc((300/var(--bw)*100vw))",
         "350d": "calc((350/var(--bw)*100vw))",
         "355d": "calc((355/var(--bw)*100vw))",
         "537d": "calc((537/var(--bw)*100vw))",

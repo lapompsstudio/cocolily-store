@@ -38,7 +38,7 @@ const Hero = () => {
       });
 
       const tl = gsap.timeline({
-        delay: 8,
+        delay: 7.5,
       });
 
       tl.to(".alphabet", {

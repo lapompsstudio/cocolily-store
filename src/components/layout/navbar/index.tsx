@@ -40,13 +40,13 @@ export function Navbar() {
         </div>
 
         <div className="flex flex-1 gap-90d justify-end md:w-1/3">
-          <Link href={"/"} className="text-ruby-red text-10d">
+          <Link href={"/"} className="nav-link text-ruby-red text-10d">
             SHOP <br /> OUR PRODUCT
           </Link>
-          <Link href={"/"} className="text-ruby-red text-10d">
+          <Link href={"/"} className="nav-link text-ruby-red text-10d">
             SEE <br /> OUR EVENTS
           </Link>
-          <Link href={"/"} className="text-ruby-red text-10d">
+          <Link href={"/"} className="nav-link text-ruby-red text-10d">
             ABOUT US
           </Link>
 
