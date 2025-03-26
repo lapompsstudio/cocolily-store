@@ -6,6 +6,7 @@ import Footer from "@/components/layout/footer";
 import EventsHomepage from "./EventsHomepage";
 import ShopOurProducts from "./ShopOurProducts";
 import Hero from "./Hero";
+import CursorFollow from "@/components/ui/CursorFollow";
 
 const Homepage = () => {
   const [isRenderFooter, setIsRenderFooter] = useState<boolean>(false);
@@ -22,6 +23,7 @@ const Homepage = () => {
 
   return (
     <>
+      <CursorFollow />
       <Hero />
       <OurMission />
       <ShopOurProducts />
