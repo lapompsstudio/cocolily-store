@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import MobileMenu from "./mobile-menu";
 import Logo from "@/components/logo";
@@ -8,10 +10,21 @@ import { getMenu } from "@/lib/shopify";
 import Search from "./search";
 import CartModal from "@/components/cart/modal";
 import AuthBtn from "@/components/layout/navbar/auth-btn";
+import { useNavbarColorStore } from "@/store/navbarColorStore";
+import clsx from "clsx";
 
-export async function Navbar() {
+export function Navbar() {
+  const { isNavbarWhite } = useNavbarColorStore();
+
   return (
-    <nav className="flex items-center justify-between p-20d fixed top-0 backdrop-blur-sm z-[999] w-full">
+    <nav
+      className={clsx(
+        "flex items-center justify-between p-20d fixed top-0 backdrop-blur-sm z-[999] w-full",
+        {
+          "navbar-white": isNavbarWhite,
+        }
+      )}
+    >
       <div className="block flex-none md:hidden">
         <MobileMenu />
       </div>
