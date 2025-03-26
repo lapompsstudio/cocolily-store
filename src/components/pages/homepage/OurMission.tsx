@@ -14,217 +14,205 @@ export default function OurMission() {
   const { setIsNavbarWhite } = useNavbarColorStore();
 
   useGSAP(() => {
-    const mm = gsap.matchMedia();
-
-    mm.add(
+    gsap.set(
+      [
+        ".text-anim-at-cocolily",
+        ".text-anim-at-cocolily-01",
+        ".chocolate-at-cocolily",
+        ".maroon-at-cocolily",
+        ".icon-at-cocolily-02",
+      ],
       {
-        isPortrait: "(orientation: portrait)",
-        isLandscape: "(orientation: landscape)",
-        md: "(min-width: 768px) and (orientation: landscape)",
-        maxXXs: "(max-width: 767.98px)",
-      },
-      (context) => {
-        gsap.set(
-          [
-            ".text-anim-at-cocolily",
-            ".text-anim-at-cocolily-01",
-            ".chocolate-at-cocolily",
-            ".maroon-at-cocolily",
-            ".icon-at-cocolily-02",
-          ],
-          {
-            clipPath: "inset(0% 0% 100% 0%)",
-            yPercent: 100,
-            marginBottom: "-16px",
-            paddingBottom: "16px",
-          }
-        );
-
-        // section 0
-        const tl = gsap.timeline({
-          scrollTrigger: {
-            trigger: ".container-at-cocolily",
-            start: "30% 95%",
-            end: "95% 95%",
-            scrub: 1,
-            // pin: true,
-            // markers: true,
-          },
-        });
-
-        tl.to(".text-anim-at-cocolily", {
-          clipPath: "inset(0% 0% 0% 0%)",
-          yPercent: 0,
-          ease: "power1.inOut",
-          stagger: 0.1,
-        });
-        tl.to(".maroon-at-cocolily", {
-          clipPath: "inset(0% 0% 0% 0%)",
-          yPercent: 0,
-          ease: "power1.inOut",
-        });
-
-        // section 1
-        const tl1 = gsap.timeline({
-          scrollTrigger: {
-            trigger: ".container-at-cocolily",
-            start: "top top",
-            end: "bottom+=3000",
-            scrub: 1,
-            pin: true,
-            onEnter: () => setIsNavbarWhite(true),
-            onLeaveBack: () => setIsNavbarWhite(false),
-            // markers: true,
-          },
-        });
-
-        // section 1
-        tl1.to(".text-anim-at-cocolily-than", {
-          x: "-16%",
-          ease: "power1.inOut",
-        });
-        tl1.to(
-          ".text-anim-at-cocolily-we",
-          { x: "70%", ease: "power1.inOut" },
-          "<"
-        );
-        tl1.to(
-          ".chocolate-at-cocolily",
-          { clipPath: "inset(0% 0% 0% 0%)", yPercent: 0, ease: "power1.inOut" },
-          "<"
-        );
-
-        // section 2
-        tl1.to(".text-anim-at-cocolily", {
-          clipPath: "inset(100% 0% 0% 0%)",
-          yPercent: -100,
-          ease: "power1.inOut",
-          stagger: 0.1,
-        });
-        tl1.to(
-          ".text-anim-at-cocolily-01",
-          {
-            clipPath: "inset(0% 0% 0% 0%)",
-            yPercent: 0,
-            ease: "power1.inOut",
-            stagger: 0.1,
-            color: "#DB0032",
-          },
-          "-=0.4"
-        );
-        tl1.to(
-          ".container-at-cocolily",
-          {
-            backgroundColor: "#F9EFED",
-            yPercent: 0,
-            ease: "power1.inOut",
-            stagger: 0.1,
-            onStart: () => setIsNavbarWhite(false),
-            onReverseComplete: () => setIsNavbarWhite(true),
-          },
-          "<"
-        );
-        tl1.to(
-          ".maroon-icon",
-          {
-            fill: "#DB0032",
-            ease: "power1.inOut",
-          },
-          "<"
-        );
-        tl1.to(
-          ".container-chocolate-at-cocolily",
-          {
-            top: "27%",
-            ease: "power1.inOut",
-          },
-          "<"
-        );
-
-        // section 3
-        tl1.to(".text-anim-at-cocolily-is-to-celebrate", {
-          x: "-15%",
-          ease: "power1.inOut",
-        });
-        tl1.to(
-          ".text-anim-at-cocolily-sweetness",
-          {
-            x: "20%",
-            ease: "power1.inOut",
-          },
-          "<"
-        );
-        tl1.to(
-          ".icon-at-cocolily-02",
-          {
-            clipPath: "inset(0% 0% 0% 0%)",
-            yPercent: 0,
-            ease: "power1.inOut",
-          },
-          "<"
-        );
-
-        // section 4
-        tl1.to(".container-chocolate-box-at-cocolily", {
-          bottom: "53%",
-          ease: "power1.inOut",
-        });
-        tl1.to(
-          ".container-chocolate-at-cocolily",
-          {
-            top: "40%",
-            ease: "power1.inOut",
-          },
-          "<"
-        );
-
-        // section 5
-        tl1.to(".container-chocolate-box-at-cocolily", {
-          bottom: "60%",
-          ease: "power1.inOut",
-        });
-        tl1.to(
-          ".container-chocolate-at-cocolily",
-          {
-            right: "31.2%",
-            rotate: 15,
-            scale: 0.5,
-            top: "59.2%",
-            ease: "power1.inOut",
-          },
-          "<"
-        );
-        tl1.to(
-          ".shadow-chocolate",
-          {
-            autoAlpha: 0,
-            ease: "power1.inOut",
-          },
-          "<"
-        );
-        tl1.to(
-          ".container-chocolate-box-top-at-cocolily",
-          {
-            top: "34%",
-            ease: "power1.inOut",
-          },
-          "<"
-        );
-
-        // section 6
-        tl1.to(".container-chocolate-bottom", {
-          top: "-10.6601%",
-          ease: "power1.inOut",
-        });
-        tl1.to(
-          ".container-chocolate-box-top-at-cocolily",
-          {
-            top: "63.5436%",
-            ease: "power1.inOut",
-          },
-          "<"
-        );
+        clipPath: "inset(0% 0% 100% 0%)",
+        yPercent: 100,
+        marginBottom: "-16px",
+        paddingBottom: "16px",
       }
+    );
+
+    // section 0
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".container-at-cocolily",
+        start: "30% 95%",
+        end: "95% 95%",
+        scrub: 1,
+        // pin: true,
+        // markers: true,
+      },
+    });
+
+    tl.to(".text-anim-at-cocolily", {
+      clipPath: "inset(0% 0% 0% 0%)",
+      yPercent: 0,
+      ease: "power1.inOut",
+      stagger: 0.1,
+    });
+    tl.to(".maroon-at-cocolily", {
+      clipPath: "inset(0% 0% 0% 0%)",
+      yPercent: 0,
+      ease: "power1.inOut",
+    });
+
+    // section 1
+    const tl1 = gsap.timeline({
+      scrollTrigger: {
+        trigger: ".container-at-cocolily",
+        start: "top top",
+        end: "bottom+=3000",
+        scrub: 1,
+        pin: true,
+        onEnter: () => setIsNavbarWhite(true),
+        onLeaveBack: () => setIsNavbarWhite(false),
+        // markers: true,
+      },
+    });
+
+    // section 1
+    tl1.to(".text-anim-at-cocolily-than", {
+      x: "-16%",
+      ease: "power1.inOut",
+    });
+    tl1.to(
+      ".text-anim-at-cocolily-we",
+      { x: "70%", ease: "power1.inOut" },
+      "<"
+    );
+    tl1.to(
+      ".chocolate-at-cocolily",
+      { clipPath: "inset(0% 0% 0% 0%)", yPercent: 0, ease: "power1.inOut" },
+      "<"
+    );
+
+    // section 2
+    tl1.to(".text-anim-at-cocolily", {
+      clipPath: "inset(100% 0% 0% 0%)",
+      yPercent: -100,
+      ease: "power1.inOut",
+      stagger: 0.1,
+    });
+    tl1.to(
+      ".text-anim-at-cocolily-01",
+      {
+        clipPath: "inset(0% 0% 0% 0%)",
+        yPercent: 0,
+        ease: "power1.inOut",
+        stagger: 0.1,
+        color: "#DB0032",
+      },
+      "-=0.4"
+    );
+    tl1.to(
+      ".container-at-cocolily",
+      {
+        backgroundColor: "#F9EFED",
+        yPercent: 0,
+        ease: "power1.inOut",
+        stagger: 0.1,
+        onStart: () => setIsNavbarWhite(false),
+        onReverseComplete: () => setIsNavbarWhite(true),
+      },
+      "<"
+    );
+    tl1.to(
+      ".maroon-icon",
+      {
+        fill: "#DB0032",
+        ease: "power1.inOut",
+      },
+      "<"
+    );
+    tl1.to(
+      ".container-chocolate-at-cocolily",
+      {
+        top: "27%",
+        ease: "power1.inOut",
+      },
+      "<"
+    );
+
+    // section 3
+    tl1.to(".text-anim-at-cocolily-is-to-celebrate", {
+      x: "-15%",
+      ease: "power1.inOut",
+    });
+    tl1.to(
+      ".text-anim-at-cocolily-sweetness",
+      {
+        x: "20%",
+        ease: "power1.inOut",
+      },
+      "<"
+    );
+    tl1.to(
+      ".icon-at-cocolily-02",
+      {
+        clipPath: "inset(0% 0% 0% 0%)",
+        yPercent: 0,
+        ease: "power1.inOut",
+      },
+      "<"
+    );
+
+    // section 4
+    tl1.to(".container-chocolate-box-at-cocolily", {
+      bottom: "53%",
+      ease: "power1.inOut",
+    });
+    tl1.to(
+      ".container-chocolate-at-cocolily",
+      {
+        top: "40%",
+        ease: "power1.inOut",
+      },
+      "<"
+    );
+
+    // section 5
+    tl1.to(".container-chocolate-box-at-cocolily", {
+      bottom: "60%",
+      ease: "power1.inOut",
+    });
+    tl1.to(
+      ".container-chocolate-at-cocolily",
+      {
+        right: "31.2%",
+        rotate: 15,
+        scale: 0.5,
+        top: "59.2%",
+        ease: "power1.inOut",
+      },
+      "<"
+    );
+    tl1.to(
+      ".shadow-chocolate",
+      {
+        autoAlpha: 0,
+        ease: "power1.inOut",
+      },
+      "<"
+    );
+    tl1.to(
+      ".container-chocolate-box-top-at-cocolily",
+      {
+        top: "34%",
+        ease: "power1.inOut",
+      },
+      "<"
+    );
+
+    // section 6
+    tl1.to(".container-chocolate-bottom", {
+      top: "-10.6601%",
+      ease: "power1.inOut",
+    });
+    tl1.to(
+      ".container-chocolate-box-top-at-cocolily",
+      {
+        top: "63.5436%",
+        ease: "power1.inOut",
+      },
+      "<"
     );
   }, []);
 
