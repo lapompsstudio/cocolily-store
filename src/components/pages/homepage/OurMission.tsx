@@ -6,10 +6,13 @@ import GradientImage from "@/components/ui/GradientImage";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
+import { useNavbarColorStore } from "@/store/navbarColorStore";
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function OurMission() {
+  const { setIsNavbarWhite } = useNavbarColorStore();
+
   useGSAP(() => {
     const mm = gsap.matchMedia();
 
@@ -69,6 +72,8 @@ export default function OurMission() {
             end: "bottom+=3000",
             scrub: 1,
             pin: true,
+            onEnter: () => setIsNavbarWhite(true),
+            onLeaveBack: () => setIsNavbarWhite(false),
             // markers: true,
           },
         });
@@ -114,6 +119,8 @@ export default function OurMission() {
             yPercent: 0,
             ease: "power1.inOut",
             stagger: 0.1,
+            onStart: () => setIsNavbarWhite(false),
+            onReverseComplete: () => setIsNavbarWhite(true),
           },
           "<"
         );
