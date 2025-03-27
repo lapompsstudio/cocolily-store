@@ -92,7 +92,7 @@ const CursorFollow = () => {
       }`}
       style={{ willChange: "transform" }} // Optimisasi performa animasi
     >
-      <div className="font-abc font-bold text-sm leading-none text-white text-center">
+      <div className="font-abc font-bold text-11d leading-none text-white text-center">
         LEARN MORE
       </div>
     </div>
