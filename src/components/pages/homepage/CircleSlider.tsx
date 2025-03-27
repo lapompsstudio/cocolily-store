@@ -1,26 +1,34 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import gsap from "gsap";
 import ArrowButton from "@/components/ui/ArrowButton";
 import Image from "next/image";
 import clsx from "clsx";
 
 interface SliderItem {
-  image: string;
+  file: string;
+  logo: string;
   desc: string;
+  type: string;
 }
 
 const SLIDER_DATA: SliderItem[] = [
   {
-    image: "/homepage/hero/swiper/Event 1.png",
+    file: "/homepage/hero/swiper/Event 1.png",
+    logo: "/homepage/hero/swiper/Logo.png",
     desc: "Cocolily country club",
+    type: "img",
   },
   {
-    image: "/homepage/hero/swiper/Event 2.png",
+    file: "/homepage/hero/swiper/Event 2.png",
+    logo: "/homepage/hero/swiper/Logo.png",
     desc: "Cocolily Carvanal",
+    type: "img",
   },
   {
-    image: "/homepage/hero/swiper/Event 3.png",
+    file: "/homepage/hero/swiper/sample.mp4",
+    logo: "/homepage/hero/swiper/Logo.png",
     desc: "Home Bakery X Cocolily",
+    type: "video",
   },
 ];
 
@@ -40,11 +48,17 @@ function getVisibleItems(
 
 const CircleSlider: React.FC = () => {
   const circleRef = useRef<HTMLDivElement>(null);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
   const [rotation, setRotation] = useState(0);
   const [radius, setRadius] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleItems, setVisibleItems] = useState<SliderItem[][]>([]);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
+
+  // Initialize video refs array
+  useEffect(() => {
+    videoRefs.current = Array(TOTAL_ITEMS).fill(null);
+  }, []);
 
   // Initialize visible items
   useEffect(() => {
@@ -67,6 +81,33 @@ const CircleSlider: React.FC = () => {
     return () => window.removeEventListener("resize", updateRadius);
   }, []);
 
+  // Handle video play/pause when currentIndex changes
+  useEffect(() => {
+    videoRefs.current.forEach((video, index) => {
+      if (!video) return;
+
+      try {
+        if (
+          index === currentIndex &&
+          SLIDER_DATA[index % SLIDER_DATA.length].type === "video"
+        ) {
+          video.play().catch((e) => console.error("Video play failed:", e));
+        } else {
+          video.pause();
+        }
+      } catch (error) {
+        console.error("Error controlling video:", error);
+      }
+    });
+  }, [currentIndex]);
+
+  const setVideoRef = useCallback(
+    (index: number) => (el: HTMLVideoElement | null) => {
+      videoRefs.current[index] = el;
+    },
+    []
+  );
+
   const rotateCircle = (direction: "next" | "prev") => {
     handleAnimationDesc(direction);
     setIsAnimating(true);
@@ -85,9 +126,9 @@ const CircleSlider: React.FC = () => {
         setIsAnimating(false);
         setCurrentIndex((prev) => {
           if (direction === "next") {
-            return (prev + 1) % 6; // Tetap bisa mencapai index 5
+            return (prev + 1) % TOTAL_ITEMS;
           } else {
-            return (prev - 1 + 6) % 6; // Looping ke belakang
+            return (prev - 1 + TOTAL_ITEMS) % TOTAL_ITEMS;
           }
         });
       },
@@ -109,7 +150,7 @@ const CircleSlider: React.FC = () => {
       );
 
       gsap.fromTo(
-        `.desc-circle-${(currentIndex + 1 + 6) % 6}`,
+        `.desc-circle-${(currentIndex + 1) % TOTAL_ITEMS}`,
         {
           transform: "translateY(300%)",
         },
@@ -133,7 +174,7 @@ const CircleSlider: React.FC = () => {
       );
 
       gsap.fromTo(
-        `.desc-circle-${(currentIndex - 1 + 6) % 6}`,
+        `.desc-circle-${(currentIndex - 1 + TOTAL_ITEMS) % TOTAL_ITEMS}`,
         {
           transform: "translateY(-300%)",
         },
@@ -176,7 +217,7 @@ const CircleSlider: React.FC = () => {
         <div
           key={i}
           className={clsx(
-            "absolute w-672d h-672d rounded-full flex items-center justify-center text-white font-bold",
+            "absolute w-672d h-672d rounded-full flex items-center justify-center text-white font-bold overflow-hidden",
             `circle-item-${i}`,
             {
               "cursor-follow-active": i === currentIndex,
@@ -186,13 +227,38 @@ const CircleSlider: React.FC = () => {
             transform: `rotate(${angle}deg) translateY(-${radius}px) rotate(0deg)`,
           }}
         >
-          <div className="w-full h-full rounded-full relative">
-            <Image
-              src={item.image}
-              alt={"image"}
-              fill
-              className="w-full h-full object-cover"
-            />
+          <div className="relative w-full h-full rounded-full overflow-hidden">
+            {/* logo */}
+            {item.logo && (
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10">
+                <div className="w-537d h-537d relative">
+                  <Image
+                    src={item.logo}
+                    alt="logo"
+                    fill
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+            )}
+
+            {item.type === "img" ? (
+              <Image
+                src={item.file}
+                alt={"image"}
+                fill
+                className="w-full h-full object-cover scale-105"
+              />
+            ) : (
+              <video
+                ref={setVideoRef(i)}
+                className="w-full h-full object-cover scale-105"
+                src={item.file}
+                loop
+                muted
+                playsInline
+              />
+            )}
           </div>
         </div>
       );
