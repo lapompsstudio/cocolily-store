@@ -7,6 +7,7 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import useSplitTextAnimation from "@/app/hooks/useSplitTextAnimation";
 import useColorStore from "@/store/colorStore";
+import { globalStore } from "@/store/globalStore";
 
 gsap.registerPlugin(useGSAP);
 
@@ -40,6 +41,7 @@ const Footer: React.FC = () => {
   const [dragStartTime, setDragStartTime] = useState<number>(0);
   const [dragPositions, setDragPositions] = useState<Position[]>([]);
   const animationFrameRef = useRef<number | null>(null);
+  const globalData = globalStore((state) => state.globalData);
 
   useSplitTextAnimation({
     selector: ".footer-text-anim",
@@ -541,19 +543,23 @@ const Footer: React.FC = () => {
                 href={"/"}
                 className="footer-text-anim text-ruby-red text-16d font-bold leading-none uppercase font-abc block"
               >
-                8 17A St - Al Bada&rsquo;a - Dubai - United Arab Emirates
+                {globalData?.address_location}
               </Link>
             </div>
             <div className="space-y-20d">
               <h3 className="footer-text-anim text-10d text-ruby-red leading-1.3">
                 FOLLOW US
               </h3>
-              <Link
-                href={"/"}
-                className="footer-text-anim text-ruby-red text-16d font-bold leading-none uppercase font-abc block"
-              >
-                INSTAGRAM
-              </Link>
+              {globalData?.social.map((social) => (
+                <Link
+                  key={social.id}
+                  href={social.links}
+                  target="_blank"
+                  className="footer-text-anim text-ruby-red text-16d font-bold leading-none uppercase font-abc block"
+                >
+                  {social.name}
+                </Link>
+              ))}
             </div>
           </div>
         </div>
@@ -561,21 +567,21 @@ const Footer: React.FC = () => {
           <div className="md:col-span-6">
             <Button
               buttonType="link"
-              href="mailto:hello@cocolily.ae"
+              href={`mailto:${globalData?.email}`}
               variant="secondary"
-              className="h-72d text-16d font-abc"
+              className="h-72d text-16d font-abc uppercase"
             >
-              EMAIL: HELLO@COCOLILY.AE
+              EMAIL: {globalData?.email}
             </Button>
           </div>
           <div className="md:col-span-6">
             <Button
               buttonType="link"
-              href="tel:+971504181411"
+              href={`tel:${globalData?.phone_number?.replace(/[\s()]+/g, "")}`}
               variant="secondary"
-              className="h-72d text-16d font-abc"
+              className="h-72d text-16d font-abc uppercase"
             >
-              PHONE NUMBER: (+971) 50 418 1411
+              PHONE NUMBER: {globalData?.phone_number}
             </Button>
           </div>
         </div>
