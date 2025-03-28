@@ -1,19 +1,20 @@
 "use client";
+import { useEffect, useState, useMemo, useCallback } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import ScrollTrigger from "gsap/ScrollTrigger";
 import Button from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import ArrowButton from "@/components/ui/ArrowButton";
 import CardProduct from "./CardProduct";
-// Import Swiper components and styles
+
+// Swiper imports
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/effect-fade";
-import { Navigation, Pagination, EffectFade } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
-import type { Swiper as SwiperType } from "swiper";
-import ArrowButton from "@/components/ui/ArrowButton";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import ScrollTrigger from "gsap/ScrollTrigger";
 
 // Define TypeScript interfaces
 interface Product {
@@ -23,6 +24,7 @@ interface Product {
   imageAlt: string;
 }
 
+// Register GSAP plugins
 gsap.registerPlugin(ScrollTrigger);
 
 export default function ShopOurProducts(): JSX.Element {
@@ -30,217 +32,229 @@ export default function ShopOurProducts(): JSX.Element {
   const [swiper, setSwiper] = useState<SwiperType | null>(null);
   const [activeIndex, setActiveIndex] = useState<number>(0);
 
-  // Enhanced dummy data with more realistic product information
-  const shopProducts: Product[] = [
-    {
-      id: 1,
-      title: "Classic Chocolate Truffles",
-      imageSrc: "/images/our-products/image.png",
-      imageAlt: "Assorted chocolate truffles in a luxury box",
-    },
-    {
-      id: 2,
-      title: "Gourmet Macarons",
-      imageSrc: "/images/our-products/image1.png",
-      imageAlt: "Colorful French macarons arranged in a gift box",
-    },
-    {
-      id: 3,
-      title: "Artisanal Pralines",
-      imageSrc: "/images/our-products/image2.png",
-      imageAlt: "Handcrafted Belgian pralines with elegant designs",
-    },
-    {
-      id: 4,
-      title: "Luxury Bonbon Collection",
-      imageSrc: "/images/our-products/image.png",
-      imageAlt: "Assorted bonbons with decorative finishes",
-    },
-    {
-      id: 5,
-      title: "Dark Chocolate Assortment",
-      imageSrc: "/images/our-products/image1.png",
-      imageAlt: "Premium dark chocolate selection in a gift box",
-    },
-    {
-      id: 6,
-      title: "Seasonal Berry Chocolates",
-      imageSrc: "/images/our-products/image2.png",
-      imageAlt: "Chocolates with seasonal berry fillings",
-    },
-    {
-      id: 7,
-      title: "Hazelnut Chocolate Bars",
-      imageSrc: "/images/our-products/image.png",
-      imageAlt: "Artisanal chocolate bars with hazelnut pieces",
-    },
-    {
-      id: 8,
-      title: "Spiced Caramel Collection",
-      imageSrc: "/images/our-products/image1.png",
-      imageAlt: "Assorted caramel-filled chocolates with exotic spices",
-    },
-    {
-      id: 9,
-      title: "Ruby Chocolate Selection",
-      imageSrc: "/images/our-products/image2.png",
-      imageAlt: "Luxurious ruby chocolate assortment in gift packaging",
-    },
-  ];
+  // Moved product data outside component to avoid re-creation on each render
+  const shopProducts: Product[] = useMemo(
+    () => [
+      {
+        id: 1,
+        title: "Classic Chocolate Truffles",
+        imageSrc: "/images/our-products/image.png",
+        imageAlt: "Assorted chocolate truffles in a luxury box",
+      },
+      {
+        id: 2,
+        title: "Gourmet Macarons",
+        imageSrc: "/images/our-products/image1.png",
+        imageAlt: "Colorful French macarons arranged in a gift box",
+      },
+      {
+        id: 3,
+        title: "Artisanal Pralines",
+        imageSrc: "/images/our-products/image2.png",
+        imageAlt: "Handcrafted Belgian pralines with elegant designs",
+      },
+      {
+        id: 4,
+        title: "Luxury Bonbon Collection",
+        imageSrc: "/images/our-products/image.png",
+        imageAlt: "Assorted bonbons with decorative finishes",
+      },
+      {
+        id: 5,
+        title: "Dark Chocolate Assortment",
+        imageSrc: "/images/our-products/image1.png",
+        imageAlt: "Premium dark chocolate selection in a gift box",
+      },
+      {
+        id: 6,
+        title: "Seasonal Berry Chocolates",
+        imageSrc: "/images/our-products/image2.png",
+        imageAlt: "Chocolates with seasonal berry fillings",
+      },
+      {
+        id: 7,
+        title: "Hazelnut Chocolate Bars",
+        imageSrc: "/images/our-products/image.png",
+        imageAlt: "Artisanal chocolate bars with hazelnut pieces",
+      },
+      {
+        id: 8,
+        title: "Spiced Caramel Collection",
+        imageSrc: "/images/our-products/image1.png",
+        imageAlt: "Assorted caramel-filled chocolates with exotic spices",
+      },
+      {
+        id: 9,
+        title: "Ruby Chocolate Selection",
+        imageSrc: "/images/our-products/image2.png",
+        imageAlt: "Luxurious ruby chocolate assortment in gift packaging",
+      },
+    ],
+    []
+  );
 
-  // Handle tab change with transitions
-  const handleTabChange = (tab: "shop" | "create"): void => {
-    // If we're already on this tab, do nothing
-    if (activeTab === tab) return;
+  // Calculate total slides once
+  const totalSlides = useMemo(
+    () => Math.ceil(shopProducts.length / 3),
+    [shopProducts.length]
+  );
 
-    // First, add a transition class to the current active tab
-    const currentActiveButton = document.querySelector(`.button-shop.active`);
-    if (currentActiveButton) {
-      // We'll add a transitioning-out class
-      currentActiveButton.classList.add("transitioning-out");
-
-      // After animation completes, remove both classes
-      setTimeout(() => {
-        currentActiveButton.classList.remove("active");
-        currentActiveButton.classList.remove("transitioning-out");
-      }, 300); // Match this with your transition time (0.3s)
-    }
-
-    // Set the new active tab
-    setActiveTab(tab);
-  };
-
-  // Handle slide change
-  const handleSlideChange = (swiperInstance: SwiperType): void => {
-    setActiveIndex(swiperInstance.activeIndex);
-  };
-
-  // Format the pagination text
-  const formatPaginationText = (): string => {
+  // Format pagination text
+  const paginationText = useMemo(() => {
     const currentPage = activeIndex + 1;
-    const totalPages = Math.ceil(shopProducts.length / 3);
-    return `${String(currentPage).padStart(2, "0")} / ${String(totalPages).padStart(2, "0")}`;
-  };
+    return `${String(currentPage).padStart(2, "0")} / ${String(totalSlides).padStart(2, "0")}`;
+  }, [activeIndex, totalSlides]);
 
+  // Memoized callbacks to avoid recreating functions on each render
+  const handleTabChange = useCallback(
+    (tab: "shop" | "create"): void => {
+      if (activeTab === tab) return;
+
+      const currentActiveButton = document.querySelector(`.button-shop.active`);
+      if (currentActiveButton) {
+        currentActiveButton.classList.add("transitioning-out");
+
+        setTimeout(() => {
+          currentActiveButton.classList.remove("active", "transitioning-out");
+        }, 300);
+      }
+
+      setActiveTab(tab);
+    },
+    [activeTab]
+  );
+
+  const handleSlideChange = useCallback((swiperInstance: SwiperType): void => {
+    setActiveIndex(swiperInstance.activeIndex);
+  }, []);
+
+  const goPrev = useCallback((): void => {
+    swiper?.slidePrev(800);
+  }, [swiper]);
+
+  const goNext = useCallback((): void => {
+    swiper?.slideNext(800);
+  }, [swiper]);
+
+  // Reset swiper when tab changes
   useEffect(() => {
-    // Reset swiper when tab changes
     if (swiper && activeTab === "shop") {
-      swiper.slideTo(0, 800); // 800ms transition when resetting
+      swiper.slideTo(0, 800);
       setActiveIndex(0);
     }
   }, [activeTab, swiper]);
 
-  // Handle prev slide with 800ms transition
-  const goPrev = (): void => {
-    if (swiper) {
-      swiper.slidePrev(800);
-    }
-  };
-
-  // Handle next slide with 800ms transition
-  const goNext = (): void => {
-    if (swiper) {
-      swiper.slideNext(800);
-    }
-  };
-
-  // Calculate total number of slides for shop section
-  const totalSlides = Math.ceil(shopProducts.length / 3);
-
+  // GSAP animations
   useGSAP(() => {
-    const mm = gsap.matchMedia();
-
-    mm.add(
-      {
-        isPortrait: "(orientation: portrait)",
-        isLandscape: "(orientation: landscape)",
-        md: "(min-width: 768px) and (orientation: landscape)",
-        maxXXs: "(max-width: 767.98px)",
-      },
-      (context) => {
-        gsap.set([".button-shop", ".text-pagination"], {
-          clipPath: "inset(0% 0% 100% 0%)",
-          yPercent: 100,
-        });
-        gsap.set([".text-pagination-left"], {
-          clipPath: "inset(0% 100% 0% 0%)",
-          xPercent: 100,
-        });
-        gsap.set([".text-pagination-right"], {
-          clipPath: "inset(0% 0% 0% 100%)",
-          xPercent: -100,
-        });
-
-        const cardSelectors = shopProducts.map(
-          (_, index) => `.card-product-${index + 1}`
-        );
-
-        gsap.set(cardSelectors, {
-          clipPath: "inset(0% 0% 100% 0%)",
-          yPercent: 100,
-        });
-
-        ScrollTrigger.create({
-          trigger: ".button-shop",
-          start: "top 75%",
-          onEnter: () => {
-            gsap.to(".button-shop", {
-              clipPath: "inset(0% 0% 0% 0%)",
-              yPercent: 0,
-              duration: 0.8,
-              stagger: 0.1,
-              ease: "power1.inOut",
-            });
-          },
-        });
-
-        ScrollTrigger.create({
-          trigger: ".container-card-product",
-          start: "top 75%",
-          onEnter: () => {
-            gsap.to(cardSelectors, {
-              clipPath: "inset(0% 0% 0% 0%)",
-              yPercent: 0,
-              duration: 0.8,
-              stagger: 0.1,
-              ease: "power1.inOut",
-            });
-          },
-        });
-
-        ScrollTrigger.create({
-          trigger: ".container-pagination",
-          start: "top 90%",
-          onEnter: () => {
-            gsap.to(".text-pagination", {
-              clipPath: "inset(0% 0% 0% 0%)",
-              yPercent: 0,
-              duration: 0.8,
-              stagger: 0.1,
-              ease: "power1.inOut",
-            });
-            gsap.to(".text-pagination-left", {
-              clipPath: "inset(0% 0% 0% 0%)",
-              xPercent: 0,
-              duration: 0.8,
-              stagger: 0.1,
-              ease: "power1.inOut",
-            });
-            gsap.to(".text-pagination-right", {
-              clipPath: "inset(0% 0% 0% 0%)",
-              xPercent: 0,
-              duration: 0.8,
-              stagger: 0.1,
-              ease: "power1.inOut",
-            });
-          },
-        });
-      }
+    // Prepare selectors for animations
+    const cardSelectors = shopProducts.map(
+      (_, index) => `.card-product-${index + 1}`
     );
-  }, []);
+
+    // Initial state setup
+    gsap.set([".button-shop", ".text-pagination"], {
+      clipPath: "inset(0% 0% 100% 0%)",
+      yPercent: 100,
+    });
+
+    gsap.set([".text-pagination-left"], {
+      clipPath: "inset(0% 100% 0% 0%)",
+      xPercent: 100,
+    });
+
+    gsap.set([".text-pagination-right"], {
+      clipPath: "inset(0% 0% 0% 100%)",
+      xPercent: -100,
+    });
+
+    gsap.set(cardSelectors, {
+      clipPath: "inset(0% 0% 100% 0%)",
+      yPercent: 100,
+    });
+
+    // Common animation config
+    const animConfig = {
+      duration: 0.8,
+      stagger: 0.1,
+      ease: "power1.inOut",
+    };
+
+    // Create scroll triggers
+    ScrollTrigger.create({
+      trigger: ".button-shop",
+      start: "top 75%",
+      onEnter: () => {
+        gsap.to(".button-shop", {
+          clipPath: "inset(0% 0% 0% 0%)",
+          yPercent: 0,
+          ...animConfig,
+        });
+      },
+    });
+
+    ScrollTrigger.create({
+      trigger: ".container-card-product",
+      start: "top 75%",
+      onEnter: () => {
+        gsap.to(cardSelectors, {
+          clipPath: "inset(0% 0% 0% 0%)",
+          yPercent: 0,
+          ...animConfig,
+        });
+      },
+    });
+
+    ScrollTrigger.create({
+      trigger: ".container-pagination",
+      start: "top 90%",
+      onEnter: () => {
+        gsap.to(".text-pagination", {
+          clipPath: "inset(0% 0% 0% 0%)",
+          yPercent: 0,
+          ...animConfig,
+        });
+
+        gsap.to(".text-pagination-left", {
+          clipPath: "inset(0% 0% 0% 0%)",
+          xPercent: 0,
+          ...animConfig,
+        });
+
+        gsap.to(".text-pagination-right", {
+          clipPath: "inset(0% 0% 0% 0%)",
+          xPercent: 0,
+          ...animConfig,
+        });
+      },
+    });
+  }, [shopProducts]);
+
+  // Memoized product slides to avoid recreating on each render
+  const productSlides = useMemo(
+    () =>
+      Array.from({ length: totalSlides }).map((_, slideIndex) => (
+        <SwiperSlide key={`slide-${slideIndex}`}>
+          <div className="grid grid-cols-3 gap-20d">
+            {shopProducts
+              .slice(slideIndex * 3, slideIndex * 3 + 3)
+              .map((product) => (
+                <CardProduct
+                  className={`card-product-${product.id}`}
+                  key={product.id}
+                  title={product.title}
+                  imageSrc={product.imageSrc}
+                  imageAlt={product.imageAlt}
+                />
+              ))}
+          </div>
+        </SwiperSlide>
+      )),
+    [shopProducts, totalSlides]
+  );
 
   return (
     <div className="w-full h-screen bg-seashell px-20d relative overflow-hidden container-shop-our-products">
+      {/* Tab buttons */}
       <div className="grid grid-cols-2 mt-[8vh] h-72d">
         <Button
           showIcon
@@ -271,33 +285,16 @@ export default function ShopOurProducts(): JSX.Element {
             modules={[Navigation, Pagination]}
             spaceBetween={20}
             slidesPerView={1}
-            speed={3000} // Set base transition speed to 3000ms (3 seconds)
-            onSwiper={(swiperInstance: SwiperType) => setSwiper(swiperInstance)}
+            speed={3000}
+            onSwiper={setSwiper}
             onSlideChange={handleSlideChange}
             allowTouchMove={true}
             watchSlidesProgress={true}
           >
-            {/* Group products in sets of 3 for each slide */}
-            {Array.from({ length: totalSlides }).map((_, slideIndex) => (
-              <SwiperSlide key={`slide-${slideIndex}`}>
-                <div className="grid grid-cols-3 gap-20d">
-                  {shopProducts
-                    .slice(slideIndex * 3, slideIndex * 3 + 3)
-                    .map((product) => (
-                      <CardProduct
-                        className={`card-product-${product.id}`}
-                        key={product.id}
-                        title={product.title}
-                        imageSrc={product.imageSrc}
-                        imageAlt={product.imageAlt}
-                      />
-                    ))}
-                </div>
-              </SwiperSlide>
-            ))}
+            {productSlides}
           </Swiper>
 
-          {/* Navigation controls for shop */}
+          {/* Navigation controls */}
           <div className="flex items-center justify-center absolute bottom-[5vh] w-full left-0 container-pagination">
             <div className="text-pagination-left pl-16d">
               <button
@@ -310,7 +307,7 @@ export default function ShopOurProducts(): JSX.Element {
               </button>
             </div>
             <p className="font-abc text-ruby-red w-[19%] text-center text-pagination">
-              {formatPaginationText()}
+              {paginationText}
             </p>
             <div className="text-pagination-right pr-16d">
               <button
@@ -326,7 +323,7 @@ export default function ShopOurProducts(): JSX.Element {
         </div>
       )}
 
-      {/* Create Your Own Section - Blank */}
+      {/* Create Your Own Section */}
       {activeTab === "create" && (
         <div className="flex flex-col items-center justify-center min-h-[400px]">
           <div className="text-center text-gray-500 p-8">

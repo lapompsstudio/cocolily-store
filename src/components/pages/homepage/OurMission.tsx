@@ -14,15 +14,6 @@ export default function OurMission() {
   const { setIsNavbarWhite } = useNavbarColorStore();
 
   useGSAP(() => {
-    // Add separate ScrollTrigger for navbar color
-    ScrollTrigger.create({
-      trigger: ".container-at-cocolily",
-      start: "top center",
-      end: "center center",
-      onEnter: () => setIsNavbarWhite(true),
-      onLeaveBack: () => setIsNavbarWhite(false),
-    });
-
     gsap.set(
       [
         ".text-anim-at-cocolily",
@@ -71,6 +62,8 @@ export default function OurMission() {
         end: "bottom+=3000",
         scrub: 1,
         pin: true,
+        onEnter: () => setIsNavbarWhite(true),
+        onLeaveBack: () => setIsNavbarWhite(false),
         // markers: true,
       },
     });
