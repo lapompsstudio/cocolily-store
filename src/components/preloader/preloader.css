@@ -1,14 +1,10 @@
 .circle-wrapper {
   position: relative;
-  width: 454px;
-  height: 454px;
   margin: 0 auto;
 }
 
 .circle-wrapper > svg {
   position: absolute;
-  width: 125px;
-  height: 125px;
   margin: auto;
   transform: scale(0);
 }

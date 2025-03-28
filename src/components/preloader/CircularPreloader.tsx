@@ -33,7 +33,7 @@ const BackgroundCircle: React.FC = () => (
 );
 
 const CircleWrapper: React.FC = () => (
-  <div className="circle-wrapper">
+  <div className="circle-wrapper w-454d h-454d">
     <Circle1 />
     <Circle2 />
     <Circle3 />
