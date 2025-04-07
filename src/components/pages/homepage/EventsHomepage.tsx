@@ -16,6 +16,17 @@ import Button from "@/components/ui/button";
 import IconMaroon from "@/components/ui/IconMaroon";
 import { eventsData } from "./eventsData";
 import useColorStore from "@/store/colorStore";
+import ArrowButton from "@/components/ui/ArrowButton";
+// Import Swiper components
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination } from "swiper/modules";
+// Import Swiper type with a different name to avoid conflict
+import type { Swiper as SwiperType } from "swiper";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 // Register GSAP plugins once
 gsap.registerPlugin(ScrollTrigger, SplitText);
@@ -37,7 +48,7 @@ interface Event {
   location: string;
   date: string;
   description: string;
-  image: string;
+  images: string[]; // Using only images array
   buttons: EventButton[];
   stats: EventStats;
 }
@@ -74,6 +85,9 @@ export default function EventsHomepage(): JSX.Element {
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [isAnimatingTrigger, setIsAnimatingTrigger] = useState<boolean>(false);
 
+  // Swiper refs - properly typed for Swiper
+  const swiperRef = useRef<SwiperType | null>(null);
+
   // Create refs using useRef
   const contentRefs = useRef<ContentRefs>({
     image: null,
@@ -104,6 +118,20 @@ export default function EventsHomepage(): JSX.Element {
       LIMITED_EVENTS_DATA.length
     );
   }, []);
+
+  // Custom navigation handlers for Swiper
+  const handleImageNavigation = useCallback(
+    (direction: "prev" | "next") => {
+      if (isAnimating || !swiperRef.current) return;
+
+      if (direction === "prev") {
+        swiperRef.current.slidePrev();
+      } else {
+        swiperRef.current.slideNext();
+      }
+    },
+    [isAnimating]
+  );
 
   // Split text helper function
   const createSplitText = useCallback((element: HTMLElement | null) => {
@@ -174,6 +202,22 @@ export default function EventsHomepage(): JSX.Element {
             opacity: 0,
             duration: 0.7,
             ease: "power2.out",
+          },
+          0
+        );
+        tl.to(
+          ".button-navigation",
+          {
+            opacity: 0,
+            duration: 0.7,
+            ease: "power2.out",
+            onComplete: () => {
+              if (swiperRef.current) {
+                // Reset Swiper to first slide
+                swiperRef.current.activeIndex = 0;
+                swiperRef.current.update();
+              }
+            },
           },
           0
         );
@@ -252,6 +296,15 @@ export default function EventsHomepage(): JSX.Element {
           duration: 0.7,
           ease: "power2.inOut",
         });
+        tl.to(
+          ".button-navigation",
+          {
+            opacity: 1,
+            duration: 0.7,
+            ease: "power2.inOut",
+          },
+          "<"
+        );
       }
 
       // Bring each element back up with staggered timing
@@ -382,7 +435,7 @@ export default function EventsHomepage(): JSX.Element {
         contentRefs.current.image,
         contentRefs.current.locationDate,
         contentRefs.current.buttons,
-        contentRefs.current.stats,
+        // contentRefs.current.stats,
         contentRefs.current.discoverBtn,
         contentRefs.current.upComing,
         contentRefs.current.upImage,
@@ -464,7 +517,7 @@ export default function EventsHomepage(): JSX.Element {
           <div className="flex items-center gap-12d">
             <div className="w-22d h-22d relative"></div>
             <div className="w-46d h-[5vh] relative rounded-6d overflow-hidden">
-              <GradientImage src={event.image} />
+              <GradientImage src={event.images[0]} />
             </div>
           </div>
           <p className="uppercase font-abc text-11d font-bold">{event.name}</p>
@@ -473,27 +526,27 @@ export default function EventsHomepage(): JSX.Element {
     [isAnimating, handleEventClick]
   );
 
-  const renderEventStats = useCallback(
-    () => (
-      <div className="flex items-center gap-60d mt-[8vh]">
-        <div>
-          <p className="font-abc text-28d leading-none">
-            {selectedEvent.stats.engagement}
-          </p>
-          <p className="font-abc text-10d leading-none mt-0.5">
-            VISITOR ENGAGEMENT
-          </p>
-        </div>
-        <div>
-          <p className="font-abc text-28d leading-none">
-            {selectedEvent.stats.attendance}
-          </p>
-          <p className="font-abc text-10d leading-none mt-0.5">ATTENDANCE</p>
-        </div>
-      </div>
-    ),
-    [selectedEvent.stats]
-  );
+  // const renderEventStats = useCallback(
+  //   () => (
+  //     <div className="flex items-center gap-60d mt-[8vh]">
+  //       <div>
+  //         <p className="font-abc text-28d leading-none">
+  //           {selectedEvent.stats.engagement}
+  //         </p>
+  //         <p className="font-abc text-10d leading-none mt-0.5">
+  //           VISITOR ENGAGEMENT
+  //         </p>
+  //       </div>
+  //       <div>
+  //         <p className="font-abc text-28d leading-none">
+  //           {selectedEvent.stats.attendance}
+  //         </p>
+  //         <p className="font-abc text-10d leading-none mt-0.5">ATTENDANCE</p>
+  //       </div>
+  //     </div>
+  //   ),
+  //   [selectedEvent.stats]
+  // );
 
   return (
     <div className="container-events-homepage w-full relative text-ruby-red">
@@ -507,15 +560,70 @@ export default function EventsHomepage(): JSX.Element {
 
       {/* Main content grid */}
       <div className="w-full h-screen events-background grid grid-cols-12 gap-20d px-20d pb-20d bg-[#C9D9E3]">
-        {/* Left section - Main event image */}
+        {/* Left section - Main event image with Swiper */}
         <div className="h-[87vh] col-span-6 mt-auto relative rounded-32d overflow-hidden">
           <div
             ref={(el) => {
               contentRefs.current.image = el;
             }}
-            className="w-full h-full relative"
+            className="w-full h-full relative overflow-hidden"
           >
-            <GradientImage src={selectedEvent.image} />
+            <Swiper
+              onSwiper={(swiper) => {
+                swiperRef.current = swiper;
+              }}
+              modules={[Navigation, Pagination]}
+              spaceBetween={0}
+              slidesPerView={1}
+              loop={true}
+              speed={800}
+              autoplay={false}
+              effect="fade"
+              fadeEffect={{ crossFade: true }}
+              pagination={{
+                clickable: true,
+                el: ".swiper-pagination",
+                bulletClass:
+                  "w-3 h-3 rounded-full transition-all bg-white/50 hover:bg-white/70 inline-block mx-1.5",
+                bulletActiveClass: "bg-white scale-125",
+              }}
+              className="w-full h-full"
+            >
+              {selectedEvent.images.map((image, index) => (
+                <SwiperSlide key={index}>
+                  <GradientImage
+                    src={image}
+                    className="h-full w-full object-cover"
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+
+          {/* Navigation buttons - only show when there are multiple images */}
+          <div className="button-navigation">
+            {selectedEvent.images.length > 1 && (
+              <div className="flex items-center justify-between absolute w-full top-1/2 -translate-y-1/2 px-30d z-10">
+                <button
+                  type="button"
+                  aria-label="Previous slide"
+                  onClick={() => handleImageNavigation("prev")}
+                  className="transition-opacity hover:opacity-80"
+                  disabled={isAnimating}
+                >
+                  <ArrowButton variant="secondary" icon="arrow-left" />
+                </button>
+                <button
+                  type="button"
+                  aria-label="Next slide"
+                  onClick={() => handleImageNavigation("next")}
+                  className="transition-opacity hover:opacity-80"
+                  disabled={isAnimating}
+                >
+                  <ArrowButton variant="secondary" />
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
@@ -560,13 +668,13 @@ export default function EventsHomepage(): JSX.Element {
             >
               {selectedEvent.description}
             </p>
-            <div
+            {/* <div
               ref={(el) => {
                 contentRefs.current.stats = el;
               }}
             >
               {renderEventStats()}
-            </div>
+            </div> */}
             <div
               ref={(el) => {
                 contentRefs.current.discoverBtn = el;
@@ -580,7 +688,7 @@ export default function EventsHomepage(): JSX.Element {
 
         {/* Right section - Upcoming events and event list */}
         <div className="h-[87vh] col-span-2 ml-auto mt-auto relative flex flex-col justify-between">
-          {/* Upcoming events */}
+          {/* Upcoming events section */}
           <div className="h-[52%]">
             <p
               className="text-10d"

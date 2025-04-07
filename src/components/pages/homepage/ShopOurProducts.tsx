@@ -37,7 +37,7 @@ export default function ShopOurProducts(): JSX.Element {
     () => [
       {
         id: 1,
-        title: "Classic Chocolate Truffles",
+        title: "Classic Chocolate",
         imageSrc: "/images/our-products/image.png",
         imageAlt: "Assorted chocolate truffles in a luxury box",
       },

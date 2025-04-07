@@ -213,6 +213,7 @@ module.exports = {
         "16d": "calc((16/var(--bw)*100vw))",
         "20d": "calc((20/var(--bw)*100vw))",
         "22d": "calc((22/var(--bw)*100vw))",
+        "30d": "calc((30/var(--bw)*100vw))",
         "55d": "calc((55/var(--bw)*100vw))",
       },
       rotate: {

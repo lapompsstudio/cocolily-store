@@ -6,7 +6,11 @@ export const eventsData = [
     date: "17 February 2025",
     description:
       "Introducing Cocolily Luxury Resort, a breathtaking destination situated beneath Dubai's magnificent iconic flag. Enter a realm of luxury with three immersive experiences crafted for",
-    image: "/images/our-products/image.png",
+    images: [
+      "/images/our-products/image.png",
+      "/images/our-products/image1.png",
+      "/images/our-products/image2.png",
+    ],
     stats: {
       engagement: "90%",
       attendance: "25K",
@@ -24,7 +28,7 @@ export const eventsData = [
     date: "22 June 2025",
     description:
       "Experience the glamour of Cocolily Summer Gala, an exclusive evening under the stars. Enjoy gourmet cuisine, live entertainment, and unforgettable moments in a stunning outdoor setting.",
-    image: "/images/our-products/image1.png",
+    images: ["/images/our-products/image1.png"],
     stats: {
       engagement: "85%",
       attendance: "18K",
@@ -42,7 +46,10 @@ export const eventsData = [
     date: "10 October 2025",
     description:
       "Indulge in the ultimate chocolate experience at Cocolily Chocolate Festival. From artisan tastings to masterclasses with renowned chocolatiers, discover the rich world of premium cocoa.",
-    image: "/images/our-products/image.png",
+    images: [
+      "/images/our-products/image.png",
+      "/images/our-products/image2.png",
+    ],
     stats: {
       engagement: "95%",
       attendance: "30K",
@@ -60,7 +67,10 @@ export const eventsData = [
     date: "5 April 2025",
     description:
       "Rejuvenate your mind and body at Cocolily Wellness Retreat. Our holistic approach combines traditional practices with modern techniques for a transformative wellness journey.",
-    image: "/images/our-products/image2.png",
+    images: [
+      "/images/our-products/image2.png",
+      "/images/our-products/image2.png",
+    ],
     stats: {
       engagement: "88%",
       attendance: "15K",
