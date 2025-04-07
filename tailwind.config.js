@@ -223,7 +223,6 @@ module.exports = {
         "20d": "calc((20/var(--bw)*100vw))",
         "32d": "calc((32/var(--bw)*100vw))",
       },
-      space: { "20d": "calc((20/var(--bw)*100vw))" },
       translate: {
         "74d": "calc((74/var(--bw)*100vw))",
         "113d": "calc((113/var(--bw)*100vw))",

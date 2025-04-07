@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useRef } from "react";
-
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
@@ -16,7 +15,11 @@ const Preloader = () => {
   useGSAP(
     () => {
       const preloaderText = gsap.utils.toArray(".preloader-text").reverse();
-      const tl = gsap.timeline({});
+      const tl = gsap.timeline({
+        onComplete: () => {
+          localStorage.setItem("PreloaderShown", Date.now().toString());
+        },
+      });
 
       tl.to(preloaderText, {
         clipPath: "inset(0% 0% 0% 0%)",
@@ -163,7 +166,8 @@ const Preloader = () => {
       ref={containerRef}
       className="preloader fixed top-0 left-0 flex flex-col w-screen h-screen z-preloader isolate"
     >
-      <div className="preloader-top-sheet flex-1 bg-ruby-red relative z-20 isolate">
+      <div className="preloader-top-sheet flex-1 bg-white relative z-20 isolate">
+        <div className="h-full w-full bg-gradient-to-b from-[#DEEEDC] from-0% to-[#E0C7E6] to-100%"></div>
         <LogoPreloader />
       </div>
 
@@ -172,13 +176,13 @@ const Preloader = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-45d h-45d bg-ruby-red rounded-full z-20"></div>
       </div>
 
-      <div className="preloader-bottom-sheet flex-1 bg-ruby-red relative z-10">
-        <div className="h-full w-full bg-gradient-to-b from-[#700A21] from-0% via-[#700A21]/0 via-[33%] to-transparent to-100%"></div>
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 text-center space-y-32d">
-          <p className="preloader-text clipped text-white font-abc text-16d font-bold">
+      <div className="preloader-bottom-sheet flex-1 bg-white relative z-10">
+        <div className="h-full w-full bg-gradient-to-b from-[#92649C] from-0% to-transparent to-100%"></div>
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 text-center space-y-32d pb-55d">
+          <p className="preloader-text clipped text-ruby-red font-abc text-16d font-bold">
             LOADING SWEET CELEBRATION
           </p>
-          <div className="preloader-text clipped flex justify-center text-white font-abc text-16d font-bold pb-55d">
+          <div className="preloader-text clipped flex justify-center text-ruby-red font-abc text-16d font-bold">
             <p className="counter-digit hundreds flex flex-col h-20d overflow-hidden">
               <span>0</span>
               <span>1</span>

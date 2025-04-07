@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 
 import clsx from "clsx";
 import gsap from "gsap";
@@ -15,101 +15,112 @@ gsap.registerPlugin(SplitText);
 
 const Hero = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const [animationDelay, setAnimationDelay] = useState(0);
+
+  useEffect(() => {
+    // Check if running in browser environment
+    if (typeof window !== "undefined") {
+      const preloaderShown = localStorage.getItem("PreloaderShown");
+      if (preloaderShown !== null && preloaderShown !== "") {
+        // if preloader skipped
+        setAnimationDelay(0.5);
+      } else {
+        // if preloader shown
+        setAnimationDelay(7.5);
+      }
+    }
+  }, []);
 
   useGSAP(
     () => {
-      const chocolate = new SplitText(".chocolate", { type: "lines" });
-      const sweetMoments = new SplitText(".sweet-moments", { type: "lines" });
-      const descCircle0 = new SplitText(".desc-circle-0", { type: "lines" });
+      if (animationDelay > 0) {
+        const chocolate = new SplitText(".chocolate", {
+          type: "lines",
+          linesClass: "clipped",
+        });
+        const sweetMoments = new SplitText(".sweet-moments", {
+          type: "lines",
+          linesClass: "clipped",
+        });
+        const descCircle0 = new SplitText(".desc-circle-0", {
+          type: "lines",
+          linesClass: "clipped",
+        });
 
-      gsap.set(".alphabet", {
-        yPercent: 100,
-        clipPath: "inset(0% 0% 100% 0%)",
-      });
+        const tl = gsap.timeline({
+          delay: animationDelay,
+        });
 
-      gsap.set(chocolate.lines, {
-        yPercent: 100,
-        clipPath: "inset(0% 0% 100% 0%)",
-      });
-
-      gsap.set(sweetMoments.lines, {
-        yPercent: 100,
-        clipPath: "inset(0% 0% 100% 0%)",
-      });
-
-      const tl = gsap.timeline({
-        delay: 7.5,
-      });
-
-      tl.to(".alphabet", {
-        yPercent: 0,
-        clipPath: "inset(0% 0% 0% 0%)",
-        ease: "power1.inOut",
-        stagger: 0.1,
-        duration: 0.8,
-      })
-        .to(chocolate.lines, {
-          yPercent: 0,
+        tl.to(".alphabet", {
+          y: "0%",
           clipPath: "inset(0% 0% 0% 0%)",
           ease: "power1.inOut",
-          stagger: 0.3,
+          stagger: 0.1,
           duration: 0.8,
         })
-        .to(
-          sweetMoments.lines,
-          {
-            yPercent: 0,
+          .to(chocolate.lines, {
+            y: "0%",
             clipPath: "inset(0% 0% 0% 0%)",
             ease: "power1.inOut",
             stagger: 0.3,
             duration: 0.8,
-          },
-          "<"
-        )
-        .from(
-          ".circle-slider-container",
-          {
-            rotate: 90,
-            translateY: "40%",
-            duration: 2,
-            ease: "power1.inOut",
-          },
-          "<"
-        )
-        .from(".button-prev", {
-          xPercent: 50,
-          opacity: 0,
-          ease: "power1.inOut",
-          duration: 0.5,
-        })
-        .from(
-          ".button-next",
-          {
-            xPercent: -50,
+          })
+          .to(
+            sweetMoments.lines,
+            {
+              y: "0%",
+              clipPath: "inset(0% 0% 0% 0%)",
+              ease: "power1.inOut",
+              stagger: 0.3,
+              duration: 0.8,
+            },
+            "<"
+          )
+          .from(
+            ".circle-slider-container",
+            {
+              rotate: 90,
+              translateY: "40%",
+              duration: 2,
+              ease: "power1.inOut",
+            },
+            "<"
+          )
+          .from(".button-prev", {
+            xPercent: 50,
             opacity: 0,
             ease: "power1.inOut",
             duration: 0.5,
-          },
-          "<"
-        )
-        .from(
-          ".title-desc",
-          {
-            yPercent: 100,
-            clipPath: "inset(0 0 100% 0)",
-          },
-          "<"
-        )
-        .from(
-          descCircle0.lines,
-          {
-            yPercent: 100,
-            clipPath: "inset(0 0 100% 0)",
-          },
-          "<"
-        );
+          })
+          .from(
+            ".button-next",
+            {
+              xPercent: -50,
+              opacity: 0,
+              ease: "power1.inOut",
+              duration: 0.5,
+            },
+            "<"
+          )
+          .from(
+            ".title-desc",
+            {
+              yPercent: 100,
+              clipPath: "inset(0 0 100% 0)",
+            },
+            "<"
+          )
+          .from(
+            descCircle0.lines,
+            {
+              yPercent: 100,
+              clipPath: "inset(0 0 100% 0)",
+            },
+            "<"
+          );
+      }
     },
-    { scope: containerRef }
+    { scope: containerRef, dependencies: [animationDelay] }
   );
 
   return (
@@ -127,7 +138,7 @@ const Hero = () => {
           >
             <span className="chocolate">More than Chocolate</span>
             <span className="sweet-moments">
-              it’s a celebration of <br />
+              it&apos;s a celebration of <br />
               sweet moments
             </span>
           </div>
@@ -135,7 +146,7 @@ const Hero = () => {
             <div
               className={clsx(
                 "relative md:landscape:w-200d md:landscape:h-230d",
-                "alphabet"
+                "alphabet clipped"
               )}
             >
               <Image
@@ -148,7 +159,7 @@ const Hero = () => {
             <div
               className={clsx(
                 "relative md:landscape:w-224d md:landscape:h-231d",
-                "alphabet"
+                "alphabet clipped"
               )}
             >
               <Image
@@ -161,7 +172,7 @@ const Hero = () => {
             <div
               className={clsx(
                 "relative md:landscape:w-200d md:landscape:h-230d md:landscape:ml-18d",
-                "alphabet"
+                "alphabet clipped"
               )}
             >
               <Image
@@ -174,7 +185,7 @@ const Hero = () => {
             <div
               className={clsx(
                 "relative md:landscape:w-224d md:landscape:h-231d",
-                "alphabet"
+                "alphabet clipped"
               )}
             >
               <Image
@@ -187,7 +198,7 @@ const Hero = () => {
             <div
               className={clsx(
                 "relative md:landscape:w-29d md:landscape:h-334d md:landscape:ml-60d",
-                "alphabet"
+                "alphabet clipped"
               )}
             >
               <Image
@@ -200,7 +211,7 @@ const Hero = () => {
             <div
               className={clsx(
                 "relative md:landscape:w-29d md:landscape:h-315d md:landscape:ml-67d",
-                "alphabet"
+                "alphabet clipped"
               )}
             >
               <Image
@@ -213,7 +224,7 @@ const Hero = () => {
             <div
               className={clsx(
                 "relative md:landscape:w-29d md:landscape:h-334d md:landscape:ml-67d",
-                "alphabet"
+                "alphabet clipped"
               )}
             >
               <Image
@@ -228,7 +239,7 @@ const Hero = () => {
               <div
                 className={clsx(
                   "relative md:landscape:w-221d md:landscape:h-353d  md:landscape:translate-y-113d md:landscape:ml-30d",
-                  "alphabet"
+                  "alphabet clipped"
                 )}
               >
                 <Image
