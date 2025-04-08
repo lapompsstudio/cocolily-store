@@ -93,11 +93,8 @@ export default function ShopOurProducts(): JSX.Element {
     []
   );
 
-  // Calculate total slides once
-  const totalSlides = useMemo(
-    () => Math.ceil(shopProducts.length / 3),
-    [shopProducts.length]
-  );
+  // Calculate total slides once - now it's just the number of products
+  const totalSlides = useMemo(() => shopProducts.length, [shopProducts.length]);
 
   // Format pagination text
   const paginationText = useMemo(() => {
@@ -229,27 +226,23 @@ export default function ShopOurProducts(): JSX.Element {
     });
   }, [shopProducts]);
 
-  // Memoized product slides to avoid recreating on each render
+  // Memoized product slides - now one product per slide
   const productSlides = useMemo(
     () =>
-      Array.from({ length: totalSlides }).map((_, slideIndex) => (
-        <SwiperSlide key={`slide-${slideIndex}`}>
-          <div className="grid grid-cols-3 gap-20d">
-            {shopProducts
-              .slice(slideIndex * 3, slideIndex * 3 + 3)
-              .map((product) => (
-                <CardProduct
-                  className={`card-product-${product.id}`}
-                  key={product.id}
-                  title={product.title}
-                  imageSrc={product.imageSrc}
-                  imageAlt={product.imageAlt}
-                />
-              ))}
+      shopProducts.map((product) => (
+        <SwiperSlide key={`slide-${product.id}`}>
+          <div className="flex justify-center">
+            <CardProduct
+              className={`card-product-${product.id}`}
+              key={product.id}
+              title={product.title}
+              imageSrc={product.imageSrc}
+              imageAlt={product.imageAlt}
+            />
           </div>
         </SwiperSlide>
       )),
-    [shopProducts, totalSlides]
+    [shopProducts]
   );
 
   return (
@@ -284,7 +277,7 @@ export default function ShopOurProducts(): JSX.Element {
           <Swiper
             modules={[Navigation, Pagination]}
             spaceBetween={20}
-            slidesPerView={1}
+            slidesPerView={3}
             speed={3000}
             onSwiper={setSwiper}
             onSlideChange={handleSlideChange}
@@ -295,7 +288,7 @@ export default function ShopOurProducts(): JSX.Element {
           </Swiper>
 
           {/* Navigation controls */}
-          <div className="flex items-center justify-center absolute bottom-[5vh] w-full left-0 container-pagination">
+          <div className="flex items-center justify-between absolute bottom-[5vh] w-full left-0 container-pagination">
             <div className="text-pagination-left pl-16d">
               <button
                 onClick={goPrev}
@@ -306,9 +299,6 @@ export default function ShopOurProducts(): JSX.Element {
                 <ArrowButton variant="secondary" icon="arrow-left" />
               </button>
             </div>
-            <p className="font-abc text-ruby-red w-[19%] text-center text-pagination">
-              {paginationText}
-            </p>
             <div className="text-pagination-right pr-16d">
               <button
                 onClick={goNext}
