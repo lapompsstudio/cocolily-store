@@ -42,7 +42,7 @@ export const globalStore = create<GlobalStoreType>((set) => ({
       state.isLoading = true;
 
       // Fetch data
-      fetchData<Global>("/api/global?populate=*")
+      fetchData<Global>("/api/global")
         .then((response) => {
           set({
             globalData: response.data,

@@ -15,28 +15,50 @@ interface StrapiResponse<T> {
 export async function fetchData<T>(
   endpoint: string
 ): Promise<StrapiResponse<T>> {
-  const baseUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
-  const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
-
-  if (!baseUrl) {
-    throw new Error(
-      "Environment variable 'NEXT_PUBLIC_STRAPI_URL' is not defined."
-    );
-  }
-
-  if (!token) {
-    throw new Error(
-      "Environment variable 'NEXT_PUBLIC_STRAPI_API_TOKEN' is not defined."
-    );
-  }
-
-  const fullUrl = `${baseUrl}${endpoint}`;
-
   try {
-    const response = await axios.get<StrapiResponse<T>>(fullUrl, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    // For client-side requests, use the Next.js API route as a proxy
+    const isClient = typeof window !== "undefined";
+    let url = endpoint;
+
+    if (isClient) {
+      // When running on the client, use the local API route
+      // Remove the /api prefix as our Next.js API routes will handle this
+      const localEndpoint = endpoint.startsWith("/api/")
+        ? endpoint
+        : `/api${endpoint}`;
+      url = localEndpoint;
+    } else {
+      // When running on the server, use the full Strapi URL with token
+      const baseUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
+      const token = process.env.STRAPI_API_TOKEN; // Changed to non-public env var for server-side
+
+      if (!baseUrl) {
+        throw new Error(
+          "Environment variable 'NEXT_PUBLIC_STRAPI_URL' is not defined."
+        );
+      }
+
+      if (!token) {
+        throw new Error(
+          "Environment variable 'STRAPI_API_TOKEN' is not defined."
+        );
+      }
+
+      url = `${baseUrl}${endpoint}`;
+
+      // Add authorization header for server-side requests
+      return axios
+        .get<StrapiResponse<T>>(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          timeout: 5000,
+        })
+        .then((response) => response.data);
+    }
+
+    // Client-side requests don't need the token as they go through our API route
+    const response = await axios.get<StrapiResponse<T>>(url, {
       timeout: 5000,
     });
 
@@ -48,7 +70,10 @@ export async function fetchData<T>(
         response?: { data?: { message?: string } };
         message: string;
       };
-      console.error(`Error fetching data from ${fullUrl}:`, axiosError.message);
+      console.error(
+        `Error fetching data from ${endpoint}:`,
+        axiosError.message
+      );
       throw new Error(
         axiosError.response?.data?.message ||
           "An error occurred while fetching data."
@@ -60,21 +85,3 @@ export async function fetchData<T>(
     throw new Error("An unknown error occurred while fetching data.");
   }
 }
-
-export const fetchDataSEO = async (params: string): Promise<unknown> => {
-  const reqOptions: RequestInit = {
-    headers: {
-      Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_TOKEN}`,
-    },
-    cache: "no-store" as const,
-  };
-
-  const request = await fetch(
-    `${process.env.NEXT_PUBLIC_STRAPI_URL}${params}`,
-    reqOptions
-  );
-
-  const response = await request.json();
-
-  return response;
-};
