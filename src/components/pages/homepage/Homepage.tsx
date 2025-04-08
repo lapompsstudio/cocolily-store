@@ -41,7 +41,7 @@ const Homepage = () => {
     }
   }, []);
 
-  useScrollAndLenis(11000);
+  useScrollAndLenis(isPreloaderShow ? 11000 : 500);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
