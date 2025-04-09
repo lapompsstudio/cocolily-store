@@ -6,6 +6,8 @@ import clsx from "clsx";
 
 import { useQuery } from "@tanstack/react-query";
 
+import { HeroSliderResponse } from "@/types/api";
+
 interface SliderItem {
   file: string;
   logo: string;
@@ -34,116 +36,7 @@ const SLIDER_DATA: SliderItem[] = [
   },
 ];
 
-type ApiResponse = {
-  data: {
-    id: number;
-    documentId: string;
-    createdAt: string;
-    updatedAt: string;
-    publishedAt: string;
-    events: {
-      id: number;
-      documentId: string;
-      eventName: string;
-      createdAt: string;
-      updatedAt: string;
-      publishedAt: string;
-      file: {
-        id: number;
-        documentId: string;
-        name: string;
-        alternativeText: string | null;
-        caption: string | null;
-        width: number | null;
-        height: number | null;
-        formats: {
-          thumbnail?: {
-            name: string;
-            hash: string;
-            ext: string;
-            mime: string;
-            path: string | null;
-            width: number;
-            height: number;
-            size: number;
-            sizeInBytes: number;
-            url: string;
-          };
-          small?: {
-            name: string;
-            hash: string;
-            ext: string;
-            mime: string;
-            path: string | null;
-            width: number;
-            height: number;
-            size: number;
-            sizeInBytes: number;
-            url: string;
-          };
-        } | null;
-        hash: string;
-        ext: string;
-        mime: string;
-        size: number;
-        url: string;
-        previewUrl: string | null;
-        provider: string;
-        provider_metadata: any | null;
-        createdAt: string;
-        updatedAt: string;
-        publishedAt: string;
-      };
-      logo: {
-        id: number;
-        documentId: string;
-        name: string;
-        alternativeText: string | null;
-        caption: string | null;
-        width: number | null;
-        height: number | null;
-        formats: {
-          thumbnail?: {
-            name: string;
-            hash: string;
-            ext: string;
-            mime: string;
-            path: string | null;
-            width: number;
-            height: number;
-            size: number;
-            sizeInBytes: number;
-            url: string;
-          };
-          small?: {
-            name: string;
-            hash: string;
-            ext: string;
-            mime: string;
-            path: string | null;
-            width: number;
-            height: number;
-            size: number;
-            sizeInBytes: number;
-            url: string;
-          };
-        } | null;
-        hash: string;
-        ext: string;
-        mime: string;
-        size: number;
-        url: string;
-        previewUrl: string | null;
-        provider: string;
-        provider_metadata: any | null;
-        createdAt: string;
-        updatedAt: string;
-        publishedAt: string;
-      };
-    }[];
-  };
-  meta: Record<string, unknown>;
-};
+type EventsType = HeroSliderResponse["data"]["events"];
 
 const TOTAL_ITEMS = 6;
 const BASE_WIDTH = 1440;
@@ -165,11 +58,10 @@ const CircleSlider: React.FC = () => {
   const [rotation, setRotation] = useState(0);
   const [radius, setRadius] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [visibleItems, setVisibleItems] = useState<SliderItem[][]>([]);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
-  const [dataFromApi, setDataFromApi] = useState<ApiResponse | null>(null);
+  const [dataFromApi, setDataFromApi] = useState<EventsType | null>(null);
 
-  const { data } = useQuery<ApiResponse>({
+  const { data } = useQuery<HeroSliderResponse>({
     queryKey: ["hero-slider"],
     queryFn: async () => {
       const res = await fetch("/api/hero-slider");
@@ -180,7 +72,15 @@ const CircleSlider: React.FC = () => {
 
   useEffect(() => {
     if (data) {
-      setDataFromApi(data);
+      const events = data.data.events;
+
+      let finalData = events.slice(0, 6); // default: ambil maksimal 6
+
+      if (events.length === 3) {
+        finalData = [...events, ...events]; // duplikat jadi 6
+      }
+
+      setDataFromApi(finalData);
     }
   }, [data]);
 
@@ -189,16 +89,8 @@ const CircleSlider: React.FC = () => {
     videoRefs.current = Array(TOTAL_ITEMS).fill(null);
   }, []);
 
-  // Initialize visible items
-  useEffect(() => {
-    const tempArray: SliderItem[][] = [];
-    for (let i = 0; i < SLIDER_DATA.length; i++) {
-      tempArray.push(getVisibleItems(SLIDER_DATA, i));
-    }
-    setVisibleItems(tempArray);
-  }, []);
+  // // Initialize visible items
 
-  // Update radius based on viewport width
   useEffect(() => {
     const updateRadius = () => {
       const viewportWidth = window.innerWidth;
@@ -212,23 +104,27 @@ const CircleSlider: React.FC = () => {
 
   // Handle video play/pause when currentIndex changes
   useEffect(() => {
-    videoRefs.current.forEach((video, index) => {
-      if (!video) return;
+    if (dataFromApi) {
+      videoRefs.current.forEach((video, index) => {
+        if (!video) return;
 
-      try {
-        if (
-          index === currentIndex &&
-          SLIDER_DATA[index % SLIDER_DATA.length].type === "video"
-        ) {
-          video.play().catch((e) => console.error("Video play failed:", e));
-        } else {
-          video.pause();
+        try {
+          if (
+            index === currentIndex &&
+            dataFromApi[index % dataFromApi.length].file.mime.startsWith(
+              "video/"
+            )
+          ) {
+            video.play().catch((e) => console.error("Video play failed:", e));
+          } else {
+            video.pause();
+          }
+        } catch (error) {
+          console.error("Error controlling video:", error);
         }
-      } catch (error) {
-        console.error("Error controlling video:", error);
-      }
-    });
-  }, [currentIndex]);
+      });
+    }
+  }, [currentIndex, dataFromApi]);
 
   const setVideoRef = useCallback(
     (index: number) => (el: HTMLVideoElement | null) => {
@@ -255,9 +151,9 @@ const CircleSlider: React.FC = () => {
         setIsAnimating(false);
         setCurrentIndex((prev) => {
           if (direction === "next") {
-            return (prev + 1) % TOTAL_ITEMS;
+            return (prev + 1) % dataFromApi!.length;
           } else {
-            return (prev - 1 + TOTAL_ITEMS) % TOTAL_ITEMS;
+            return (prev - 1 + dataFromApi!.length) % dataFromApi!.length;
           }
         });
       },
@@ -279,7 +175,7 @@ const CircleSlider: React.FC = () => {
       );
 
       gsap.fromTo(
-        `.desc-circle-${(currentIndex + 1) % TOTAL_ITEMS}`,
+        `.desc-circle-${(currentIndex + 1) % dataFromApi!.length}`,
         {
           transform: "translateY(300%)",
         },
@@ -303,7 +199,7 @@ const CircleSlider: React.FC = () => {
       );
 
       gsap.fromTo(
-        `.desc-circle-${(currentIndex - 1 + TOTAL_ITEMS) % TOTAL_ITEMS}`,
+        `.desc-circle-${(currentIndex - 1 + dataFromApi!.length) % dataFromApi!.length}`,
         {
           transform: "translateY(-300%)",
         },
@@ -319,9 +215,7 @@ const CircleSlider: React.FC = () => {
   const renderDescCircle = () => {
     return (
       dataFromApi &&
-      dataFromApi.data.events.map((data, i) => {
-        const item = SLIDER_DATA[i % SLIDER_DATA.length];
-
+      dataFromApi.map((data, i) => {
         return (
           <div
             key={i}
@@ -344,9 +238,8 @@ const CircleSlider: React.FC = () => {
   const renderCircleItems = () => {
     return (
       dataFromApi &&
-      dataFromApi.data.events.map((data, i) => {
+      dataFromApi.map((data, i) => {
         const angle = (i / TOTAL_ITEMS) * 360;
-        const item = SLIDER_DATA[i % SLIDER_DATA.length];
 
         return (
           <div
@@ -381,6 +274,7 @@ const CircleSlider: React.FC = () => {
                 <Image
                   src={process.env.NEXT_PUBLIC_STRAPI_URL + data.file.url}
                   alt="image"
+                  priority
                   fill
                   className="w-full h-full object-cover scale-105"
                 />
@@ -392,6 +286,7 @@ const CircleSlider: React.FC = () => {
                   loop
                   muted
                   playsInline
+                  preload="auto"
                 />
               )}
             </div>

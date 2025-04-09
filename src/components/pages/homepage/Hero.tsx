@@ -42,13 +42,6 @@ const Hero = () => {
           type: "lines",
           linesClass: "clipped",
         });
-        const descCircle0 = new SplitText(".desc-circle-0", {
-          type: "lines",
-        });
-
-        gsap.set(".desc-circle-0", {
-          opacity: 1,
-        });
 
         gsap.set(".chocolate", {
           opacity: 1,
@@ -102,6 +95,7 @@ const Hero = () => {
               translateY: "40%",
               duration: 2,
               ease: "power1.inOut",
+              onStart: () => {},
             },
             "<"
           )
@@ -128,8 +122,16 @@ const Hero = () => {
               clipPath: "inset(0% 0% 0% 0%)",
             },
             "<"
-          )
-          .from(
+          );
+
+        setTimeout(() => {
+          const descCircle0 = new SplitText(".desc-circle-0", {
+            type: "lines",
+          });
+          gsap.set(".desc-circle-0", {
+            opacity: 1,
+          });
+          tl.from(
             descCircle0.lines,
             {
               yPercent: 100,
@@ -137,6 +139,7 @@ const Hero = () => {
             },
             "<"
           );
+        }, 1000);
       }
     },
     { scope: containerRef, dependencies: [animationDelay] }
