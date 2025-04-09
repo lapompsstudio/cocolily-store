@@ -5,9 +5,11 @@ import Button from "../ui/button";
 import Link from "next/link";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 import useSplitTextAnimation from "@/app/hooks/useSplitTextAnimation";
 import useColorStore from "@/store/colorStore";
 import { globalStore } from "@/store/globalStore";
+import NewsletterForm from "../newsletter-form";
 
 gsap.registerPlugin(useGSAP);
 
@@ -485,108 +487,102 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <footer
-      ref={containerRef}
-      className="footer min-h-screen relative flex w-full items-end p-20d bg-seashell overflow-hidden"
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
-      onDoubleClick={handleDoubleClick}
-      style={{ cursor: isDragging ? "grabbing" : "grab" }}
+    <GoogleReCaptchaProvider
+      reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
+      scriptProps={{
+        async: true,
+        defer: true,
+        appendTo: "head",
+      }}
     >
-      <div className="dynamic-bg absolute top-0 left-0 right-0 h-264d z-[1]"></div>
+      <footer
+        ref={containerRef}
+        className="footer min-h-screen relative flex w-full items-end p-20d bg-seashell overflow-hidden"
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onDoubleClick={handleDoubleClick}
+        style={{ cursor: isDragging ? "grabbing" : "grab" }}
+      >
+        <div className="dynamic-bg absolute top-0 left-0 right-0 h-264d z-[1]"></div>
 
-      {/* Draggable Canvas */}
-      <canvas
-        ref={canvasRef}
-        className="absolute top-0 left-0 w-full h-full z-[30] pointer-events-none"
-      />
+        {/* Draggable Canvas */}
+        <canvas
+          ref={canvasRef}
+          className="absolute top-0 left-0 w-full h-full z-[30] pointer-events-none"
+        />
 
-      <div className="w-full z-[20] relative">
-        <div>
-          <h2 className="footer-text-anim text-128d font-bold font-abc text-center text-ruby-red leading-none">
-            JOIN THE CELEBRATION
-          </h2>
-          <p className="footer-text-anim text-ruby-red font-bold text-16d text-center mt-32d font-abc">
-            BE PART OF COCOLILY&rsquo;S WORLD
-          </p>
-        </div>
-        <div className="grid md:landscape:grid-cols-12 mt-80d">
-          <div className="md:col-span-8">
-            <h3 className="text-10d text-ruby-red leading-1.3">
-              STAY CONNECTED
-            </h3>
-            <div className="flex items-center relative w-355d mt-20d">
-              <input
-                type="text"
-                className="bg-transparent border border-ruby-red rounded-full h-38d w-full px-22d placeholder:text-ruby-red placeholder:font-semibold text-ruby-red font-semibold text-12d focus-visible:outline-none focus-within:outline-none focus:outline-none"
-                placeholder="SUBMIT YOUR EMAIL"
-              />
+        <div className="w-full z-[20] relative">
+          <div>
+            <h2 className="footer-text-anim text-128d font-bold font-abc text-center text-ruby-red leading-none">
+              JOIN THE CELEBRATION
+            </h2>
+            <p className="footer-text-anim text-ruby-red font-bold text-16d text-center mt-32d font-abc">
+              BE PART OF COCOLILY&rsquo;S WORLD
+            </p>
+          </div>
+          <div className="grid md:landscape:grid-cols-12 mt-80d">
+            <div className="md:col-span-8">
+              <h3 className="text-10d text-ruby-red leading-1.3">
+                STAY CONNECTED
+              </h3>
+              <NewsletterForm />
+            </div>
+            <div className="md:col-span-4 flex justify-between">
+              <div className="max-w-225d space-y-20d">
+                <h3 className="footer-text-anim text-10d text-ruby-red leading-1.3">
+                  VISIT COCOLILY STORE
+                </h3>
+                <Link
+                  href={"/"}
+                  className="footer-text-anim text-ruby-red text-16d font-bold leading-none uppercase font-abc block"
+                >
+                  {globalData?.address_location}
+                </Link>
+              </div>
+              <div className="space-y-20d">
+                <h3 className="footer-text-anim text-10d text-ruby-red leading-1.3">
+                  FOLLOW US
+                </h3>
+                {globalData?.social.map((social) => (
+                  <Link
+                    key={social.id}
+                    href={social.links}
+                    target="_blank"
+                    className="footer-text-anim text-ruby-red text-16d font-bold leading-none uppercase font-abc block"
+                  >
+                    {social.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="reveal-bottom grid md:landscape:grid-cols-12 mt-48d">
+            <div className="md:col-span-6">
               <Button
-                buttonType="button"
-                onClick={(
-                  e: React.MouseEvent<HTMLButtonElement | HTMLAnchorElement>
-                ) => console.log("e", e)}
-                className="!absolute right-0"
+                buttonType="link"
+                href={`mailto:${globalData?.email}`}
+                variant="secondary"
+                className="h-72d text-16d font-abc uppercase"
               >
-                SUBMIT
+                EMAIL: {globalData?.email}
+              </Button>
+            </div>
+            <div className="md:col-span-6">
+              <Button
+                buttonType="link"
+                href={`tel:${globalData?.phone_number?.replace(/[\s()]+/g, "")}`}
+                variant="secondary"
+                className="h-72d text-16d font-abc uppercase"
+              >
+                PHONE NUMBER: {globalData?.phone_number}
               </Button>
             </div>
           </div>
-          <div className="md:col-span-4 flex justify-between">
-            <div className="max-w-225d space-y-20d">
-              <h3 className="footer-text-anim text-10d text-ruby-red leading-1.3">
-                VISIT COCOLILY STORE
-              </h3>
-              <Link
-                href={"/"}
-                className="footer-text-anim text-ruby-red text-16d font-bold leading-none uppercase font-abc block"
-              >
-                {globalData?.address_location}
-              </Link>
-            </div>
-            <div className="space-y-20d">
-              <h3 className="footer-text-anim text-10d text-ruby-red leading-1.3">
-                FOLLOW US
-              </h3>
-              {globalData?.social.map((social) => (
-                <Link
-                  key={social.id}
-                  href={social.links}
-                  target="_blank"
-                  className="footer-text-anim text-ruby-red text-16d font-bold leading-none uppercase font-abc block"
-                >
-                  {social.name}
-                </Link>
-              ))}
-            </div>
-          </div>
         </div>
-        <div className="reveal-bottom grid md:landscape:grid-cols-12 mt-48d">
-          <div className="md:col-span-6">
-            <Button
-              buttonType="link"
-              href={`mailto:${globalData?.email}`}
-              variant="secondary"
-              className="h-72d text-16d font-abc uppercase"
-            >
-              EMAIL: {globalData?.email}
-            </Button>
-          </div>
-          <div className="md:col-span-6">
-            <Button
-              buttonType="link"
-              href={`tel:${globalData?.phone_number?.replace(/[\s()]+/g, "")}`}
-              variant="secondary"
-              className="h-72d text-16d font-abc uppercase"
-            >
-              PHONE NUMBER: {globalData?.phone_number}
-            </Button>
-          </div>
-        </div>
-      </div>
-    </footer>
+      </footer>
+    </GoogleReCaptchaProvider>
   );
 };
 
