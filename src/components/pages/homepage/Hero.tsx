@@ -44,7 +44,26 @@ const Hero = () => {
         });
         const descCircle0 = new SplitText(".desc-circle-0", {
           type: "lines",
-          linesClass: "clipped",
+        });
+
+        gsap.set(".desc-circle-0", {
+          opacity: 1,
+        });
+
+        gsap.set(".chocolate", {
+          opacity: 1,
+        });
+
+        gsap.set(".sweet-moments", {
+          opacity: 1,
+        });
+
+        gsap.set(".button-next", {
+          opacity: 1,
+        });
+
+        gsap.set(".button-prev", {
+          opacity: 1,
         });
 
         const tl = gsap.timeline({
@@ -102,11 +121,11 @@ const Hero = () => {
             },
             "<"
           )
-          .from(
+          .to(
             ".title-desc",
             {
-              yPercent: 100,
-              clipPath: "inset(0 0 100% 0)",
+              transform: "translateY(0%)",
+              clipPath: "inset(0% 0% 0% 0%)",
             },
             "<"
           )
@@ -125,7 +144,7 @@ const Hero = () => {
 
   return (
     <div
-      className={clsx("h-1269d overflow-hidden", "relative")}
+      className={clsx("h-1269d overflow-hidden bg-white z-10", "relative")}
       ref={containerRef}
     >
       <div className="absolute md:landscape:top-82d left-1/2 -translate-x-1/2 w-full z-[100]">
@@ -136,8 +155,8 @@ const Hero = () => {
               "font-abc font-bold uppercase leading-none text-ruby-red"
             )}
           >
-            <span className="chocolate">More than Chocolate</span>
-            <span className="sweet-moments">
+            <span className="chocolate opacity-0">More than Chocolate</span>
+            <span className="sweet-moments opacity-0">
               it&apos;s a celebration of <br />
               sweet moments
             </span>
@@ -235,10 +254,10 @@ const Hero = () => {
               />
             </div>
 
-            <div>
+            <div className="md:landscape:translate-y-113d">
               <div
                 className={clsx(
-                  "relative md:landscape:w-221d md:landscape:h-353d  md:landscape:translate-y-113d md:landscape:ml-30d",
+                  "relative md:landscape:w-221d md:landscape:h-353d   md:landscape:ml-30d",
                   "alphabet clipped"
                 )}
               >

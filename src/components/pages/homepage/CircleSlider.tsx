@@ -4,6 +4,8 @@ import ArrowButton from "@/components/ui/ArrowButton";
 import Image from "next/image";
 import clsx from "clsx";
 
+import { useQuery } from "@tanstack/react-query";
+
 interface SliderItem {
   file: string;
   logo: string;
@@ -32,6 +34,117 @@ const SLIDER_DATA: SliderItem[] = [
   },
 ];
 
+type ApiResponse = {
+  data: {
+    id: number;
+    documentId: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+    events: {
+      id: number;
+      documentId: string;
+      eventName: string;
+      createdAt: string;
+      updatedAt: string;
+      publishedAt: string;
+      file: {
+        id: number;
+        documentId: string;
+        name: string;
+        alternativeText: string | null;
+        caption: string | null;
+        width: number | null;
+        height: number | null;
+        formats: {
+          thumbnail?: {
+            name: string;
+            hash: string;
+            ext: string;
+            mime: string;
+            path: string | null;
+            width: number;
+            height: number;
+            size: number;
+            sizeInBytes: number;
+            url: string;
+          };
+          small?: {
+            name: string;
+            hash: string;
+            ext: string;
+            mime: string;
+            path: string | null;
+            width: number;
+            height: number;
+            size: number;
+            sizeInBytes: number;
+            url: string;
+          };
+        } | null;
+        hash: string;
+        ext: string;
+        mime: string;
+        size: number;
+        url: string;
+        previewUrl: string | null;
+        provider: string;
+        provider_metadata: any | null;
+        createdAt: string;
+        updatedAt: string;
+        publishedAt: string;
+      };
+      logo: {
+        id: number;
+        documentId: string;
+        name: string;
+        alternativeText: string | null;
+        caption: string | null;
+        width: number | null;
+        height: number | null;
+        formats: {
+          thumbnail?: {
+            name: string;
+            hash: string;
+            ext: string;
+            mime: string;
+            path: string | null;
+            width: number;
+            height: number;
+            size: number;
+            sizeInBytes: number;
+            url: string;
+          };
+          small?: {
+            name: string;
+            hash: string;
+            ext: string;
+            mime: string;
+            path: string | null;
+            width: number;
+            height: number;
+            size: number;
+            sizeInBytes: number;
+            url: string;
+          };
+        } | null;
+        hash: string;
+        ext: string;
+        mime: string;
+        size: number;
+        url: string;
+        previewUrl: string | null;
+        provider: string;
+        provider_metadata: any | null;
+        createdAt: string;
+        updatedAt: string;
+        publishedAt: string;
+      };
+    }[];
+  };
+  meta: Record<string, unknown>;
+};
+
 const TOTAL_ITEMS = 6;
 const BASE_WIDTH = 1440;
 
@@ -54,6 +167,22 @@ const CircleSlider: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visibleItems, setVisibleItems] = useState<SliderItem[][]>([]);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
+  const [dataFromApi, setDataFromApi] = useState<ApiResponse | null>(null);
+
+  const { data } = useQuery<ApiResponse>({
+    queryKey: ["hero-slider"],
+    queryFn: async () => {
+      const res = await fetch("/api/hero-slider");
+      if (!res.ok) throw new Error("Network response was not ok");
+      return res.json();
+    },
+  });
+
+  useEffect(() => {
+    if (data) {
+      setDataFromApi(data);
+    }
+  }, [data]);
 
   // Initialize video refs array
   useEffect(() => {
@@ -188,87 +317,100 @@ const CircleSlider: React.FC = () => {
   };
 
   const renderDescCircle = () => {
-    return Array.from({ length: TOTAL_ITEMS }, (_, i) => {
-      const item = SLIDER_DATA[i % SLIDER_DATA.length];
+    return (
+      dataFromApi &&
+      dataFromApi.data.events.map((data, i) => {
+        const item = SLIDER_DATA[i % SLIDER_DATA.length];
 
-      return (
-        <div
-          key={i}
-          className={clsx(
-            `font-bold font-abc md:landscape:text-16d text-ruby-red uppercase desc-circle-${i} leading-none`,
-            "absolute top-0 left-0",
-            {
-              "translate-y-[300%]": i !== 0,
-            }
-          )}
-        >
-          {item.desc}
-        </div>
-      );
-    });
+        return (
+          <div
+            key={i}
+            className={clsx(
+              `font-bold font-abc md:landscape:text-16d text-ruby-red uppercase desc-circle-${i} leading-none`,
+              "absolute top-0 left-0",
+              {
+                "translate-y-[300%]": i !== 0,
+                "opacity-0": i === 0,
+              }
+            )}
+          >
+            {data.eventName}
+          </div>
+        );
+      })
+    );
   };
 
   const renderCircleItems = () => {
-    return Array.from({ length: TOTAL_ITEMS }, (_, i) => {
-      const angle = (i / TOTAL_ITEMS) * 360;
-      const item = SLIDER_DATA[i % SLIDER_DATA.length];
+    return (
+      dataFromApi &&
+      dataFromApi.data.events.map((data, i) => {
+        const angle = (i / TOTAL_ITEMS) * 360;
+        const item = SLIDER_DATA[i % SLIDER_DATA.length];
 
-      return (
-        <div
-          key={i}
-          className={clsx(
-            "absolute w-672d h-672d rounded-full flex items-center justify-center text-white font-bold overflow-hidden",
-            `circle-item-${i}`,
-            {
-              "cursor-follow-active": i === currentIndex,
-            }
-          )}
-          style={{
-            transform: `rotate(${angle}deg) translateY(-${radius}px) rotate(0deg)`,
-          }}
-        >
-          <div className="relative w-full h-full rounded-full overflow-hidden">
-            {/* logo */}
-            {item.logo && (
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10">
-                <div className="w-537d h-537d relative">
-                  <Image
-                    src={item.logo}
-                    alt="logo"
-                    fill
-                    className="w-full h-full object-cover"
-                  />
+        return (
+          <div
+            key={i}
+            className={clsx(
+              "absolute w-672d h-672d rounded-full flex items-center justify-center text-white font-bold overflow-hidden",
+              `circle-item-${i}`,
+              {
+                "cursor-follow-active": i === currentIndex,
+              }
+            )}
+            style={{
+              transform: `rotate(${angle}deg) translateY(-${radius}px) rotate(0deg)`,
+            }}
+          >
+            <div className="relative w-full h-full rounded-full overflow-hidden">
+              {/* logo */}
+              {data.logo && (
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10">
+                  <div className="w-537d h-537d relative">
+                    <Image
+                      src={process.env.NEXT_PUBLIC_STRAPI_URL + data.logo.url}
+                      alt="logo"
+                      fill
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {item.type === "img" ? (
-              <Image
-                src={item.file}
-                alt={"image"}
-                fill
-                className="w-full h-full object-cover scale-105"
-              />
-            ) : (
-              <video
-                ref={setVideoRef(i)}
-                className="w-full h-full object-cover scale-105"
-                src={item.file}
-                loop
-                muted
-                playsInline
-              />
-            )}
+              {data.file.mime?.startsWith("image/") ? (
+                <Image
+                  src={process.env.NEXT_PUBLIC_STRAPI_URL + data.file.url}
+                  alt="image"
+                  fill
+                  className="w-full h-full object-cover scale-105"
+                />
+              ) : (
+                <video
+                  ref={setVideoRef(i)}
+                  className="w-full h-full object-cover scale-105"
+                  src={process.env.NEXT_PUBLIC_STRAPI_URL + data.file.url}
+                  loop
+                  muted
+                  playsInline
+                />
+              )}
+            </div>
           </div>
-        </div>
-      );
-    });
+        );
+      })
+    );
   };
 
   return (
     <>
       <div className="w-217d absolute left-141d top-510d z-10 flex flex-col gap-y-20d">
-        <div className="uppercase font-sans text-10d text-ruby-red title-desc">
+        <div
+          className="uppercase font-sans text-10d text-ruby-red title-desc "
+          style={{
+            transform: "translateY(100%)",
+            clipPath: "inset(0% 0% 100% 0%)",
+          }}
+        >
           Cocolily sweet moments
         </div>
 
@@ -290,13 +432,13 @@ const CircleSlider: React.FC = () => {
         </div>
 
         <div
-          className="absolute left-365d top-387d z-10 cursor-pointer button-prev"
+          className="absolute left-365d top-387d z-10 cursor-pointer button-prev opacity-0"
           onClick={() => !isAnimating && rotateCircle("prev")}
         >
           <ArrowButton variant="secondary" icon="arrow-left" />
         </div>
         <div
-          className="absolute right-365d top-387d z-10 cursor-pointer button-next"
+          className="absolute right-365d top-387d z-10 cursor-pointer button-next opacity-0"
           onClick={() => !isAnimating && rotateCircle("next")}
         >
           <ArrowButton variant="secondary" />
