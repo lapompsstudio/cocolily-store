@@ -1,6 +1,7 @@
 /** srctype {import('next').NextConfig} */
 module.exports = {
   images: {
+    domains: ["admin-cocolily.lapomps.cloud"],
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
