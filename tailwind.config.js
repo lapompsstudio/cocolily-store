@@ -169,6 +169,7 @@ module.exports = {
       },
       inset: {
         "20d": "calc((20/var(--bw)*100vw))",
+        "24d": "calc((24/var(--bw)*100vw))",
         "33d": "calc((33/var(--bw)*100vw))",
         "68d": "calc((68/var(--bw)*100vw))",
         "74d": "calc((74/var(--bw)*100vw))",
@@ -188,6 +189,7 @@ module.exports = {
         1.4: "1.4",
       },
       margin: {
+        "8d": "calc((8/var(--bw)*100vw))",
         "18d": "calc((18/var(--bw)*100vw))",
         "20d": "calc((20/var(--bw)*100vw))",
         "30d": "calc((30/var(--bw)*100vw))",

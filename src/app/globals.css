@@ -171,6 +171,10 @@ ul {
   transform: translateY(100%);
 }
 
+.grecaptcha-badge {
+  visibility: hidden;
+}
+
 input:focus-visible,
 input:focus-within,
 input:focus {
