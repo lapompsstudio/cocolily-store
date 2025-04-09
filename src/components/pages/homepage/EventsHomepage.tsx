@@ -1,56 +1,41 @@
 "use client";
 
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  useMemo,
-  useCallback,
-} from "react";
+import ArrowButton from "@/components/ui/ArrowButton";
+import Button from "@/components/ui/button";
+import GradientImage from "@/components/ui/GradientImage";
+import IconMaroon from "@/components/ui/IconMaroon";
+import useColorStore from "@/store/colorStore";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import SplitText from "gsap/SplitText";
-import GradientImage from "@/components/ui/GradientImage";
-import Button from "@/components/ui/button";
-import IconMaroon from "@/components/ui/IconMaroon";
-import { eventsData } from "./eventsData";
-import useColorStore from "@/store/colorStore";
-import ArrowButton from "@/components/ui/ArrowButton";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 // Import Swiper components
-import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 // Import Swiper type with a different name to avoid conflict
 import type { Swiper as SwiperType } from "swiper";
 
 // Import Swiper styles
+import { useQuery } from "@tanstack/react-query";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+// Import API types from our type definition file
+import { Button as APIButton, APIResponse } from "@/types/events-homepages";
 
 // Register GSAP plugins once
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
-// Define types for our data structure
-interface EventButton {
-  id: number;
-  label: string;
-}
-
-interface EventStats {
-  engagement: string;
-  attendance: string;
-}
-
-interface Event {
+// Define our internal Event interface for component state
+interface InternalEvent {
   id: number;
   name: string;
   location: string;
   date: string;
   description: string;
   images: string[]; // Using only images array
-  buttons: EventButton[];
-  stats: EventStats;
+  buttons: APIButton[];
 }
 
 // Define type for our content refs
@@ -70,20 +55,93 @@ interface ContentRefs {
   upRecent: HTMLDivElement | null;
 }
 
-// Limit eventsData to only 4 items
-const LIMITED_EVENTS_DATA = eventsData.slice(0, 4);
-const ITEM_HEIGHT = 9; // 9vh height for each item
-
 export default function EventsHomepage(): JSX.Element {
+  const { data, isLoading, isSuccess } = useQuery<APIResponse>({
+    queryKey: ["events-homepages"],
+    queryFn: async () => {
+      const res = await fetch("/api/events-homepages");
+      if (!res.ok) throw new Error("Network response was not ok");
+      return res.json();
+    },
+  });
+
+  // Define a default event to use when data is undefined
+  const DEFAULT_EVENT: InternalEvent = {
+    id: 0,
+    name: "Loading...",
+    location: "TBD",
+    date: "TBD",
+    description: "Event details are loading...",
+    images: ["/images/placeholder.jpg"],
+    buttons: [],
+  };
+
+  // Function to format date from API (YYYY-MM-DD) to displayed format
+  const formatDate = (dateString: string): string => {
+    if (!dateString) return "TBD";
+
+    try {
+      const date = new Date(dateString);
+      // Format to something like "25 Mar 2025"
+      return date
+        .toLocaleDateString("id-ID", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        })
+        .toLowerCase();
+    } catch (error) {
+      console.error("Error formatting date:", error);
+      return dateString; // Return the original string if formatting fails
+    }
+  };
+
+  // Convert API data to our InternalEvent interface format
+  const LIMITED_EVENTS_DATA: InternalEvent[] = useMemo(() => {
+    if (data?.data?.events && data.data.events.length > 0) {
+      // Map API events to our InternalEvent interface
+      return data.data.events.slice(0, 4).map((apiEvent) => ({
+        id: apiEvent.id,
+        name: apiEvent.eventName, // Use eventName from API
+        location: apiEvent.location,
+        date: formatDate(apiEvent.date), // Format date
+        description: apiEvent.description,
+        // Combine all image sources with proper URL path
+        images: [
+          ...(apiEvent.images
+            ? apiEvent.images.map(
+                (img) => process.env.NEXT_PUBLIC_STRAPI_URL + img.url
+              )
+            : []),
+        ],
+        buttons: apiEvent.buttons || [],
+      }));
+    }
+    return [DEFAULT_EVENT];
+  }, [data?.data?.events]);
+
+  const ITEM_HEIGHT = 9; // 9vh height for each item
+
   // Use Zustand store for color
   const { currentColor, setColor } = useColorStore();
 
   // State management
-  const [selectedEvent, setSelectedEvent] = useState<Event>(
-    LIMITED_EVENTS_DATA[0]
+  const [selectedEvent, setSelectedEvent] = useState<InternalEvent | null>(
+    null
   );
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [isAnimatingTrigger, setIsAnimatingTrigger] = useState<boolean>(false);
+  const [isDataReady, setIsDataReady] = useState<boolean>(false);
+
+  // Update selected event when data changes
+  useEffect(() => {
+    if (LIMITED_EVENTS_DATA.length > 0 && LIMITED_EVENTS_DATA[0].id !== 0) {
+      setSelectedEvent(LIMITED_EVENTS_DATA[0]);
+      setIsDataReady(true);
+    } else if (LIMITED_EVENTS_DATA.length > 0 && !selectedEvent) {
+      setSelectedEvent(LIMITED_EVENTS_DATA[0]);
+    }
+  }, [LIMITED_EVENTS_DATA, selectedEvent]);
 
   // Swiper refs - properly typed for Swiper
   const swiperRef = useRef<SwiperType | null>(null);
@@ -109,7 +167,7 @@ export default function EventsHomepage(): JSX.Element {
   const eventItemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Memoize the selected event ID for comparison
-  const selectedEventId = useMemo(() => selectedEvent.id, [selectedEvent]);
+  const selectedEventId = useMemo(() => selectedEvent?.id, [selectedEvent]);
 
   // Initialize event item refs
   useEffect(() => {
@@ -117,7 +175,7 @@ export default function EventsHomepage(): JSX.Element {
       0,
       LIMITED_EVENTS_DATA.length
     );
-  }, []);
+  }, [LIMITED_EVENTS_DATA.length]);
 
   // Custom navigation handlers for Swiper
   const handleImageNavigation = useCallback(
@@ -162,7 +220,7 @@ export default function EventsHomepage(): JSX.Element {
   // Function to animate content on event change
   const animateContent = useCallback(
     (newEventId: number, index: number) => {
-      if (isAnimating || selectedEventId === newEventId) return;
+      if (isAnimating || selectedEventId === newEventId || !isDataReady) return;
       setIsAnimating(true);
 
       const event = LIMITED_EVENTS_DATA.find(
@@ -227,7 +285,6 @@ export default function EventsHomepage(): JSX.Element {
       const contentElements = [
         contentRefs.current.locationDate,
         contentRefs.current.buttons,
-        contentRefs.current.stats,
         contentRefs.current.discoverBtn,
       ].filter(Boolean);
 
@@ -323,7 +380,14 @@ export default function EventsHomepage(): JSX.Element {
         );
       }
     },
-    [isAnimating, selectedEventId, setColor, createSplitText]
+    [
+      isAnimating,
+      selectedEventId,
+      setColor,
+      createSplitText,
+      LIMITED_EVENTS_DATA,
+      isDataReady,
+    ]
   );
 
   // Handle click on event item
@@ -336,7 +400,7 @@ export default function EventsHomepage(): JSX.Element {
 
   // Animation when event is changed
   useGSAP(() => {
-    if (!isAnimatingTrigger) return;
+    if (!isAnimatingTrigger || !isDataReady) return;
 
     const mm = gsap.matchMedia();
     mm.add("(min-width: 0px)", () => {
@@ -362,10 +426,28 @@ export default function EventsHomepage(): JSX.Element {
     });
 
     return () => mm.revert();
-  }, [selectedEvent, isAnimatingTrigger, createSplitText, animateLines]);
+  }, [
+    selectedEvent,
+    isAnimatingTrigger,
+    createSplitText,
+    animateLines,
+    isDataReady,
+  ]);
+
+  // Reset animatingTrigger after animation completes
+  useEffect(() => {
+    if (isAnimatingTrigger) {
+      const timer = setTimeout(() => {
+        setIsAnimatingTrigger(false);
+      }, 1000); // Match this with your animation duration
+      return () => clearTimeout(timer);
+    }
+  }, [isAnimatingTrigger]);
 
   // Horizontal text animation
   useGSAP(() => {
+    if (!isDataReady) return;
+
     const mm = gsap.matchMedia();
     mm.add("(min-width: 0px)", () => {
       gsap
@@ -384,10 +466,12 @@ export default function EventsHomepage(): JSX.Element {
     });
 
     return () => mm.revert();
-  }, []);
+  }, [isDataReady]);
 
   // Background color animation
   useGSAP(() => {
+    if (!isDataReady) return;
+
     const mm = gsap.matchMedia();
     mm.add("(min-width: 0px)", () => {
       // Animate background color change
@@ -406,10 +490,12 @@ export default function EventsHomepage(): JSX.Element {
     });
 
     return () => mm.revert();
-  }, [currentColor]);
+  }, [currentColor, isDataReady]);
 
   // Initial animation on page load
   useGSAP(() => {
+    if (!isDataReady) return;
+
     const mm = gsap.matchMedia();
     mm.add("(min-width: 0px)", () => {
       // Split text for specified elements
@@ -435,13 +521,13 @@ export default function EventsHomepage(): JSX.Element {
         contentRefs.current.image,
         contentRefs.current.locationDate,
         contentRefs.current.buttons,
-        // contentRefs.current.stats,
         contentRefs.current.discoverBtn,
         contentRefs.current.upComing,
         contentRefs.current.upImage,
         contentRefs.current.upComingLocation,
         contentRefs.current.upRecent,
         ".anim-indicator-events-homepage",
+        ".button-navigation-image-events-home",
         ...eventItemRefs.current.filter(Boolean),
       ].filter(Boolean);
 
@@ -457,6 +543,7 @@ export default function EventsHomepage(): JSX.Element {
       ScrollTrigger.create({
         trigger: ".container-events-homepage",
         start: "60% 90%",
+        markers: true,
         onEnter: () => {
           // Animate standard elements
           if (otherContentElements.length > 0) {
@@ -483,12 +570,12 @@ export default function EventsHomepage(): JSX.Element {
     });
 
     return () => mm.revert();
-  }, [createSplitText]);
+  }, [createSplitText, isDataReady]);
 
   // Memoize event buttons
   const eventButtons = useMemo(
     () =>
-      selectedEvent.buttons.map((button) => (
+      selectedEvent?.buttons.map((button) => (
         <Button
           key={button.id}
           variant="secondary"
@@ -496,8 +583,8 @@ export default function EventsHomepage(): JSX.Element {
         >
           {button.label}
         </Button>
-      )),
-    [selectedEvent.buttons]
+      )) || [],
+    [selectedEvent?.buttons]
   );
 
   // Memoize event list
@@ -517,36 +604,23 @@ export default function EventsHomepage(): JSX.Element {
           <div className="flex items-center gap-12d">
             <div className="w-22d h-22d relative"></div>
             <div className="w-46d h-[5vh] relative rounded-6d overflow-hidden">
-              <GradientImage src={event.images[0]} />
+              {event.images[0] && <GradientImage src={event.images[0]} />}
             </div>
           </div>
           <p className="uppercase font-abc text-11d font-bold">{event.name}</p>
         </div>
       )),
-    [isAnimating, handleEventClick]
+    [LIMITED_EVENTS_DATA, isAnimating, handleEventClick]
   );
 
-  // const renderEventStats = useCallback(
-  //   () => (
-  //     <div className="flex items-center gap-60d mt-[8vh]">
-  //       <div>
-  //         <p className="font-abc text-28d leading-none">
-  //           {selectedEvent.stats.engagement}
-  //         </p>
-  //         <p className="font-abc text-10d leading-none mt-0.5">
-  //           VISITOR ENGAGEMENT
-  //         </p>
-  //       </div>
-  //       <div>
-  //         <p className="font-abc text-28d leading-none">
-  //           {selectedEvent.stats.attendance}
-  //         </p>
-  //         <p className="font-abc text-10d leading-none mt-0.5">ATTENDANCE</p>
-  //       </div>
-  //     </div>
-  //   ),
-  //   [selectedEvent.stats]
-  // );
+  // Show loading state if data is still loading
+  if (isLoading) {
+    return (
+      <div className="w-full h-screen flex items-center justify-center bg-seashell">
+        <p className="text-ruby-red font-abc text-2xl">Loading events...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="container-events-homepage w-full relative text-ruby-red">
@@ -589,12 +663,14 @@ export default function EventsHomepage(): JSX.Element {
               }}
               className="w-full h-full"
             >
-              {selectedEvent.images.map((image, index) => (
+              {selectedEvent?.images.map((image, index) => (
                 <SwiperSlide key={index}>
-                  <GradientImage
-                    src={image}
-                    className="h-full w-full object-cover"
-                  />
+                  {image && (
+                    <GradientImage
+                      src={image}
+                      className="h-full w-full object-cover"
+                    />
+                  )}
                 </SwiperSlide>
               ))}
             </Swiper>
@@ -602,8 +678,8 @@ export default function EventsHomepage(): JSX.Element {
 
           {/* Navigation buttons - only show when there are multiple images */}
           <div className="button-navigation">
-            {selectedEvent.images.length > 1 && (
-              <div className="flex items-center justify-between absolute w-full top-1/2 -translate-y-1/2 px-30d z-10">
+            {selectedEvent?.images.length && (
+              <div className="flex items-center justify-between absolute w-full top-1/2 -translate-y-1/2 px-30d z-10 button-navigation-image-events-home">
                 <button
                   type="button"
                   aria-label="Previous slide"
@@ -637,8 +713,8 @@ export default function EventsHomepage(): JSX.Element {
               }}
               className="grid grid-cols-4 gap-20d uppercase"
             >
-              <p className="text-10d">{selectedEvent.location}</p>
-              <p className="text-10d">{selectedEvent.date}</p>
+              <p className="text-10d">{selectedEvent?.location}</p>
+              <p className="text-10d">{selectedEvent?.date}</p>
             </div>
             <h3
               ref={(el) => {
@@ -646,7 +722,7 @@ export default function EventsHomepage(): JSX.Element {
               }}
               className="font-span w-[90%] mt-[7vh] font-semibold"
             >
-              {selectedEvent.name}
+              {selectedEvent?.name}
             </h3>
             <div
               ref={(el) => {
@@ -666,15 +742,8 @@ export default function EventsHomepage(): JSX.Element {
               }}
               className="text-12d"
             >
-              {selectedEvent.description}
+              {selectedEvent?.description}
             </p>
-            {/* <div
-              ref={(el) => {
-                contentRefs.current.stats = el;
-              }}
-            >
-              {renderEventStats()}
-            </div> */}
             <div
               ref={(el) => {
                 contentRefs.current.discoverBtn = el;
@@ -705,7 +774,14 @@ export default function EventsHomepage(): JSX.Element {
               }}
             >
               <div className="w-full relative h-full hover:scale-125 transition-all duration-500">
-                <GradientImage src="/images/our-products/image1.png" />
+                {data?.data?.upcomingEvents?.images[0]?.url && (
+                  <GradientImage
+                    src={
+                      process.env.NEXT_PUBLIC_STRAPI_URL +
+                      data?.data?.upcomingEvents?.images[0]?.url
+                    }
+                  />
+                )}
               </div>
             </div>
             <div
@@ -714,8 +790,12 @@ export default function EventsHomepage(): JSX.Element {
                 contentRefs.current.upComingLocation = el;
               }}
             >
-              <p className="text-10d uppercase">Dubai</p>
-              <p className="text-10d uppercase">25 mar 2025</p>
+              <p className="text-10d uppercase">
+                {data?.data?.upcomingEvents?.location}
+              </p>
+              <p className="text-10d uppercase">
+                {formatDate(data?.data?.upcomingEvents?.date || "")}
+              </p>
             </div>
             <p
               className="font-abc uppercase leading-none mt-[2.5vh]"
@@ -723,7 +803,7 @@ export default function EventsHomepage(): JSX.Element {
                 contentRefs.current.upName = el;
               }}
             >
-              Cocolily x premium partner
+              {data?.data?.upcomingEvents?.eventName}
             </p>
           </div>
 
