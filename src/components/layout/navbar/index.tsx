@@ -46,7 +46,7 @@ export function Navbar() {
           <Link href={"/"} className="nav-link text-ruby-red text-10d">
             SEE <br /> OUR EVENTS
           </Link>
-          <Link href={"/"} className="nav-link text-ruby-red text-10d">
+          <Link href={"/about-us"} className="nav-link text-ruby-red text-10d">
             ABOUT US
           </Link>
 
