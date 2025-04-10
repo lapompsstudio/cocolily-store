@@ -56,7 +56,7 @@ interface ContentRefs {
 }
 
 export default function EventsHomepage(): JSX.Element {
-  const { data, isLoading, isSuccess } = useQuery<APIResponse>({
+  const { data } = useQuery<APIResponse>({
     queryKey: ["events-homepages"],
     queryFn: async () => {
       const res = await fetch("/api/events-homepages");
@@ -126,20 +126,42 @@ export default function EventsHomepage(): JSX.Element {
   const { currentColor, setColor } = useColorStore();
 
   // State management
-  const [selectedEvent, setSelectedEvent] = useState<InternalEvent | null>(
-    null
+  const [selectedEvent, setSelectedEvent] = useState<InternalEvent>(
+    LIMITED_EVENTS_DATA[0]
   );
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [isAnimatingTrigger, setIsAnimatingTrigger] = useState<boolean>(false);
-  const [isDataReady, setIsDataReady] = useState<boolean>(false);
+  // Add state for tracking images loaded
+  const [imagesLoaded, setImagesLoaded] = useState<boolean>(false);
+  const [initialAnimationComplete, setInitialAnimationComplete] =
+    useState<boolean>(false);
 
   // Update selected event when data changes
   useEffect(() => {
-    if (LIMITED_EVENTS_DATA.length > 0 && LIMITED_EVENTS_DATA[0].id !== 0) {
+    if (
+      LIMITED_EVENTS_DATA.length > 0 &&
+      (!selectedEvent || selectedEvent.id === 0)
+    ) {
       setSelectedEvent(LIMITED_EVENTS_DATA[0]);
-      setIsDataReady(true);
-    } else if (LIMITED_EVENTS_DATA.length > 0 && !selectedEvent) {
-      setSelectedEvent(LIMITED_EVENTS_DATA[0]);
+    }
+  }, [LIMITED_EVENTS_DATA, selectedEvent]);
+
+  // Effect to track when images are loaded
+  useEffect(() => {
+    if (
+      LIMITED_EVENTS_DATA.length > 0 &&
+      selectedEvent &&
+      selectedEvent.id !== 0 &&
+      selectedEvent.images.length > 0
+    ) {
+      // Add a small delay to ensure DOM is ready
+      const timer = setTimeout(() => {
+        setImagesLoaded(true);
+        if (swiperRef.current) {
+          swiperRef.current.update();
+        }
+      }, 200);
+      return () => clearTimeout(timer);
     }
   }, [LIMITED_EVENTS_DATA, selectedEvent]);
 
@@ -167,7 +189,7 @@ export default function EventsHomepage(): JSX.Element {
   const eventItemRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Memoize the selected event ID for comparison
-  const selectedEventId = useMemo(() => selectedEvent?.id, [selectedEvent]);
+  const selectedEventId = useMemo(() => selectedEvent.id, [selectedEvent]);
 
   // Initialize event item refs
   useEffect(() => {
@@ -220,7 +242,7 @@ export default function EventsHomepage(): JSX.Element {
   // Function to animate content on event change
   const animateContent = useCallback(
     (newEventId: number, index: number) => {
-      if (isAnimating || selectedEventId === newEventId || !isDataReady) return;
+      if (isAnimating || selectedEventId === newEventId) return;
       setIsAnimating(true);
 
       const event = LIMITED_EVENTS_DATA.find(
@@ -386,7 +408,6 @@ export default function EventsHomepage(): JSX.Element {
       setColor,
       createSplitText,
       LIMITED_EVENTS_DATA,
-      isDataReady,
     ]
   );
 
@@ -400,7 +421,7 @@ export default function EventsHomepage(): JSX.Element {
 
   // Animation when event is changed
   useGSAP(() => {
-    if (!isAnimatingTrigger || !isDataReady) return;
+    if (!isAnimatingTrigger) return;
 
     const mm = gsap.matchMedia();
     mm.add("(min-width: 0px)", () => {
@@ -426,13 +447,7 @@ export default function EventsHomepage(): JSX.Element {
     });
 
     return () => mm.revert();
-  }, [
-    selectedEvent,
-    isAnimatingTrigger,
-    createSplitText,
-    animateLines,
-    isDataReady,
-  ]);
+  }, [selectedEvent, isAnimatingTrigger, createSplitText, animateLines]);
 
   // Reset animatingTrigger after animation completes
   useEffect(() => {
@@ -446,8 +461,6 @@ export default function EventsHomepage(): JSX.Element {
 
   // Horizontal text animation
   useGSAP(() => {
-    if (!isDataReady) return;
-
     const mm = gsap.matchMedia();
     mm.add("(min-width: 0px)", () => {
       gsap
@@ -466,12 +479,10 @@ export default function EventsHomepage(): JSX.Element {
     });
 
     return () => mm.revert();
-  }, [isDataReady]);
+  }, []);
 
   // Background color animation
   useGSAP(() => {
-    if (!isDataReady) return;
-
     const mm = gsap.matchMedia();
     mm.add("(min-width: 0px)", () => {
       // Animate background color change
@@ -490,11 +501,19 @@ export default function EventsHomepage(): JSX.Element {
     });
 
     return () => mm.revert();
-  }, [currentColor, isDataReady]);
+  }, [currentColor]);
 
-  // Initial animation on page load
+  // Initial animation on page load - modified to only run when data and images are loaded
   useGSAP(() => {
-    if (!isDataReady) return;
+    // Only run the animation if data is loaded, events are available, and images are loaded
+    if (
+      !LIMITED_EVENTS_DATA.length ||
+      LIMITED_EVENTS_DATA[0].id === 0 ||
+      !imagesLoaded ||
+      initialAnimationComplete
+    ) {
+      return; // Exit early if conditions aren't met
+    }
 
     const mm = gsap.matchMedia();
     mm.add("(min-width: 0px)", () => {
@@ -527,7 +546,6 @@ export default function EventsHomepage(): JSX.Element {
         contentRefs.current.upComingLocation,
         contentRefs.current.upRecent,
         ".anim-indicator-events-homepage",
-        ".button-navigation-image-events-home",
         ...eventItemRefs.current.filter(Boolean),
       ].filter(Boolean);
 
@@ -543,8 +561,10 @@ export default function EventsHomepage(): JSX.Element {
       ScrollTrigger.create({
         trigger: ".container-events-homepage",
         start: "60% 90%",
-        markers: true,
         onEnter: () => {
+          // Mark animation as complete to prevent re-running
+          setInitialAnimationComplete(true);
+
           // Animate standard elements
           if (otherContentElements.length > 0) {
             gsap.to(otherContentElements, {
@@ -570,12 +590,17 @@ export default function EventsHomepage(): JSX.Element {
     });
 
     return () => mm.revert();
-  }, [createSplitText, isDataReady]);
+  }, [
+    createSplitText,
+    LIMITED_EVENTS_DATA,
+    imagesLoaded,
+    initialAnimationComplete,
+  ]);
 
   // Memoize event buttons
   const eventButtons = useMemo(
     () =>
-      selectedEvent?.buttons.map((button) => (
+      selectedEvent.buttons.map((button) => (
         <Button
           key={button.id}
           variant="secondary"
@@ -583,8 +608,8 @@ export default function EventsHomepage(): JSX.Element {
         >
           {button.label}
         </Button>
-      )) || [],
-    [selectedEvent?.buttons]
+      )),
+    [selectedEvent.buttons]
   );
 
   // Memoize event list
@@ -613,15 +638,6 @@ export default function EventsHomepage(): JSX.Element {
     [LIMITED_EVENTS_DATA, isAnimating, handleEventClick]
   );
 
-  // Show loading state if data is still loading
-  if (isLoading) {
-    return (
-      <div className="w-full h-screen flex items-center justify-center bg-seashell">
-        <p className="text-ruby-red font-abc text-2xl">Loading events...</p>
-      </div>
-    );
-  }
-
   return (
     <div className="container-events-homepage w-full relative text-ruby-red">
       {/* Header section with horizontal scrolling text */}
@@ -642,44 +658,52 @@ export default function EventsHomepage(): JSX.Element {
             }}
             className="w-full h-full relative overflow-hidden"
           >
-            <Swiper
-              onSwiper={(swiper) => {
-                swiperRef.current = swiper;
-              }}
-              modules={[Navigation, Pagination]}
-              spaceBetween={0}
-              slidesPerView={1}
-              loop={true}
-              speed={800}
-              autoplay={false}
-              effect="fade"
-              fadeEffect={{ crossFade: true }}
-              pagination={{
-                clickable: true,
-                el: ".swiper-pagination",
-                bulletClass:
-                  "w-3 h-3 rounded-full transition-all bg-white/50 hover:bg-white/70 inline-block mx-1.5",
-                bulletActiveClass: "bg-white scale-125",
-              }}
-              className="w-full h-full"
-            >
-              {selectedEvent?.images.map((image, index) => (
-                <SwiperSlide key={index}>
-                  {image && (
-                    <GradientImage
-                      src={image}
-                      className="h-full w-full object-cover"
-                    />
-                  )}
-                </SwiperSlide>
-              ))}
-            </Swiper>
+            {selectedEvent &&
+            selectedEvent.images &&
+            selectedEvent.images.length > 0 ? (
+              <Swiper
+                onSwiper={(swiper) => {
+                  swiperRef.current = swiper;
+                }}
+                modules={[Navigation, Pagination]}
+                spaceBetween={0}
+                slidesPerView={1}
+                loop={true}
+                speed={800}
+                autoplay={false}
+                effect="fade"
+                fadeEffect={{ crossFade: true }}
+                pagination={{
+                  clickable: true,
+                  el: ".swiper-pagination",
+                  bulletClass:
+                    "w-3 h-3 rounded-full transition-all bg-white/50 hover:bg-white/70 inline-block mx-1.5",
+                  bulletActiveClass: "bg-white scale-125",
+                }}
+                className="w-full h-full"
+              >
+                {selectedEvent.images.map((image, index) => (
+                  <SwiperSlide key={`slide-${selectedEvent.id}-${index}`}>
+                    {image && (
+                      <GradientImage
+                        src={image}
+                        className="h-full w-full object-cover"
+                      />
+                    )}
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            ) : (
+              <div className="w-full h-full bg-gray-200 flex items-center justify-center">
+                <p>Loading images...</p>
+              </div>
+            )}
           </div>
 
           {/* Navigation buttons - only show when there are multiple images */}
           <div className="button-navigation">
-            {selectedEvent?.images.length && (
-              <div className="flex items-center justify-between absolute w-full top-1/2 -translate-y-1/2 px-30d z-10 button-navigation-image-events-home">
+            {selectedEvent.images.length > 1 && (
+              <div className="flex items-center justify-between absolute w-full top-1/2 -translate-y-1/2 px-30d z-10">
                 <button
                   type="button"
                   aria-label="Previous slide"
@@ -713,8 +737,8 @@ export default function EventsHomepage(): JSX.Element {
               }}
               className="grid grid-cols-4 gap-20d uppercase"
             >
-              <p className="text-10d">{selectedEvent?.location}</p>
-              <p className="text-10d">{selectedEvent?.date}</p>
+              <p className="text-10d">{selectedEvent.location}</p>
+              <p className="text-10d">{selectedEvent.date}</p>
             </div>
             <h3
               ref={(el) => {
@@ -722,7 +746,7 @@ export default function EventsHomepage(): JSX.Element {
               }}
               className="font-span w-[90%] mt-[7vh] font-semibold"
             >
-              {selectedEvent?.name}
+              {selectedEvent.name}
             </h3>
             <div
               ref={(el) => {
@@ -742,7 +766,7 @@ export default function EventsHomepage(): JSX.Element {
               }}
               className="text-12d"
             >
-              {selectedEvent?.description}
+              {selectedEvent.description}
             </p>
             <div
               ref={(el) => {
