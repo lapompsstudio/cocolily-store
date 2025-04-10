@@ -13,7 +13,7 @@ const AboutUsPage = () => {
     <>
       <AboutHero />
       <AboutProductGrid />
-      <AboutProductHighlight />
+      {/* <AboutProductHighlight /> */}
       <AboutPurpose />
       <AboutWhatDone />
       <AboutCollaboration />
