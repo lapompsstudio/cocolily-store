@@ -4,10 +4,10 @@ export default function WeCareSection() {
   return (
     <div className="w-full h-screen bg-[#E0C7E6] relative text-ruby-red overflow-hidden">
       <div className="absolute top-0 z-0 pointer-events-none w-full h-full">
-        <div className="w-[217px] h-[271px] absolute top-[-20%] rounded-32d bg-white left-[20%]"></div>
-        <div className="w-[217px] h-[271px] absolute top-[10%] rounded-32d bg-white right-[20%]"></div>
-        <div className="w-[217px] h-[271px] absolute bottom-[10%] rounded-32d bg-white left-[2%]"></div>
-        <div className="w-[217px] h-[271px] absolute bottom-[0%] rounded-32d bg-white right-[2%]"></div>
+        <div className="w-217d h-271d absolute top-[-20%] rounded-32d bg-white left-[20%]"></div>
+        <div className="w-217d h-271d absolute top-[10%] rounded-32d bg-white right-[20%]"></div>
+        <div className="w-217d h-271d absolute bottom-[10%] rounded-32d bg-white left-[2%]"></div>
+        <div className="w-217d h-271d absolute bottom-[0%] rounded-32d bg-white right-[2%]"></div>
       </div>
       <div className="absolute top-0 w-full h-[10vh] z-10 bg-gradient-to-b from-baby-pink"></div>
       <div className="flex flex-col justify-center items-center w-full h-full gap-80d z-10 relative">
