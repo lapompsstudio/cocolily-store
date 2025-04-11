@@ -45,7 +45,7 @@ module.exports = {
         ],
         "12d": [
           "calc((12/var(--bw)*100vw))",
-          { letterSpacing: "calc((-0.05*12/var(--bw))*100vw)" },
+          { letterSpacing: "calc((-0.03*12/var(--bw))*100vw)" },
         ],
         "13d": [
           "calc((13/var(--bw)*100vw))",
@@ -150,6 +150,7 @@ module.exports = {
         "80d": "calc((80/var(--bw)*100vw))",
         "111d": "calc((111/var(--bw)*100vw))",
         "125d": "calc((125/var(--bw)*100vw))",
+        "217d": "calc((217/var(--bw)*100vw))",
         "230d": "calc((230/var(--bw)*100vw))",
         "231d": "calc((231/var(--bw)*100vw))",
         "264d": "calc((264/var(--bw)*100vw))",
@@ -204,6 +205,7 @@ module.exports = {
         "60d": "calc((60/var(--bw)*100vw))",
         "67d": "calc((67/var(--bw)*100vw))",
         "80d": "calc((80/var(--bw)*100vw))",
+        "110d": "calc((110/var(--bw)*100vw))",
         "113d": "calc((113/var(--bw)*100vw))",
         "150d": "calc((150/var(--bw)*100vw))",
         "180d": "calc((180/var(--bw)*100vw))",
@@ -229,6 +231,7 @@ module.exports = {
         "24d": "calc((24/var(--bw)*100vw))",
         "30d": "calc((30/var(--bw)*100vw))",
         "55d": "calc((55/var(--bw)*100vw))",
+        "120d": "calc((120/var(--bw)*100vw))",
         "142d": "calc((142/var(--bw)*100vw))",
         "150d": "calc((150/var(--bw)*100vw))",
       },
