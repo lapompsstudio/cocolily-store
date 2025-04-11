@@ -12,7 +12,7 @@ const AboutPurpose = () => {
           can build a long-lasting relationship with a brand. So we ran with it.
         </h2>
       </div>
-      <div className="mt-150d mb-180d grid md:landscape:grid-cols-12">
+      <div className="mt-150d mb-180d grid md:landscape:grid-cols-12 gap-20d">
         <div className="col-span-4 pr-24d text-right relative">
           <div className="absolute top-92d right-64d max-w-335d">
             <h3 className="text-16d font-bold font-abc uppercase">
