@@ -16,7 +16,7 @@ const AboutUsPage = () => {
       {/* <AboutProductHighlight /> */}
       <AboutPurpose />
       <AboutWhatDone />
-      <AboutCollaboration />
+      {/* <AboutCollaboration /> */}
       <Footer />
     </>
   );
