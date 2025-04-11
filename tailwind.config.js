@@ -138,7 +138,7 @@ module.exports = {
         "20d": "calc((20/var(--bw)*100vw))",
         "24d": "calc((24/var(--bw)*100vw))",
         "60d": "calc((60/var(--bw)*100vw))",
-
+        "80d": "calc((80/var(--bw)*100vw))",
         "90d": "calc((90/var(--bw)*100vw))",
         "124d": "calc((124/var(--bw)*100vw))",
       },
