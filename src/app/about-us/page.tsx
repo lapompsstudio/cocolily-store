@@ -7,6 +7,7 @@ import AboutPurpose from "@/components/pages/about-us/AboutPurpose";
 import AboutWhatDone from "@/components/pages/about-us/AboutWhatDone";
 import AboutCollaboration from "@/components/pages/about-us/AboutCollaboration";
 import Footer from "@/components/layout/footer";
+import WeCareSection from "@/components/pages/about-us/WeCareSection";
 
 const AboutUsPage = () => {
   return (
@@ -15,8 +16,11 @@ const AboutUsPage = () => {
       <AboutProductGrid />
       {/* <AboutProductHighlight /> */}
       <AboutPurpose />
+      <WeCareSection />
       <AboutWhatDone />
       {/* <AboutCollaboration /> */}
+      {/* <AboutWhatDone /> */}
+      <AboutCollaboration />
       <Footer />
     </>
   );
