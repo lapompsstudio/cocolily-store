@@ -21,6 +21,7 @@ interface GradientImageProps {
   fitVariant?: FitVariant; // Default is 'cover'
   className?: string; // Additional class names
   style?: React.CSSProperties; // Custom inline styles
+  alt?: string; // Alt text for the image
 }
 
 export default function GradientImage({
@@ -29,6 +30,7 @@ export default function GradientImage({
   fitVariant = "cover",
   className = "",
   style = {}, // Default empty object for inline styles
+  alt = "image", // Default alt text
 }: GradientImageProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false); // State to track if the image failed to load
@@ -58,7 +60,7 @@ export default function GradientImage({
         <Image
           src={src}
           fill
-          alt="image"
+          alt={alt || "image"}
           className={cx(
             "transition-opacity duration-400 ease-in-out",
             isLoading ? "opacity-0" : "opacity-100",
