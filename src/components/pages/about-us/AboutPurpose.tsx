@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useRef } from "react";
-import Image from "next/image";
 import clsx from "clsx";
 import useSplitTextAnimation from "@/app/hooks/useSplitTextAnimation";
 import { useGSAP } from "@gsap/react";

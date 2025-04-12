@@ -3,10 +3,16 @@
 import React, { useState } from "react";
 
 import MarqueeItem from "./MarqueeItem";
+import useSplitTextAnimation from "@/app/hooks/useSplitTextAnimation";
+import clsx from "clsx";
 
 const AboutCollaboration = () => {
-  const collaborationImages = Array(5).fill("/about-us/collaboration1.png");
   const [isHovering, setIsHovering] = useState(false);
+  useSplitTextAnimation({
+    selector: ".collaboration-split-text",
+  });
+
+  const collaborationImages = Array(5).fill("/about-us/collaboration1.png");
 
   return (
     <div className="min-h-screen bg-pale-sky-blue pt-120d">
@@ -15,7 +21,12 @@ const AboutCollaboration = () => {
           COLLABORATION
         </h2>
         <div className="grid md:landscape:grid-cols-12 gap-5">
-          <p className="md:landscape:col-start-8 md:landscape:col-span-3 mt-16 text-12d leading-1.4 text-ruby-red">
+          <p
+            className={clsx(
+              "md:landscape:col-start-8 md:landscape:col-span-3 mt-16 text-12d leading-1.4 text-ruby-red",
+              "collaboration-split-text"
+            )}
+          >
             Our network of local, independent business partnerships extend into
             an exciting variety of industries. We are tied together by our
             curiosity and commitment to building each other up, collaborating
