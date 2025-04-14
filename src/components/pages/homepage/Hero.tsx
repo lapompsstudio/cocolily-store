@@ -282,16 +282,7 @@ const Hero = () => {
 
       {/* gradient */}
 
-      <div className="w-full  absolute h-264d bottom-0">
-        <div className="w-full h-full relative">
-          <Image
-            src={"/homepage/hero/gradient.png"}
-            alt="gradient"
-            fill
-            className={"w-full h-full object-cover"}
-          />
-        </div>
-      </div>
+      <div className="w-full  absolute h-264d bottom-0 z-10 bg-gradient-to-b to-ruby-red from-transparent"></div>
 
       {/* gradient */}
     </div>
