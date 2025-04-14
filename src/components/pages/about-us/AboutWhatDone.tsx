@@ -11,10 +11,12 @@ import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import gsap from "gsap";
+import { useQuery } from "@tanstack/react-query";
 
 import ArrowButton from "@/components/ui/ArrowButton";
+import { BeyondChocolateResponse } from "@/types/api";
 
-const data = [
+const datas = [
   {
     category: "seasonal pop-ups",
     titleSection: "",
@@ -119,8 +121,19 @@ const AboutWhatDone = () => {
   const sectionRef = useRef<(HTMLDivElement | null)[]>([]);
   const [activeCategory, setActiveCategory] = useState<number>(0);
 
+  const { data } = useQuery<BeyondChocolateResponse>({
+    queryKey: ["beyond-chocolate"],
+    queryFn: async () => {
+      const res = await fetch("/api/beyond-chocolate");
+      if (!res.ok) throw new Error("Network response was not ok");
+      return res.json();
+    },
+  });
+
   useGSAP(
     () => {
+      if (!data) return;
+
       const translate = (32.4 / 1440) * 100; // Hasil: 2.25 (vw)
 
       gsap.to(".marker-category", {
@@ -142,10 +155,12 @@ const AboutWhatDone = () => {
         ease: "power1.inOut",
       });
     },
-    { dependencies: [activeCategory] }
+    { dependencies: [activeCategory, data] }
   );
 
   useEffect(() => {
+    if (!data) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -160,7 +175,7 @@ const AboutWhatDone = () => {
         });
       },
       {
-        threshold: 0.3, // 30% of section needs to be visible
+        threshold: 0.4, // 30% of section needs to be visible
       }
     );
 
@@ -173,9 +188,7 @@ const AboutWhatDone = () => {
         if (el) observer.unobserve(el);
       });
     };
-  }, []);
-
-  console.log(sectionRef.current);
+  }, [data]);
 
   const slideNext = (idx: number) => swiperRefs.current[idx]?.slideNext();
   const slidePrev = (idx: number) => swiperRefs.current[idx]?.slidePrev();
@@ -191,6 +204,44 @@ const AboutWhatDone = () => {
         type: "lines",
       }
     );
+
+    ScrollTrigger.create({
+      trigger: ".beyond-chocolate",
+      onEnter: () => {
+        gsap.fromTo(
+          ".beyond-chocolate",
+          {
+            yPercent: 100,
+            clipPath: "inset(0% 0% 100% 0%)",
+          },
+          {
+            yPercent: 0,
+            clipPath: "inset(0% 0% 0% 0%)",
+            ease: "power1.inOut",
+            duration: 1,
+          }
+        );
+      },
+    });
+
+    ScrollTrigger.create({
+      trigger: ".marker-svg",
+      onEnter: () => {
+        gsap.fromTo(
+          ".marker-svg",
+          {
+            yPercent: 100,
+            clipPath: "inset(0% 0% 100% 0%)",
+          },
+          {
+            yPercent: 0,
+            clipPath: "inset(0% 0% 0% 0%)",
+            ease: "power1.inOut",
+            duration: 1,
+          }
+        );
+      },
+    });
 
     ScrollTrigger.create({
       trigger: ".border-lines",
@@ -248,146 +299,176 @@ const AboutWhatDone = () => {
         );
       },
     });
+  }, [containerRef]);
 
-    data.forEach((data, index) => {
-      if (data.category) {
-        const titleSectionText = new SplitText(`.title-section-${index}`, {
-          type: "lines",
-        });
-
-        ScrollTrigger.create({
-          trigger: `.title-section-${index}`,
-          onEnter: () => {
-            gsap.fromTo(
-              titleSectionText.lines,
-              {
-                yPercent: 100,
-                clipPath: "inset(0% 0% 100% 0%)",
-              },
-              {
-                yPercent: 0,
-                clipPath: "inset(0% 0% 0% 0%)",
-                ease: "power1.inOut",
-                duration: 1,
-                stagger: 0.1,
-              }
-            );
-          },
-        });
-      }
-
-      if (data.descprition) {
-        const descpritionText = new SplitText(`.descprition-${index}`, {
-          type: "lines",
-        });
-
-        ScrollTrigger.create({
-          trigger: `.descprition-${index}`,
-          onEnter: () => {
-            gsap.fromTo(
-              descpritionText.lines,
-              {
-                yPercent: 100,
-                clipPath: "inset(0% 0% 100% 0%)",
-              },
-              {
-                yPercent: 0,
-                clipPath: "inset(0% 0% 0% 0%)",
-                ease: "power1.inOut",
-                duration: 1,
-                stagger: 0.1,
-              }
-            );
-          },
-        });
-      }
-
-      data.items.forEach((item, i) => {
-        if (item.title) {
-          const titleImageText = new SplitText(`.title-image-${index}-${i}`, {
-            type: "lines",
-          });
-
+  useGSAP(
+    () => {
+      if (data) {
+        data.data.forEach((data: any, index) => {
           ScrollTrigger.create({
-            trigger: `.title-image-${index}-${i}`,
+            trigger: `.section-name-${index}`,
             onEnter: () => {
               gsap.fromTo(
-                titleImageText.lines,
+                `.section-name-${index}`,
                 {
                   yPercent: 100,
-                  opacity: 0,
                   clipPath: "inset(0% 0% 100% 0%)",
                 },
                 {
                   yPercent: 0,
-                  opacity: 1,
                   clipPath: "inset(0% 0% 0% 0%)",
                   ease: "power1.inOut",
                   duration: 1,
-                  stagger: 0.1,
                 }
               );
             },
           });
-        }
 
-        ScrollTrigger.create({
-          trigger: `.image-${index}-${i}`,
-          onEnter: () => {
-            gsap.fromTo(
-              `.image-${index}-${i}`,
-              {
-                scale: 1.1,
-                opacity: 0,
+          if (data.sectionTitle) {
+            const titleSectionText = new SplitText(`.title-section-${index}`, {
+              type: "lines",
+            });
+
+            ScrollTrigger.create({
+              trigger: `.title-section-${index}`,
+              onEnter: () => {
+                gsap.fromTo(
+                  titleSectionText.lines,
+                  {
+                    yPercent: 100,
+                    clipPath: "inset(0% 0% 100% 0%)",
+                  },
+                  {
+                    yPercent: 0,
+                    clipPath: "inset(0% 0% 0% 0%)",
+                    ease: "power1.inOut",
+                    duration: 1,
+                    stagger: 0.1,
+                  }
+                );
               },
-              {
-                scale: 1,
-                opacity: 1,
-                ease: "power1.inOut",
-                duration: 1,
-              }
-            );
-          },
+            });
+          }
+
+          if (data.sectionDescription) {
+            const descpritionText = new SplitText(`.descprition-${index}`, {
+              type: "lines",
+            });
+
+            ScrollTrigger.create({
+              trigger: `.descprition-${index}`,
+              onEnter: () => {
+                gsap.fromTo(
+                  descpritionText.lines,
+                  {
+                    yPercent: 100,
+                    clipPath: "inset(0% 0% 100% 0%)",
+                  },
+                  {
+                    yPercent: 0,
+                    clipPath: "inset(0% 0% 0% 0%)",
+                    ease: "power1.inOut",
+                    duration: 1,
+                    stagger: 0.1,
+                  }
+                );
+              },
+            });
+          }
+
+          data.image.forEach((item: any, i: number) => {
+            if (item.imageTitle) {
+              const titleImageText = new SplitText(
+                `.title-image-${index}-${i}`,
+                {
+                  type: "lines",
+                }
+              );
+
+              ScrollTrigger.create({
+                trigger: `.title-image-${index}-${i}`,
+                onEnter: () => {
+                  gsap.fromTo(
+                    titleImageText.lines,
+                    {
+                      yPercent: 100,
+                      opacity: 0,
+                      clipPath: "inset(0% 0% 100% 0%)",
+                    },
+                    {
+                      yPercent: 0,
+                      opacity: 1,
+                      clipPath: "inset(0% 0% 0% 0%)",
+                      ease: "power1.inOut",
+                      duration: 1,
+                      stagger: 0.1,
+                    }
+                  );
+                },
+              });
+            }
+
+            ScrollTrigger.create({
+              trigger: `.image-${index}-${i}`,
+              onEnter: () => {
+                gsap.fromTo(
+                  `.image-${index}-${i}`,
+                  {
+                    scale: 1.1,
+                    opacity: 0,
+                  },
+                  {
+                    scale: 1,
+                    opacity: 1,
+                    ease: "power1.inOut",
+                    duration: 1,
+                  }
+                );
+              },
+            });
+          });
+
+          ScrollTrigger.create({
+            trigger: `.button-slide-prev-${index}`,
+            onEnter: () => {
+              gsap.fromTo(
+                `.button-slide-prev-${index}`,
+                {
+                  xPercent: 30,
+                },
+                {
+                  xPercent: 0,
+                  ease: "power1.inOut",
+                  duration: 0.5,
+                }
+              );
+            },
+          });
+
+          ScrollTrigger.create({
+            trigger: `.button-slide-next-${index}`,
+            onEnter: () => {
+              gsap.fromTo(
+                `.button-slide-next-${index}`,
+                {
+                  xPercent: -30,
+                },
+                {
+                  xPercent: 0,
+                  ease: "power1.inOut",
+                  duration: 0.5,
+                }
+              );
+            },
+          });
         });
-      });
-
-      ScrollTrigger.create({
-        trigger: `.button-slide-prev-${index}`,
-        onEnter: () => {
-          gsap.fromTo(
-            `.button-slide-prev-${index}`,
-            {
-              xPercent: 30,
-            },
-            {
-              xPercent: 0,
-              ease: "power1.inOut",
-              duration: 0.5,
-            }
-          );
-        },
-      });
-
-      ScrollTrigger.create({
-        trigger: `.button-slide-next-${index}`,
-        onEnter: () => {
-          gsap.fromTo(
-            `.button-slide-next-${index}`,
-            {
-              xPercent: -30,
-            },
-            {
-              xPercent: 0,
-              ease: "power1.inOut",
-              duration: 0.5,
-            }
-          );
-        },
-      });
-    });
-  }, [containerRef]);
-
-  useEffect(() => {}, []);
+      }
+    },
+    {
+      scope: containerRef,
+      dependencies: [data],
+    }
+  );
 
   return (
     <section
@@ -395,13 +476,18 @@ const AboutWhatDone = () => {
       ref={containerRef}
     >
       <div className="md:landscape:col-span-3 sticky top-142d">
-        <div className="uppercase font-abc font-bold md:landscape:text-16d">
+        <div
+          className={clsx(
+            "uppercase font-abc font-bold md:landscape:text-16d",
+            "beyond-chocolate"
+          )}
+        >
           beyond chocolate
         </div>
         <div className="md:landscape:mt-60d flex gap-x-16d gap-y-16d ">
           <div className="py-1.65d marker-category">
             <svg
-              className="w-12d h-12d"
+              className="w-12d h-12d marker-svg block"
               viewBox="0 0 16 16"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -426,24 +512,26 @@ const AboutWhatDone = () => {
           </div>
 
           <div className="flex flex-col gap-y-16d">
-            {data.map((item, index) => (
-              <div
-                className={clsx(
-                  "uppercase font-bold md:landscape:text-11d ",
+            {data &&
+              data.data.map((item, index) => (
+                <div
+                  className={clsx(
+                    "uppercase font-bold md:landscape:text-11d ",
+                    `section-name-${index}`,
 
-                  {
-                    "active-category": activeCategory === index,
-                    "inactive-category": activeCategory !== index,
-                  }
-                )}
-                key={index}
-                ref={(el) => {
-                  sectionRef.current[index] = el;
-                }}
-              >
-                {item.category}
-              </div>
-            ))}
+                    {
+                      "active-category": activeCategory === index,
+                      "inactive-category": activeCategory !== index,
+                    }
+                  )}
+                  key={index}
+                  ref={(el) => {
+                    sectionRef.current[index] = el;
+                  }}
+                >
+                  {item.sectionName}
+                </div>
+              ))}
           </div>
         </div>
       </div>
@@ -471,88 +559,92 @@ const AboutWhatDone = () => {
             customers something different to look forward to every season.
           </div>
 
-          {data.map((item, index) => (
-            <div
-              className="mt-90d"
-              key={index}
-              ref={(el) => {
-                sectionRef.current[index] = el;
-              }}
-            >
-              {item.titleSection && (
-                <div className="grid grid-cols-8">
-                  <div
-                    className={clsx(
-                      "col-span-3 font-abc font-bold text-16d text-ruby-red uppercase",
-                      `title-section-${index}`
-                    )}
-                  >
-                    {item.titleSection}
+          {data &&
+            data.data.map((item, index) => (
+              <div
+                className="mt-90d"
+                key={index}
+                ref={(el) => {
+                  sectionRef.current[index] = el;
+                }}
+              >
+                {item.sectionTitle && (
+                  <div className="grid grid-cols-8">
+                    <div
+                      className={clsx(
+                        "col-span-3 font-abc font-bold text-16d text-ruby-red uppercase",
+                        `title-section-${index}`
+                      )}
+                    >
+                      {item.sectionTitle}
+                    </div>
+                    <div
+                      className={clsx(
+                        "col-span-4 col-start-5 font-sans text-12d font-light",
+                        `descprition-${index}`
+                      )}
+                    >
+                      {item.sectionDescription}
+                    </div>
                   </div>
-                  <div
-                    className={clsx(
-                      "col-span-4 col-start-5 font-sans text-12d font-light",
-                      `descprition-${index}`
-                    )}
-                  >
-                    {item.descprition}
-                  </div>
-                </div>
-              )}
+                )}
 
-              <div className="mt-90d">
-                <Swiper
-                  slidesPerView={3}
-                  spaceBetween={20}
-                  onSwiper={(swiper) => (swiperRefs.current[index] = swiper)}
-                >
-                  {item.items.map((data, i) => (
-                    <SwiperSlide key={i}>
-                      <div className="w-296d flex flex-col gap-y-24d">
-                        {data.title && (
-                          <div
-                            className={clsx(
-                              "font-abc font-bold text-11d uppercase",
-                              `title-image-${index}-${i}`
-                            )}
-                          >
-                            {data.title}
+                <div className="mt-90d">
+                  <Swiper
+                    slidesPerView={3}
+                    spaceBetween={20}
+                    onSwiper={(swiper) => (swiperRefs.current[index] = swiper)}
+                  >
+                    {item.image.map((data, i) => (
+                      <SwiperSlide key={i}>
+                        <div className="w-296d flex flex-col gap-y-24d">
+                          {data.imageTitle && (
+                            <div
+                              className={clsx(
+                                "font-abc font-bold text-11d uppercase",
+                                `title-image-${index}-${i}`
+                              )}
+                            >
+                              {data.imageTitle}
+                            </div>
+                          )}
+
+                          <div className="w-full h-369d relative rounded-32d overflow-hidden">
+                            <Image
+                              src={
+                                process.env.NEXT_PUBLIC_STRAPI_URL +
+                                data.image.url
+                              }
+                              alt={data.imageTitle}
+                              className={clsx(
+                                "w-full h-full object-cover rounded-32d",
+                                `image-${index}-${i}`
+                              )}
+                              fill
+                            />
                           </div>
-                        )}
-
-                        <div className="w-full h-369d relative rounded-32d overflow-hidden">
-                          <Image
-                            src={data.image}
-                            alt={item.category}
-                            className={clsx(
-                              "w-full h-full object-cover rounded-32d",
-                              `image-${index}-${i}`
-                            )}
-                            fill
-                          />
                         </div>
-                      </div>
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
 
-                <div className="w-full mt-20d flex justify-between z-50 relative">
-                  <div
-                    onClick={() => slidePrev(index)}
-                    className={`button-slide-prev-${index}`}
-                  >
-                    <ArrowButton icon="arrow-left" variant="secondary" />
-                  </div>
-                  <div
-                    onClick={() => slideNext(index)}
-                    className={`button-slide-next-${index}`}
-                  >
-                    <ArrowButton variant="secondary" />
+                  <div className="w-full mt-20d flex justify-between z-50 relative">
+                    <div
+                      onClick={() => slidePrev(index)}
+                      className={`button-slide-prev-${index}`}
+                    >
+                      <ArrowButton icon="arrow-left" variant="secondary" />
+                    </div>
+                    <div
+                      onClick={() => slideNext(index)}
+                      className={`button-slide-next-${index}`}
+                    >
+                      <ArrowButton variant="secondary" />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
 
