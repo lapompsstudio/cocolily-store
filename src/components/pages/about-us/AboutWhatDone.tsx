@@ -117,7 +117,33 @@ const AboutWhatDone = () => {
   const swiperRefs = useRef<SwiperCore[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<(HTMLDivElement | null)[]>([]);
-  const [activeCategory, setActiveCategory] = useState<number | null>(null);
+  const [activeCategory, setActiveCategory] = useState<number>(0);
+
+  useGSAP(
+    () => {
+      const translate = (32.4 / 1440) * 100; // Hasil: 2.25 (vw)
+
+      gsap.to(".marker-category", {
+        translateY:
+          activeCategory === 0 ? 0 : `${translate * activeCategory}vw`,
+        duration: 1,
+        ease: "power1.inOut",
+      });
+
+      gsap.to(".active-category", {
+        color: "#DB0032",
+        duration: 1,
+        ease: "power1.inOut",
+      });
+
+      gsap.to(".inactive-category", {
+        color: "#D0B0D8",
+        duration: 1,
+        ease: "power1.inOut",
+      });
+    },
+    { dependencies: [activeCategory] }
+  );
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -365,23 +391,17 @@ const AboutWhatDone = () => {
 
   return (
     <section
-      className="w-full bg-baby-pink md:landscape:py-142d font-bold text-ruby-red md:landscape:px-20d relative"
+      className="w-full bg-purple-dust md:landscape:py-142d font-bold text-ruby-red md:landscape:px-20d relative"
       ref={containerRef}
     >
       <div className="md:landscape:col-span-3 sticky top-142d">
         <div className="uppercase font-abc font-bold md:landscape:text-16d">
           beyond chocolate
         </div>
-        <div className="md:landscape:mt-60d flex gap-x-16d gap-y-16d">
-          <div
-            style={{
-              transform: `translateY(${activeCategory !== null ? activeCategory * 45 : 0}px)`,
-              transition: "transform 0.3s ease",
-            }}
-          >
+        <div className="md:landscape:mt-60d flex gap-x-16d gap-y-16d ">
+          <div className="py-1.65d marker-category">
             <svg
-              width="16"
-              height="16"
+              className="w-12d h-12d"
               viewBox="0 0 16 16"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -408,19 +428,18 @@ const AboutWhatDone = () => {
           <div className="flex flex-col gap-y-16d">
             {data.map((item, index) => (
               <div
-                className={clsx("uppercase font-bold md:landscape:text-11d", {
-                  "text-ruby-red": activeCategory === index,
-                  "text-lavender-mist": activeCategory !== index,
-                })}
+                className={clsx(
+                  "uppercase font-bold md:landscape:text-11d ",
+
+                  {
+                    "active-category": activeCategory === index,
+                    "inactive-category": activeCategory !== index,
+                  }
+                )}
                 key={index}
                 ref={(el) => {
                   sectionRef.current[index] = el;
                 }}
-                // style={{
-                //   backgroundColor:
-                //     activeCategory === index ? "#ff0000" : "transparent",
-                //   transition: "background-color 0.3s ease",
-                // }}
               >
                 {item.category}
               </div>
