@@ -163,7 +163,7 @@ const AboutHero = () => {
 
       <div className="md:landscape:w-1115d md:landscape:mt-110d mx-auto font-span md:landscape:text-64d leading-none text-center">
         <div
-          className="reveal-text translate-y-full"
+          className="reveal-text translate-y-full pb-12 -mb-12"
           style={{ clipPath: "inset(0% 0% 100% 0%)" }}
         >
           Cocolily <span className="font-light">is a homegrown Emirati</span>{" "}
