@@ -226,7 +226,7 @@ export default function WeCareSection() {
 
   return (
     <div className="bg-[#E0C7E6] overflow-hidden">
-      <div className="relative w-full h-[10vh] z-10 bg-gradient-to-b from-baby-pink"></div>
+      <div className="relative w-full h-[40vh] z-10 bg-gradient-to-b from-ruby-red"></div>
       <div className="w-full h-screen bg-[#E0C7E6] relative text-ruby-red container-we-care-section">
         <div className="absolute top-0 z-0 pointer-events-none w-full h-full">
           <div className="w-217d h-271d absolute top-[8%] rounded-32d bg-white left-[2%] image-1">
@@ -281,7 +281,6 @@ export default function WeCareSection() {
           </div>
         </div>
       </div>
-      <div className="relative w-full h-[10vh] z-10 bg-gradient-to-t from-baby-pink"></div>
     </div>
   );
 }

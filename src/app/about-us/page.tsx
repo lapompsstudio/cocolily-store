@@ -14,12 +14,12 @@ const AboutUsPage = () => {
     <>
       <AboutHero />
       <AboutProductGrid />
-      <AboutProductHighlight />
+      {/* <AboutProductHighlight /> */}
       <AboutPurpose />
       <WeCareSection />
       <AboutWhatDone />
-      <AboutCollaboration />
-      <AboutWhatDone />
+      {/* <AboutCollaboration /> */}
+      {/* <AboutWhatDone /> */}
       <AboutCollaboration />
       <Footer />
     </>
