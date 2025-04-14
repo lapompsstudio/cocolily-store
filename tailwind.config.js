@@ -25,6 +25,7 @@ module.exports = {
         "ivory-blush": "#F9EFED",
         "baby-pink": "#F6CDD7",
         "lavender-mist": "#D0B0D8",
+        "purple-dust": "#E0C7E6",
         seashell: "#F9EFED",
         "pale-sky-blue": "#C9D9E3",
       },
@@ -144,6 +145,8 @@ module.exports = {
         "124d": "calc((124/var(--bw)*100vw))",
       },
       height: {
+        "12d": "calc((12/var(--bw)*100vw))",
+        "16d": "calc((16/var(--bw)*100vw))",
         "20d": "calc((20/var(--bw)*100vw))",
         "22d": "calc((22/var(--bw)*100vw))",
         "36d": "calc((36/var(--bw)*100vw))",
@@ -213,6 +216,7 @@ module.exports = {
         1.4: "1.4",
       },
       margin: {
+        "2d": "calc((2/var(--bw)*100vw))",
         "8d": "calc((8/var(--bw)*100vw))",
         "16d": "calc((16/var(--bw)*100vw))",
         "18d": "calc((18/var(--bw)*100vw))",
@@ -250,6 +254,7 @@ module.exports = {
         "1200d": "calc((1200/var(--bw)*100vw))",
       },
       padding: {
+        "1.65d": "calc((1.65/var(--bw)*100vw))",
         "10d": "calc((10/var(--bw)*100vw))",
         "11d": "calc((11/var(--bw)*100vw))",
         "12d": "calc((12/var(--bw)*100vw))",
@@ -283,6 +288,8 @@ module.exports = {
       },
       width: {
         "2d": "calc((2/var(--bw)*100vw))",
+        "12d": "calc((12/var(--bw)*100vw))",
+        "16d": "calc((16/var(--bw)*100vw))",
         "20d": "calc((20/var(--bw)*100vw))",
         "22d": "calc((22/var(--bw)*100vw))",
         "29d": "calc((29/var(--bw)*100vw))",
