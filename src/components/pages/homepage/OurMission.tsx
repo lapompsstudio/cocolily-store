@@ -137,9 +137,25 @@ export default function OurMission() {
       ease: "power1.inOut",
     });
     tl1.to(
+      ".text-anim-at-cocolily-is-to-celebrate-1",
+      {
+        x: "-10%",
+        ease: "power1.inOut",
+      },
+      "<"
+    );
+    tl1.to(
       ".text-anim-at-cocolily-sweetness",
       {
-        x: "20%",
+        x: "15%",
+        ease: "power1.inOut",
+      },
+      "<"
+    );
+    tl1.to(
+      ".text-anim-at-cocolily-sweetness-1",
+      {
+        x: "10%",
         ease: "power1.inOut",
       },
       "<"
@@ -283,17 +299,17 @@ export default function OurMission() {
                 <span className="font-semibold">experiences.</span>
               </h2>
             </div>
-            <div className="text-seashell font-light w-full absolute top-0 left-1/2 -translate-x-1/2">
+            <div className="text-seashell font-light w-full absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2">
               <div className="relative">
                 <h2 className="text-anim-at-cocolily-01">
                   <span className="text-anim-at-cocolily-is-to-celebrate inline-block">
-                    Is to <span className="italic">celebrate</span>
+                    Is to <span className="italic">create</span>
                   </span>
                   <span className="text-anim-at-cocolily-sweetness inline-block font-semibold">
-                    sweetness
+                    chocolate
                   </span>
                 </h2>
-                <div className="absolute w-100d h-74d top-[23%] scale-125 right-[43%] icon-at-cocolily-02">
+                <div className="absolute w-100d h-74d top-[23%] scale-125 right-[46%] icon-at-cocolily-02">
                   <GradientImage
                     src="/images/our-mission/icon-sweetness.svg"
                     fitVariant="contain"
@@ -301,23 +317,24 @@ export default function OurMission() {
                 </div>
               </div>
               <div className="relative">
-                <div className="absolute w-100d h-74d top-[23%] scale-125 right-[48.5%] icon-at-cocolily-02">
+                <div className="absolute w-100d h-74d top-[23%] scale-125 right-[47.7%] icon-at-cocolily-02">
                   <GradientImage
                     src="/images/our-mission/icon-joy.svg"
                     fitVariant="contain"
                   />
                 </div>
                 <h2 className="text-anim-at-cocolily-01">
-                  <span className="inline-block text-anim-at-cocolily-is-to-celebrate">
-                    and <span className="italic">bring </span>
+                  <span className="inline-block text-anim-at-cocolily-is-to-celebrate font-semibold">
+                    experiences
                   </span>{" "}
                   <span className="inline-block text-anim-at-cocolily-sweetness">
-                    <span className="font-semibold">joy</span> through
+                    <span className="italic">that</span> spark{" "}
+                    <span className="font-semibold">joy,</span>
                   </span>
                 </h2>
               </div>
               <div className="relative">
-                <div className="absolute w-100d h-74d top-[23%] scale-125 right-[33%] icon-at-cocolily-02">
+                <div className="absolute w-100d h-74d top-[23%] scale-125 right-[31.8%] icon-at-cocolily-02">
                   <GradientImage
                     src="/images/our-mission/icon-bite.svg"
                     fitVariant="contain"
@@ -325,16 +342,32 @@ export default function OurMission() {
                 </div>
                 <h2 className="text-anim-at-cocolily-01">
                   <span className="inline-block text-anim-at-cocolily-is-to-celebrate">
-                    every <span className="font-semibold">chocolate </span>
+                    fuel <span className="font-semibold">creativity, </span>and
                   </span>{" "}
                   <span className="inline-block text-anim-at-cocolily-sweetness">
-                    bite.
+                    make
+                  </span>
+                </h2>
+              </div>
+              <div className="relative">
+                <div className="absolute w-100d h-100d top-[15%] scale-125 right-[63.8%] icon-at-cocolily-02">
+                  <GradientImage
+                    src="/images/our-mission/every.png"
+                    fitVariant="contain"
+                  />
+                </div>
+                <h2 className="text-anim-at-cocolily-01">
+                  <span className="inline-block text-anim-at-cocolily-is-to-celebrate-1">
+                    <span className="italic">every</span>
+                  </span>{" "}
+                  <span className="inline-block text-anim-at-cocolily-sweetness-1">
+                    celebration <span className="font-semibold">sweeter.</span>
                   </span>
                 </h2>
               </div>
             </div>
           </div>
-          <div className="absolute bottom-[19vh] left-1/2 -translate-x-1/2">
+          <div className="absolute bottom-[12vh] left-1/2 -translate-x-1/2">
             <div className="text-anim-at-cocolily-01 py-12d">
               <Button
                 buttonType="link"
@@ -346,7 +379,7 @@ export default function OurMission() {
               </Button>
             </div>
           </div>
-          <div className="absolute bottom-[8vh] left-1/2 -translate-x-1/2 maroon-at-cocolily">
+          <div className="absolute bottom-[4vh] left-1/2 -translate-x-1/2 maroon-at-cocolily">
             <Maroon />
           </div>
         </div>
