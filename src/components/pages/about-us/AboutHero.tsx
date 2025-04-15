@@ -88,8 +88,11 @@ const AboutHero = () => {
     const stickyHeight = sticky!.offsetHeight;
     const endValue = parentHeight - stickyHeight;
 
+    const vw = (90 / 1440) * 100; // 2.25vw
+    const pixelValue = (vw / 100) * window.innerWidth;
+
     gsap.to(sticky, {
-      y: endValue - 90,
+      y: endValue,
       ease: "none",
       scrollTrigger: {
         trigger: parent,
@@ -118,6 +121,7 @@ const AboutHero = () => {
       .to(".chocolate-1", {
         ease: "none",
         bottom: 0,
+        // duration: 3,
       })
       .to(".chocolate-1", {
         ease: "none",
@@ -288,7 +292,7 @@ const AboutHero = () => {
       </div>
 
       <div
-        className="w-full h-screen  absolute top-0 left-0 z-50"
+        className="w-full h-770d  absolute top-0 left-0 z-50"
         ref={stickyRef}
       >
         <div className="w-full h-full relative">
