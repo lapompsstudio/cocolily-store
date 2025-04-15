@@ -13,7 +13,7 @@ import NewsletterForm from "../newsletter-form";
 
 gsap.registerPlugin(useGSAP);
 
-// Define types for ornaments
+// Define types for ornaments with scale property
 interface Ornament {
   id: number;
   src: string;
@@ -24,6 +24,7 @@ interface Ornament {
   loaded: boolean;
   img: HTMLImageElement;
   velocity: { x: number; y: number };
+  scale: number; // Added scale property
 }
 
 // Define types for position
@@ -43,6 +44,7 @@ const Footer: React.FC = () => {
   const [dragStartTime, setDragStartTime] = useState<number>(0);
   const [dragPositions, setDragPositions] = useState<Position[]>([]);
   const animationFrameRef = useRef<number | null>(null);
+  const animationInitialized = useRef<boolean>(false);
   const globalData = globalStore((state) => state.globalData);
 
   useSplitTextAnimation({
@@ -74,7 +76,7 @@ const Footer: React.FC = () => {
       "/footer/ornament7_crop.png",
     ];
 
-    // Define initial ornament positions
+    // Define initial ornament positions - initialize with scale 0
     const newOrnaments: Omit<Ornament, "img">[] = [
       {
         id: 1,
@@ -85,6 +87,7 @@ const Footer: React.FC = () => {
         height: 150,
         loaded: false,
         velocity: { x: 0, y: 0 },
+        scale: 0, // Start with scale 0
       },
       {
         id: 2,
@@ -95,6 +98,7 @@ const Footer: React.FC = () => {
         height: 150,
         loaded: false,
         velocity: { x: 0, y: 0 },
+        scale: 0, // Start with scale 0
       },
       {
         id: 3,
@@ -105,6 +109,7 @@ const Footer: React.FC = () => {
         height: 150,
         loaded: false,
         velocity: { x: 0, y: 0 },
+        scale: 0, // Start with scale 0
       },
       {
         id: 4,
@@ -115,6 +120,7 @@ const Footer: React.FC = () => {
         height: 150,
         loaded: false,
         velocity: { x: 0, y: 0 },
+        scale: 0, // Start with scale 0
       },
       {
         id: 5,
@@ -125,6 +131,7 @@ const Footer: React.FC = () => {
         height: 150,
         loaded: false,
         velocity: { x: 0, y: 0 },
+        scale: 0, // Start with scale 0
       },
       {
         id: 6,
@@ -135,6 +142,7 @@ const Footer: React.FC = () => {
         height: 150,
         loaded: false,
         velocity: { x: 0, y: 0 },
+        scale: 0, // Start with scale 0
       },
       {
         id: 7,
@@ -145,6 +153,7 @@ const Footer: React.FC = () => {
         height: 150,
         loaded: false,
         velocity: { x: 0, y: 0 },
+        scale: 0, // Start with scale 0
       },
     ];
 
@@ -275,45 +284,83 @@ const Footer: React.FC = () => {
 
     ornaments.forEach((ornament) => {
       if (ornament.loaded) {
+        // Apply scale transformation to drawing
+        const scaledWidth = ornament.width * ornament.scale;
+        const scaledHeight = ornament.height * ornament.scale;
+
         ctx.drawImage(
           ornament.img,
-          ornament.x - ornament.width / 2,
-          ornament.y - ornament.height / 2,
-          ornament.width,
-          ornament.height
+          ornament.x - scaledWidth / 2,
+          ornament.y - scaledHeight / 2,
+          scaledWidth,
+          scaledHeight
         );
       }
     });
   }, [ornaments]);
 
-  // Animation effects
-  useGSAP(
-    () => {
+  // Initialize staggered scale animation once ornaments are loaded
+  useEffect(() => {
+    // Check if all ornaments are loaded and animation hasn't been initialized yet
+    if (
+      ornaments.length === 7 &&
+      ornaments.every((o) => o.loaded) &&
+      !animationInitialized.current
+    ) {
+      animationInitialized.current = true;
+
+      // Define the stagger order: 5, 6, 3, 2, 7, 4, 1
+      const staggerOrder = [5, 6, 3, 2, 7, 4, 1];
+
+      // Create timeline for staggered animation
       const tl = gsap.timeline({
-        paused: true,
         delay: 1.2,
         scrollTrigger: {
           trigger: containerRef.current,
           start: "top 90%",
           end: "bottom 10%",
           toggleActions: "play none none none",
+          // markers: true,
         },
       });
 
-      // Animate ornaments appearance with delay
-      ornaments.forEach((ornament, index) => {
-        tl.from(
-          `#ornament-${ornament.id}`,
+      // Add animations for each ornament in the specified order
+      staggerOrder.forEach((id, index) => {
+        tl.to(
+          // Use an invisible proxy object for animation
+          { value: 0 },
           {
-            opacity: 0,
-            duration: 0.1,
-            scale: 1.2,
+            value: 1,
+            duration: 0.6,
+            ease: "elastic.out(1, 0.5)",
+            onUpdate: function () {
+              // Update the ornament's scale property in state
+              setOrnaments((prevOrnaments) =>
+                prevOrnaments.map((ornament) =>
+                  ornament.id === id
+                    ? { ...ornament, scale: this.targets()[0].value }
+                    : ornament
+                )
+              );
+            },
           },
-          index * 0.2
+          index * 0.2 // Stagger delay
         );
       });
+    }
+  }, [ornaments]);
 
-      // Reveal animation for bottom elements
+  useGSAP(() => {
+    gsap.to(".dynamic-bg", {
+      backgroundImage: `linear-gradient(to bottom, ${currentColor} 0%, rgba(255,255,255,0) 100%)`,
+      duration: 1,
+      ease: "power2.inOut",
+    });
+  }, [currentColor]);
+
+  // Reveal animation for bottom elements
+  useGSAP(
+    () => {
       gsap.fromTo(
         ".reveal-bottom",
         {
@@ -335,14 +382,6 @@ const Footer: React.FC = () => {
     },
     { scope: containerRef }
   );
-
-  useGSAP(() => {
-    gsap.to(".dynamic-bg", {
-      backgroundImage: `linear-gradient(to bottom, ${currentColor} 0%, rgba(255,255,255,0) 100%)`,
-      duration: 1,
-      ease: "power2.inOut",
-    });
-  }, [currentColor]);
 
   // Track drag positions for velocity calculation
   const updateDragPositions = (position: Position) => {
@@ -368,8 +407,9 @@ const Footer: React.FC = () => {
     // Check if mouse is over any ornament
     for (let i = ornaments.length - 1; i >= 0; i--) {
       const ornament = ornaments[i];
-      const halfWidth = ornament.width / 2;
-      const halfHeight = ornament.height / 2;
+      // Adjust hit detection to account for current scale
+      const halfWidth = (ornament.width * ornament.scale) / 2;
+      const halfHeight = (ornament.height * ornament.scale) / 2;
 
       if (
         mouseX >= ornament.x - halfWidth &&
@@ -455,8 +495,9 @@ const Footer: React.FC = () => {
     // Check if mouse is over any ornament
     for (let i = ornaments.length - 1; i >= 0; i--) {
       const ornament = ornaments[i];
-      const halfWidth = ornament.width / 2;
-      const halfHeight = ornament.height / 2;
+      // Adjust hit detection to account for current scale
+      const halfWidth = (ornament.width * ornament.scale) / 2;
+      const halfHeight = (ornament.height * ornament.scale) / 2;
 
       if (
         mouseX >= ornament.x - halfWidth &&
