@@ -463,21 +463,29 @@ export default function EventsHomepage(): JSX.Element {
   useGSAP(() => {
     const mm = gsap.matchMedia();
     mm.add("(min-width: 0px)", () => {
-      gsap
-        .timeline({
-          scrollTrigger: {
-            trigger: ".text-anim-cocolily-sweet-celebration",
-            start: "top-=1100 30%",
-            end: "bottom+=600 30%",
-            scrub: 1,
-          },
-        })
-        .to(".text-anim-cocolily-sweet-celebration", {
-          x: "-70%",
-          ease: "power1.inOut",
-        });
+      gsap.to(".text-anim-cocolily-sweet-celebration", {
+        x: "-100%",
+        duration: 40,
+        ease: "none",
+        repeat: -1,
+        onComplete: () => {
+          gsap.set(".text-anim-cocolily-sweet-celebration", {
+            x: "0%",
+          });
+        },
+      });
+      gsap.to(".text-anim-cocolily-sweet-celebration-1", {
+        x: "0%",
+        duration: 40,
+        ease: "none",
+        repeat: -1,
+        onComplete: () => {
+          gsap.set(".text-anim-cocolily-sweet-celebration-1", {
+            x: "100%",
+          });
+        },
+      });
     });
-
     return () => mm.revert();
   }, []);
 
@@ -642,9 +650,14 @@ export default function EventsHomepage(): JSX.Element {
     <div className="container-events-homepage w-full relative text-ruby-red">
       {/* Header section with horizontal scrolling text */}
       <div className="h-[50vh] w-full relative overflow-hidden bg-seashell">
-        <h2 className="text-128d w-max font-abc h-[13vh] uppercase absolute top-1/2 -translate-y-1/2 translate-x-[50%] z-10 text-anim-cocolily-sweet-celebration">
-          cocolily elegant festival
-        </h2>
+        <div className="w-full">
+          <h2 className="text-128d w-max font-abc h-[13vh] uppercase absolute top-1/2 -translate-y-1/2 z-10 text-anim-cocolily-sweet-celebration">
+            For gifting. For treating. For creating. For sweet celebrations.
+          </h2>
+          <h2 className="text-128d w-max font-abc h-[13vh] uppercase absolute top-1/2 -translate-y-1/2 translate-x-[100%] z-10 text-anim-cocolily-sweet-celebration-1 text-blue-500">
+            For gifting. For treating. For creating. For sweet celebrations.
+          </h2>
+        </div>
         <div className="bg-gradient-to-t from-[#C9D9E3] to-transparent gradient-background h-full w-full absolute z-0 top-0 left-0"></div>
       </div>
 
