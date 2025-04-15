@@ -654,7 +654,7 @@ export default function EventsHomepage(): JSX.Element {
           <h2 className="text-128d w-max font-abc h-[13vh] uppercase absolute top-1/2 -translate-y-1/2 z-10 text-anim-cocolily-sweet-celebration">
             For gifting. For treating. For creating. For sweet celebrations.
           </h2>
-          <h2 className="text-128d w-max font-abc h-[13vh] uppercase absolute top-1/2 -translate-y-1/2 translate-x-[100%] z-10 text-anim-cocolily-sweet-celebration-1 text-blue-500">
+          <h2 className="text-128d w-max font-abc h-[13vh] uppercase absolute top-1/2 -translate-y-1/2 translate-x-[100%] z-10 text-anim-cocolily-sweet-celebration-1">
             For gifting. For treating. For creating. For sweet celebrations.
           </h2>
         </div>
