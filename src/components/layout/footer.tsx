@@ -317,7 +317,7 @@ const Footer: React.FC = () => {
         delay: 1.2,
         scrollTrigger: {
           trigger: containerRef.current,
-          start: "top 90%",
+          start: "top center",
           end: "bottom 10%",
           toggleActions: "play none none none",
           // markers: true,
