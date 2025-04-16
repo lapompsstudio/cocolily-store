@@ -132,7 +132,14 @@ const AboutPurpose = () => {
       ref={containerRef}
     >
       <div className="text-center space-y-80d">
-        <p className="text-16d font-bold font-abc uppercase">IN 2022</p>
+        <p
+          className={clsx(
+            "text-16d font-bold font-abc uppercase",
+            "split-text-stagger"
+          )}
+        >
+          IN 2022
+        </p>
         <h2
           className={clsx(
             "text-32d font-bold font-abc uppercase max-w-1200d mx-auto",

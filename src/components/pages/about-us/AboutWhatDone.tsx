@@ -115,6 +115,8 @@ const datas = [
   },
 ];
 
+gsap.registerPlugin(ScrollTrigger);
+
 const AboutWhatDone = () => {
   const swiperRefs = useRef<SwiperCore[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -462,6 +464,9 @@ const AboutWhatDone = () => {
             },
           });
         });
+
+        // ensure marker instance is updated after data is fetched
+        ScrollTrigger.refresh();
       }
     },
     {
