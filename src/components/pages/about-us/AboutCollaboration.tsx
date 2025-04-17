@@ -5,6 +5,9 @@ import React, { useState } from "react";
 import MarqueeItem from "./MarqueeItem";
 import useSplitTextAnimation from "@/app/hooks/useSplitTextAnimation";
 import clsx from "clsx";
+import { useQuery } from "@tanstack/react-query";
+
+import { CollaborationResponse } from "@/types/api";
 
 const AboutCollaboration = () => {
   const [isHovering, setIsHovering] = useState(false);
@@ -12,7 +15,34 @@ const AboutCollaboration = () => {
     selector: ".collaboration-split-text",
   });
 
-  const collaborationImages = Array(5).fill("/about-us/collaboration1.png");
+  const { data } = useQuery<CollaborationResponse>({
+    queryKey: ["collaborations-query"],
+    queryFn: async () => {
+      const res = await fetch("/api/collaborations");
+      if (!res.ok) throw new Error("Network response was not ok");
+      return res.json();
+    },
+  });
+
+  const collaborationImages = React.useMemo(() => {
+    if (!data?.data || !Array.isArray(data.data) || data.data.length === 0) {
+      // Return empty array if no collaborations data
+      return [];
+    }
+
+    // Map through available collaboration images
+    const images = data.data
+      .filter((item) => item.featured_images?.url)
+      .map((item) => item.featured_images.url);
+
+    // Ensure we have exactly 5 items by repeating if necessary
+    if (images.length === 0) {
+      return [];
+    } else {
+      // Create an array of exactly 5 items by repeating the available images
+      return Array.from({ length: 5 }, (_, i) => images[i % images.length]);
+    }
+  }, [data?.data]);
 
   return (
     <div className="min-h-screen bg-pale-sky-blue pt-120d">
@@ -48,7 +78,7 @@ const AboutCollaboration = () => {
               (src, index) => (
                 <MarqueeItem
                   key={`item1-${index}`}
-                  src={src}
+                  src={`${process.env.NEXT_PUBLIC_STRAPI_URL + src}`}
                   index={index}
                   setIsHovering={setIsHovering}
                 />
@@ -67,7 +97,7 @@ const AboutCollaboration = () => {
               (src, index) => (
                 <MarqueeItem
                   key={`item2-${index}`}
-                  src={src}
+                  src={`${process.env.NEXT_PUBLIC_STRAPI_URL + src}`}
                   index={index}
                   setIsHovering={setIsHovering}
                 />

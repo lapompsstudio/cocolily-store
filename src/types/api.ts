@@ -179,3 +179,68 @@ export type BeyondChocolateResponse = {
     };
   };
 };
+
+export type CollaborationResponse = {
+  data: {
+    id: number;
+    documentId: string;
+    sectionName: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+    featured_images: {
+      id: number;
+      documentId: string;
+      name: string;
+      alternativeText: string | null;
+      caption: string | null;
+      width: number;
+      height: number;
+      formats: {
+        thumbnail: {
+          name: string;
+          hash: string;
+          ext: string;
+          mime: string;
+          path: string | null;
+          width: number;
+          height: number;
+          size: number;
+          sizeInBytes: number;
+          url: string;
+        };
+        [key: string]: {
+          name: string;
+          hash: string;
+          ext: string;
+          mime: string;
+          path: string | null;
+          width: number;
+          height: number;
+          size: number;
+          sizeInBytes: number;
+          url: string;
+        };
+      };
+      hash: string;
+      ext: string;
+      mime: string;
+      size: number;
+      url: string;
+      previewUrl: string | null;
+      provider: string;
+      provider_metadata: unknown | null;
+      createdAt: string;
+      updatedAt: string;
+      publishedAt: string;
+    };
+  }[];
+  meta: {
+    pagination: {
+      page: number;
+      pageSize: number;
+      pageCount: number;
+      total: number;
+    };
+  };
+};

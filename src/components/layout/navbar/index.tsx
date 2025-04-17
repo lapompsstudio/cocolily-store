@@ -41,13 +41,13 @@ export function Navbar() {
 
         <div className="flex flex-1 gap-90d justify-end md:w-1/3">
           <Link href={"/"} className="nav-link text-ruby-red text-10d">
-            SHOP <br /> OUR PRODUCT
+            CREATIONS
           </Link>
           <Link href={"/"} className="nav-link text-ruby-red text-10d">
-            SEE <br /> OUR EVENTS
+            EVENTS
           </Link>
           <Link href={"/about-us"} className="nav-link text-ruby-red text-10d">
-            ABOUT US
+            OUR STORY
           </Link>
 
           {/* TODO: Add AuthBtn, CartModal, Search on phase 2
