@@ -38,6 +38,7 @@ const MarqueeItem = ({ src, index, setIsHovering }: MarqueeItemProps) => {
             "w-full h-full object-contain p-6 transition-all duration-300 cursor-pointer",
             !isItemHovered && "invert brightness-0"
           )}
+          alt="collaboration image"
         />
       </div>
     </div>
