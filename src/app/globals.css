@@ -153,11 +153,11 @@ ul {
     @apply text-48d leading-none;
   }
 
-  /* h4 {
-    @apply md:landscape:text-24d font-medium text-20d;
+  h4 {
+    @apply text-32d leading-none;
   }
 
-  h5 {
+  /* h5 {
     @apply text-16d font-normal;
   } */
 
