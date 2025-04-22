@@ -19,6 +19,7 @@ const useColorStore = create<ColorState>((set) => ({
     "#E3C9D9", // Warna untuk index 1
     "#D9E3C9", // Warna untuk index 2
     "#C9E3D9", // Warna untuk index 3
+    "#F9EFED",
   ],
 
   // Fungsi untuk mengubah warna berdasarkan index
