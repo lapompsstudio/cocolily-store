@@ -5,77 +5,60 @@ import Image from "next/image";
 
 import { gsap } from "gsap";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { useQuery } from "@tanstack/react-query";
+
 import "swiper/css";
 
 import ArrowButton from "@/components/ui/ArrowButton";
-
-const data = [
-  {
-    title: "Cocolily Country Club",
-    image: "/events/carousel1.png",
-    logo: "/events/logo.png",
-    tags: ["COCOA BAR", "MERCH BAR", "SELF STUDIO"],
-    icons: [
-      {
-        url: "/footer/ornament1_crop.png",
-      },
-      {
-        url: "/footer/ornament2_crop.png",
-      },
-      {
-        url: "/footer/ornament3_crop.png",
-      },
-      {
-        url: "/footer/ornament4_crop.png",
-      },
-    ],
-  },
-  {
-    title: "Backyard x Cocolily",
-    image: "/events/carousel2.png",
-    logo: "/events/logo.png",
-    tags: ["COCOA BAR", "MERCH BAR", "SELF STUDIO"],
-    icons: [
-      {
-        url: "/footer/ornament5_crop.png",
-      },
-      {
-        url: "/footer/ornament6_crop.png",
-      },
-      {
-        url: "/footer/ornament7_crop.png",
-      },
-      {
-        url: "/footer/ornament1_crop.png",
-      },
-    ],
-  },
-  {
-    title: "Cocolily Cabana at Flat 12",
-    image: "/events/carousel3.png",
-    logo: "/events/logo.png",
-    tags: ["COCOA BAR", "MERCH BAR", "SELF STUDIO"],
-    icons: [
-      {
-        url: "/footer/ornament2_crop.png",
-      },
-      {
-        url: "/footer/ornament3_crop.png",
-      },
-      {
-        url: "/footer/ornament4_crop.png",
-      },
-      {
-        url: "/footer/ornament5_crop.png",
-      },
-    ],
-  },
-];
+import { APIResponse } from "@/types/events-eventspage";
 
 const EventsHero = () => {
   const sliderRef = useRef<any>(null);
+  const videoRefs = useRef<{ [key: number]: HTMLVideoElement }>({});
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [activeIndex, setActiveIndex] = useState<number>(0);
+
+  const { data: apiResponse } = useQuery<APIResponse>({
+    queryKey: ["events-eventpages"],
+    queryFn: async () => {
+      const res = await fetch("/api/events-eventpages");
+      if (!res.ok) throw new Error("Network response was not ok");
+      return res.json();
+    },
+  });
+
+  // Transform API data to the expected format
+  const transformedData = useMemo(() => {
+    if (!apiResponse?.data?.events) return [];
+
+    return apiResponse.data.events.map((event) => {
+      // Determine if file is a video based on mime type or extension
+      const isVideo =
+        event.file?.mime?.includes("video") ||
+        event.file?.ext?.toLowerCase().includes(".mp4") ||
+        event.file?.url?.toLowerCase().endsWith(".mp4");
+
+      return {
+        title: event.eventName,
+        image: event.file?.url
+          ? process.env.NEXT_PUBLIC_STRAPI_URL + "/" + event.file.url
+          : "",
+        isVideo,
+        logo: event.logo?.url
+          ? process.env.NEXT_PUBLIC_STRAPI_URL + "/" + event.logo.url
+          : "",
+        // Extract button labels as tags or use empty array if none
+        tags: event.buttons?.map((button) => button.label) || [],
+        // For demonstration, we'll use placeholder icons if needed
+        icons: [
+          { url: "/footer/ornament1_crop.png" },
+          { url: "/footer/ornament2_crop.png" },
+          { url: "/footer/ornament3_crop.png" },
+          { url: "/footer/ornament4_crop.png" },
+        ],
+      };
+    });
+  }, [apiResponse]);
 
   // Define gradient colors for each slide (will repeat after 3)
   const gradientColors = useMemo(() => ["#C9D9E3", "#D0B0D8", "#F2ECCB"], []);
@@ -89,7 +72,37 @@ const EventsHero = () => {
         "style",
         `background-image: linear-gradient(to bottom, rgba(255,255,255,0) 0%, ${initialColor} 100%)`
       );
-  }, [gradientColors]);
+
+    // Initialize first video to play if it's a video
+    if (
+      transformedData.length > 0 &&
+      transformedData[0].isVideo &&
+      videoRefs.current[0]
+    ) {
+      videoRefs.current[0]
+        .play()
+        .catch((err) => console.log("Autoplay prevented:", err));
+    }
+  }, [gradientColors, transformedData]);
+
+  // Control video playback when active index changes
+  useEffect(() => {
+    // Pause all videos first
+    Object.values(videoRefs.current).forEach((videoEl) => {
+      if (videoEl && !videoEl.paused) {
+        videoEl.pause();
+      }
+    });
+
+    // Play only the active video if it exists
+    const activeVideo = videoRefs.current[activeIndex];
+    if (activeVideo && transformedData[activeIndex]?.isVideo) {
+      activeVideo.play().catch((err) => {
+        console.log("Autoplay prevented:", err);
+        // You might want to add a play button if autoplay is blocked
+      });
+    }
+  }, [activeIndex, transformedData]);
 
   const animateOutNext = (onComplete?: () => void) => {
     setIsAnimating(true);
@@ -303,7 +316,6 @@ const EventsHero = () => {
   const animateInNext = () => {
     // Get the new active index directly from the swiper
     const newIndex = sliderRef.current?.swiper.realIndex || 0;
-    // Use the newIndex for setting state (for future reference)
     setActiveIndex(newIndex);
 
     // Get the color using the newIndex directly instead of relying on state
@@ -387,7 +399,7 @@ const EventsHero = () => {
         top: computedBottom(),
         left: computedLeftRight(),
         transform: "none",
-        duration: 0.8,
+        duration: 1.2,
         ease: "elastic.out(1, 0.9)",
       })
       .to(
@@ -397,7 +409,7 @@ const EventsHero = () => {
           bottom: "0",
           left: computedLeftRight(),
           transform: "none",
-          duration: 0.8,
+          duration: 1.2,
           ease: "elastic.out(1, 0.9)",
         },
         "<"
@@ -409,7 +421,7 @@ const EventsHero = () => {
           top: computedBottom(),
           right: computedLeftRight(),
           transform: "none",
-          duration: 0.8,
+          duration: 1.2,
           ease: "elastic.out(1, 0.9)",
         },
         "<"
@@ -421,7 +433,7 @@ const EventsHero = () => {
           bottom: "0",
           right: computedLeftRight(),
           transform: "none",
-          duration: 0.8,
+          duration: 1.2,
           ease: "elastic.out(1, 0.9)",
         },
         "<"
@@ -431,8 +443,6 @@ const EventsHero = () => {
   const animateInPrev = () => {
     // Get the new active index directly from the swiper
     const newIndex = sliderRef.current?.swiper.realIndex || 0;
-
-    // Use the newIndex for setting state (for future reference)
     setActiveIndex(newIndex);
 
     // Get the color using the newIndex directly instead of relying on state
@@ -517,7 +527,7 @@ const EventsHero = () => {
         top: computedBottom(),
         left: computedLeftRight(),
         transform: "none",
-        duration: 0.8,
+        duration: 1.2,
         ease: "elastic.out(1, 0.9)",
       })
       .to(
@@ -527,7 +537,7 @@ const EventsHero = () => {
           bottom: "0",
           left: computedLeftRight(),
           transform: "none",
-          duration: 0.8,
+          duration: 1.2,
           ease: "elastic.out(1, 0.9)",
         },
         "<"
@@ -539,7 +549,7 @@ const EventsHero = () => {
           top: computedBottom(),
           right: computedLeftRight(),
           transform: "none",
-          duration: 0.8,
+          duration: 1.2,
           ease: "elastic.out(1, 0.9)",
         },
         "<"
@@ -551,7 +561,7 @@ const EventsHero = () => {
           bottom: "0",
           right: computedLeftRight(),
           transform: "none",
-          duration: 0.8,
+          duration: 1.2,
           ease: "elastic.out(1, 0.9)",
         },
         "<"
@@ -576,6 +586,22 @@ const EventsHero = () => {
     }
   };
 
+  // Function to save video reference
+  const setVideoRef = (index: number, el: HTMLVideoElement | null) => {
+    if (el) {
+      videoRefs.current[index] = el;
+    }
+  };
+
+  // Show loading state or return empty div if data isn't loaded yet
+  if (!transformedData.length) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="w-12 h-12 border-4 border-t-transparent border-ruby-red rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="hero-events-bg min-h-screen text-ruby-red text-96d pt-115d bg-gradient-to-b from-white to-pale-sky-blue relative">
       <p className="absolute top-115d left-20d font-abc font-bold uppercase text-16d">
@@ -595,7 +621,7 @@ const EventsHero = () => {
           draggable={false}
           allowTouchMove={false}
         >
-          {data.map((item, index) => {
+          {transformedData.map((item, index) => {
             return (
               <SwiperSlide
                 key={`hero-${index}`}
@@ -648,18 +674,32 @@ const EventsHero = () => {
                     alt="ornament"
                   />
                   <div className="circle-swiper-anim w-926d h-480d relative rounded-full overflow-hidden m-auto">
-                    <Image
-                      className="h-full w-full object-cover"
-                      fill
-                      src={item.image}
-                      alt="Event Image"
-                    />
-                    <Image
-                      className="object-contain"
-                      fill
-                      src={item.logo}
-                      alt="Event logo"
-                    />
+                    {item.isVideo ? (
+                      <video
+                        ref={(el) => setVideoRef(index, el)}
+                        className="h-full w-full object-cover"
+                        src={item.image}
+                        playsInline
+                        loop
+                        muted
+                        controls={false}
+                      />
+                    ) : (
+                      <Image
+                        className="h-full w-full object-cover"
+                        fill
+                        src={item.image}
+                        alt="Event Image"
+                      />
+                    )}
+                    {item.logo && (
+                      <Image
+                        className="object-contain"
+                        fill
+                        src={item.logo}
+                        alt="Event logo"
+                      />
+                    )}
                   </div>
                 </div>
               </SwiperSlide>
