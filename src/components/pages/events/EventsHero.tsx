@@ -1,6 +1,12 @@
 "use client";
 
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import Image from "next/image";
 
 import { gsap } from "gsap";
@@ -31,12 +37,33 @@ const EventsHero = () => {
   const transformedData = useMemo(() => {
     if (!apiResponse?.data?.events) return [];
 
-    return apiResponse.data.events.map((event) => {
+    // Define all 7 ornament paths
+    const allOrnaments = [
+      { url: "/footer/ornament1_crop.png" },
+      { url: "/footer/ornament2_crop.png" },
+      { url: "/footer/ornament3_crop.png" },
+      { url: "/footer/ornament4_crop.png" },
+      { url: "/footer/ornament5_crop.png" },
+      { url: "/footer/ornament6_crop.png" },
+      { url: "/footer/ornament7_crop.png" },
+    ];
+
+    return apiResponse.data.events.map((event, index) => {
       // Determine if file is a video based on mime type or extension
       const isVideo =
         event.file?.mime?.includes("video") ||
         event.file?.ext?.toLowerCase().includes(".mp4") ||
         event.file?.url?.toLowerCase().endsWith(".mp4");
+
+      // Calculate the starting ornament index for this slide (wrapping around if needed)
+      const startOrnamentIndex = index % 7;
+
+      // Get 4 sequential ornaments starting from the calculated index (wrapping around if needed)
+      const slideOrnaments = [];
+      for (let i = 0; i < 4; i++) {
+        const ornamentIndex = (startOrnamentIndex + i) % 7;
+        slideOrnaments.push(allOrnaments[ornamentIndex]);
+      }
 
       return {
         title: event.eventName,
@@ -50,12 +77,7 @@ const EventsHero = () => {
         // Extract button labels as tags or use empty array if none
         tags: event.buttons?.map((button) => button.label) || [],
         // For demonstration, we'll use placeholder icons if needed
-        icons: [
-          { url: "/footer/ornament1_crop.png" },
-          { url: "/footer/ornament2_crop.png" },
-          { url: "/footer/ornament3_crop.png" },
-          { url: "/footer/ornament4_crop.png" },
-        ],
+        icons: slideOrnaments,
       };
     });
   }, [apiResponse]);
@@ -587,11 +609,14 @@ const EventsHero = () => {
   };
 
   // Function to save video reference
-  const setVideoRef = (index: number, el: HTMLVideoElement | null) => {
-    if (el) {
-      videoRefs.current[index] = el;
-    }
-  };
+  const setVideoRef = useCallback(
+    (index: number, el: HTMLVideoElement | null) => {
+      if (el) {
+        videoRefs.current[index] = el;
+      }
+    },
+    []
+  );
 
   // Show loading state or return empty div if data isn't loaded yet
   if (!transformedData.length) {
