@@ -15,27 +15,6 @@ interface SliderItem {
   type: string;
 }
 
-const SLIDER_DATA: SliderItem[] = [
-  {
-    file: "/homepage/hero/swiper/Event 1.png",
-    logo: "/homepage/hero/swiper/Logo.png",
-    desc: "Cocolily country club",
-    type: "img",
-  },
-  {
-    file: "/homepage/hero/swiper/Event 2.png",
-    logo: "/homepage/hero/swiper/Logo.png",
-    desc: "Cocolily Carvanal",
-    type: "img",
-  },
-  {
-    file: "/homepage/hero/swiper/sample.mp4",
-    logo: "/homepage/hero/swiper/Logo.png",
-    desc: "Home Bakery X Cocolily",
-    type: "video",
-  },
-];
-
 type EventsType = HeroSliderResponse["data"]["events"];
 
 const TOTAL_ITEMS = 6;

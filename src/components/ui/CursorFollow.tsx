@@ -3,7 +3,15 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
-const CursorFollow = () => {
+const CursorFollow = ({
+  title,
+  isOneElement,
+  isManyElement,
+}: {
+  title: string;
+  isOneElement?: boolean;
+  isManyElement?: boolean;
+}) => {
   const cursorRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);
   const mousePosition = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
@@ -31,6 +39,8 @@ const CursorFollow = () => {
   }, []);
 
   useEffect(() => {
+    if (!isOneElement) return;
+
     let activeElement: Element | null = null;
 
     const handleMouseEnter = () => setIsVisible(true);
@@ -82,7 +92,48 @@ const CursorFollow = () => {
         activeElement.removeEventListener("mouseleave", handleMouseLeave);
       }
     };
-  }, []);
+  }, [isOneElement]);
+
+  useEffect(() => {
+    if (!isManyElement) return;
+
+    const elements = document.querySelectorAll(".cursor-follow-active");
+
+    const handleMouseEnter = () => setIsVisible(true);
+    const handleMouseLeave = () => setIsVisible(false);
+
+    elements.forEach((el) => {
+      el.addEventListener("mouseenter", handleMouseEnter);
+      el.addEventListener("mouseleave", handleMouseLeave);
+    });
+
+    const observer = new MutationObserver(() => {
+      const updatedElements = document.querySelectorAll(
+        ".cursor-follow-active"
+      );
+
+      updatedElements.forEach((el) => {
+        el.removeEventListener("mouseenter", handleMouseEnter);
+        el.removeEventListener("mouseleave", handleMouseLeave);
+        el.addEventListener("mouseenter", handleMouseEnter);
+        el.addEventListener("mouseleave", handleMouseLeave);
+      });
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+    });
+
+    return () => {
+      elements.forEach((el) => {
+        el.removeEventListener("mouseenter", handleMouseEnter);
+        el.removeEventListener("mouseleave", handleMouseLeave);
+      });
+      observer.disconnect();
+    };
+  }, [isManyElement]);
 
   return (
     <div
@@ -93,7 +144,7 @@ const CursorFollow = () => {
       style={{ willChange: "transform" }} // Optimisasi performa animasi
     >
       <div className="font-abc font-bold text-11d leading-none text-white text-center">
-        LEARN MORE
+        {title}
       </div>
     </div>
   );

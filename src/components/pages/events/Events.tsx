@@ -8,7 +8,11 @@ import CursorFollow from "@/components/ui/CursorFollow";
 const Events = () => {
   return (
     <>
-      <CursorFollow />
+      <CursorFollow
+        title={"SEE DETAIL"}
+        isOneElement={false}
+        isManyElement={true}
+      />
       <EventsHero />
       <EventsList />
       <Footer />
