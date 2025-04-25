@@ -56,7 +56,11 @@ const Homepage = () => {
   return (
     <>
       {isPreloaderShow && <Preloader />}
-      <CursorFollow />
+      <CursorFollow
+        title={"LEARN MORE"}
+        isOneElement={true}
+        isManyElement={false}
+      />
       <Hero />
       <OurMission />
       <ShopOurProducts />
