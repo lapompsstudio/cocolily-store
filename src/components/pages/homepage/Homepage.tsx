@@ -9,9 +9,10 @@ import Hero from "./Hero";
 import CursorFollow from "@/components/ui/CursorFollow";
 import useScrollAndLenis from "@/app/hooks/useScrollAndLenis";
 import Preloader from "@/components/preloader";
+import { useFooterStore } from "@/store/footerStore";
 
 const Homepage = () => {
-  const [isRenderFooter, setIsRenderFooter] = useState<boolean>(false);
+  const { isRenderFooter, initFooter } = useFooterStore();
   const [isPreloaderShow, setIsPreloaderShow] = useState<boolean>(false);
 
   useEffect(() => {
@@ -44,14 +45,8 @@ const Homepage = () => {
   useScrollAndLenis(isPreloaderShow ? 11000 : 500);
 
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      setIsRenderFooter(true);
-    }, 500);
-
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, []);
+    initFooter();
+  }, [initFooter]);
 
   return (
     <>

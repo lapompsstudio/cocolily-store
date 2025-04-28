@@ -529,35 +529,23 @@ const Footer: React.FC = () => {
 
   useGSAP(
     () => {
-      gsap.set(".social-hover-animate", {
-        opacity: 0,
-        yPercent: 50,
+      gsap.from(".social-hover-animate", {
+        yPercent: 100,
+        duration: 1.2,
+        clipPath: "inset(0% 0% 100% 0%)",
+        stagger: 0.01,
+        ease: "elastic.out(1, 0.5)",
+        scrollTrigger: {
+          trigger: ".social-hover-animate",
+          start: "top 90%",
+          toggleActions: "play none none none",
+        },
       });
     },
     {
       scope: containerRef,
     }
   );
-
-  const handleHoverSocial = (action: "enter" | "leave"): void => {
-    if (action === "enter") {
-      gsap.to(".social-hover-animate", {
-        opacity: 1,
-        yPercent: 0,
-        duration: 0.6,
-        stagger: 0.01,
-        ease: "elastic.out(1, 0.5)",
-      });
-    } else {
-      gsap.to(".social-hover-animate", {
-        opacity: 0,
-        yPercent: 50,
-        duration: 0.6,
-        stagger: 0.01,
-        ease: "elastic.out(1, 0.5)",
-      });
-    }
-  };
 
   return (
     <GoogleReCaptchaProvider
@@ -602,11 +590,7 @@ const Footer: React.FC = () => {
               </h3>
               <NewsletterForm />
             </div>
-            <div
-              className="md:col-span-4 flex justify-end items-end max-w-fit ml-auto"
-              onMouseEnter={() => handleHoverSocial("enter")}
-              onMouseLeave={() => handleHoverSocial("leave")}
-            >
+            <div className="md:col-span-4 flex justify-end items-end max-w-fit ml-auto">
               {/* DO NOT REMOVE, RESERVED FOR FUTURE UPDATE */}
               {/* <div className="max-w-225d space-y-20d">
                 <h3 className="footer-text-anim text-10d text-ruby-red leading-1.3">
