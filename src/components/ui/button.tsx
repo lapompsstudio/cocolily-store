@@ -11,6 +11,7 @@ type ButtonType = {
   showIcon?: boolean;
   className?: string;
   isHoverTranslate?: boolean;
+  isActive?: boolean;
   props?: React.ButtonHTMLAttributes<HTMLButtonElement>;
 };
 
@@ -22,6 +23,7 @@ const Button = ({
   className,
   showIcon = false,
   isHoverTranslate = false,
+  isActive = false,
   ...props
 }: ButtonType &
   React.ButtonHTMLAttributes<HTMLButtonElement> &
@@ -36,6 +38,7 @@ const Button = ({
               "bg-ivory": variant === "primary",
               "bg-transparent": variant === "secondary",
               "translate-anim": isHoverTranslate,
+              active: isActive,
             },
             className
           )}
@@ -57,6 +60,7 @@ const Button = ({
               "bg-ivory": variant === "primary",
               "bg-transparent": variant === "secondary",
               "translate-anim": isHoverTranslate,
+              active: isActive,
             },
             className
           )}
