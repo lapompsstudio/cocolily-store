@@ -153,6 +153,7 @@ module.exports = {
         "90d": "calc((90/var(--bw)*100vw))",
         "124d": "calc((124/var(--bw)*100vw))",
         "142d": "calc((142/var(--bw)*100vw))",
+        "500d": "calc((500/var(--bw)*100vw))",
       },
       height: {
         "12d": "calc((12/var(--bw)*100vw))",
@@ -275,6 +276,7 @@ module.exports = {
         "150d": "calc((150/var(--bw)*100vw))",
         "178d": "calc((178/var(--bw)*100vw))",
         "180d": "calc((180/var(--bw)*100vw))",
+        "194d": "calc((194/var(--bw)*100vw))",
         "200d": "calc((200/var(--bw)*100vw))",
         "257d": "calc((257/var(--bw)*100vw))",
         "278d": "calc((278/var(--bw)*100vw))",
@@ -311,6 +313,8 @@ module.exports = {
         "120d": "calc((120/var(--bw)*100vw))",
         "142d": "calc((142/var(--bw)*100vw))",
         "150d": "calc((150/var(--bw)*100vw))",
+        "400d": "calc((400/var(--bw)*100vw))",
+        "500d": "calc((500/var(--bw)*100vw))",
       },
       rotate: {
         120: "120deg",

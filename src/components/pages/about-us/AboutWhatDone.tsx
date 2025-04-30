@@ -16,105 +16,6 @@ import { useQuery } from "@tanstack/react-query";
 import ArrowButton from "@/components/ui/ArrowButton";
 import { BeyondChocolateResponse } from "@/types/api";
 
-const datas = [
-  {
-    category: "seasonal pop-ups",
-    titleSection: "",
-    descprition: "",
-    items: [
-      {
-        title: "cocolily country club",
-        image: "/about-us/about-what-done/Image 1.png",
-      },
-      {
-        title: "cocolily carnival",
-        image: "/about-us/about-what-done/Image 2.png",
-      },
-      {
-        title: "cocolily cabana",
-        image: "/about-us/about-what-done/Image 3.png",
-      },
-      {
-        title: "cocolily country club",
-        image: "/about-us/about-what-done/Image 1.png",
-      },
-      {
-        title: "cocolily carnival",
-        image: "/about-us/about-what-done/Image 2.png",
-      },
-      {
-        title: "cocolily cabana",
-        image: "/about-us/about-what-done/Image 3.png",
-      },
-    ],
-  },
-  {
-    category: "Menu Development",
-    titleSection: "menu development",
-    descprition:
-      "As we continue to grow, our menu will evolve with the seasons and eventually include savory options, appealing to a wider audience.",
-    items: [
-      {
-        title: "",
-        image: "/about-us/about-what-done/Image 4.png",
-      },
-      {
-        title: "",
-        image: "/about-us/about-what-done/Image 5.png",
-      },
-      {
-        title: "",
-        image: "/about-us/about-what-done/Image 6.png",
-      },
-      {
-        title: "",
-        image: "/about-us/about-what-done/Image 4.png",
-      },
-      {
-        title: "",
-        image: "/about-us/about-what-done/Image 5.png",
-      },
-      {
-        title: "",
-        image: "/about-us/about-what-done/Image 6.png",
-      },
-    ],
-  },
-
-  {
-    category: "merchandise",
-    titleSection: "merchandise",
-    descprition:
-      "Began with personalized beverages to create an intimate feeling—that you are a ‘regular’ of sorts—we built upon intently. This has evolved into a range of customizable merchandise. From tote bags to crewnecks and hats, our products can be personalized on the spot, making each item a special keepsake or souvenir.",
-    items: [
-      {
-        title: "",
-        image: "/about-us/about-what-done/Image 7.png",
-      },
-      {
-        title: "",
-        image: "/about-us/about-what-done/Image 8.png",
-      },
-      {
-        title: "",
-        image: "/about-us/about-what-done/Image 9.png",
-      },
-      {
-        title: "",
-        image: "/about-us/about-what-done/Image 7.png",
-      },
-      {
-        title: "",
-        image: "/about-us/about-what-done/Image 8.png",
-      },
-      {
-        title: "",
-        image: "/about-us/about-what-done/Image 9.png",
-      },
-    ],
-  },
-];
-
 gsap.registerPlugin(ScrollTrigger);
 
 const AboutWhatDone = () => {
@@ -540,7 +441,7 @@ const AboutWhatDone = () => {
           </div>
         </div>
       </div>
-      <div className="w-full grid md:landscape:grid-cols-12 md:landscape:-mt-142d relative">
+      <div className="w-full grid md:landscape:grid-cols-12 md:landscape:-mt-194d relative">
         <div className="md:landscape:col-start-5 md:landscape:col-span-8 ">
           <div className="border-lines bg-ruby-red h-[1px] w-0"></div>
           <div

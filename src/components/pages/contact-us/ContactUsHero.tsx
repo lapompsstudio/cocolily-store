@@ -70,7 +70,7 @@ const ContactUsHero = () => {
 
   return (
     <section
-      className="text-ruby-red font-bold overflow-hidden relative "
+      className="text-ruby-red font-bold overflow-hidden relative bg-ivory-blush"
       ref={containerRef}
     >
       <div
@@ -119,17 +119,20 @@ const ContactUsHero = () => {
       <div className="overflow-hidden">
         <div
           className={clsx(
-            "md:landscape:mt-80d flex gap-20d translate-y-full",
+            "md:landscape:mt-80d flex translate-y-full",
             "text-running-container"
           )}
           ref={marqueeRef}
         >
-          <div className="font-abc md:landscape:text-128d uppercase whitespace-nowrap">
+          <div className="font-abc md:landscape:text-128d uppercase whitespace-nowrap pr-400d">
             Slide Into Our Inbox
           </div>
-          <div className="font-abc md:landscape:text-128d uppercase whitespace-nowrap ">
+          <div className="font-abc md:landscape:text-128d uppercase whitespace-nowrap pr-400d">
             Slide Into Our Inbox
           </div>
+          {/* <div className="font-abc md:landscape:text-128d uppercase whitespace-nowrap ">
+            Slide Into Our Inbox
+          </div> */}
         </div>
       </div>
 
