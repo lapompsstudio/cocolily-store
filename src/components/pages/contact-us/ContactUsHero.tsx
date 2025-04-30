@@ -130,9 +130,6 @@ const ContactUsHero = () => {
           <div className="font-abc md:landscape:text-128d uppercase whitespace-nowrap pr-400d">
             Slide Into Our Inbox
           </div>
-          {/* <div className="font-abc md:landscape:text-128d uppercase whitespace-nowrap ">
-            Slide Into Our Inbox
-          </div> */}
         </div>
       </div>
 

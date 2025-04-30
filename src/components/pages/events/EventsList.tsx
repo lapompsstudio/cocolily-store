@@ -268,7 +268,7 @@ const EventsList = () => {
                   {data.buttons.map((button, i) => (
                     <div
                       className={clsx(
-                        "py-8d px-12d rounded-32d border-[1px] border-ruby-red font-sans text-10d",
+                        "py-8d px-12d rounded-32d border border-ruby-red font-sans text-10d",
                         `tag-${index}-${i}`
                       )}
                       key={button.id}
