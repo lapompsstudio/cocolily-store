@@ -249,7 +249,7 @@ export type EventResponse = {
   data: {
     id: number;
     documentId: string;
-    status?: "ongoing event" | "upcoming event" | "latest past";
+    status?: string;
     eventName: string;
     createdAt: string;
     updatedAt: string;
