@@ -177,7 +177,10 @@ ul {
 
 input:focus-visible,
 input:focus-within,
-input:focus {
+input:focus,
+textarea:focus-visible,
+textarea:focus-within,
+textarea:focus {
   outline: none;
   box-shadow: none;
 }

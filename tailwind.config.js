@@ -71,7 +71,7 @@ module.exports = {
         ],
         "20d": [
           "calc((20/var(--bw)*100vw))",
-          { letterSpacing: "calc((-0.01*20/var(--bw))*100vw)" },
+          { letterSpacing: "calc((-0.05*20/var(--bw))*100vw)" },
         ],
         "24d": [
           "calc((24/var(--bw)*100vw))",
@@ -145,6 +145,7 @@ module.exports = {
         "32d": "calc((32/var(--bw)*100vw))",
         "36d": "calc((36/var(--bw)*100vw))",
         "49d": "calc((49/var(--bw)*100vw))",
+        "48d": "calc((48/var(--bw)*100vw))",
         "60d": "calc((60/var(--bw)*100vw))",
         "64d": "calc((64/var(--bw)*100vw))",
         "72d": "calc((72/var(--bw)*100vw))",
@@ -162,6 +163,7 @@ module.exports = {
         "38d": "calc((38/var(--bw)*100vw))",
         "40d": "calc((40/var(--bw)*100vw))",
         "45d": "calc((45/var(--bw)*100vw))",
+        "48d": "calc((48/var(--bw)*100vw))",
         "62d": "calc((62/var(--bw)*100vw))",
         "70d": "calc((70/var(--bw)*100vw))",
         "72d": "calc((72/var(--bw)*100vw))",
@@ -303,6 +305,7 @@ module.exports = {
         "55d": "calc((55/var(--bw)*100vw))",
         "60d": "calc((60/var(--bw)*100vw))",
         "80d": "calc((80/var(--bw)*100vw))",
+        "101d": "calc((101/var(--bw)*100vw))",
         "114d": "calc((114/var(--bw)*100vw))",
         "115d": "calc((115/var(--bw)*100vw))",
         "120d": "calc((120/var(--bw)*100vw))",
@@ -313,8 +316,12 @@ module.exports = {
         120: "120deg",
       },
       space: {
+        "8d": "calc((8/var(--bw)*100vw))",
+        "12d": "calc((12/var(--bw)*100vw))",
+        "16d": "calc((16/var(--bw)*100vw))",
         "20d": "calc((20/var(--bw)*100vw))",
         "32d": "calc((32/var(--bw)*100vw))",
+        "48d": "calc((48/var(--bw)*100vw))",
         "80d": "calc((80/var(--bw)*100vw))",
       },
       translate: {
@@ -336,6 +343,7 @@ module.exports = {
         "40d": "calc((40/var(--bw)*100vw))",
         "45d": "calc((45/var(--bw)*100vw))",
         "46d": "calc((46/var(--bw)*100vw))",
+        "48d": "calc((48/var(--bw)*100vw))",
         "62d": "calc((62/var(--bw)*100vw))",
         "70d": "calc((70/var(--bw)*100vw))",
         "78d": "calc((78/var(--bw)*100vw))",

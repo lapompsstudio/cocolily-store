@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactLenis } from "lenis/react";
 import { Navbar } from "@/components/layout/navbar";
 import { globalStore } from "@/store/globalStore";
+import { GoogleReCaptchaProvider } from "react-google-recaptcha-v3";
 
 const Template = ({ children }: { children: React.ReactNode }) => {
   const { fetchGlobalData, isGlobalFetched } = globalStore();
@@ -22,8 +23,17 @@ const Template = ({ children }: { children: React.ReactNode }) => {
   return (
     <ReactLenis root>
       <QueryClientProvider client={queryClient}>
-        <Navbar />
-        <main>{children}</main>
+        <GoogleReCaptchaProvider
+          reCaptchaKey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || ""}
+          scriptProps={{
+            async: true,
+            defer: true,
+            appendTo: "head",
+          }}
+        >
+          <Navbar />
+          <main>{children}</main>
+        </GoogleReCaptchaProvider>
       </QueryClientProvider>
     </ReactLenis>
   );
