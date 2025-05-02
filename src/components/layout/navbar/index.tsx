@@ -43,7 +43,7 @@ export function Navbar() {
           <Link href={"/"} className="nav-link text-ruby-red text-10d">
             CREATIONS
           </Link>
-          <Link href={"/"} className="nav-link text-ruby-red text-10d">
+          <Link href={"/events"} className="nav-link text-ruby-red text-10d">
             EVENTS
           </Link>
           <Link href={"/about-us"} className="nav-link text-ruby-red text-10d">

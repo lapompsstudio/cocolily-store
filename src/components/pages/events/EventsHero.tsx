@@ -10,6 +10,7 @@ import React, {
 import Image from "next/image";
 
 import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useQuery } from "@tanstack/react-query";
 
@@ -17,12 +18,15 @@ import "swiper/css";
 
 import ArrowButton from "@/components/ui/ArrowButton";
 import { APIResponse } from "@/types/events-eventspage";
+import clsx from "clsx";
 
 const EventsHero = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<any>(null);
   const videoRefs = useRef<{ [key: number]: HTMLVideoElement }>({});
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [activeIndex, setActiveIndex] = useState<number>(0);
+  const slideRefs = useRef<{ [key: number]: HTMLDivElement }>({});
 
   const { data: apiResponse } = useQuery<APIResponse>({
     queryKey: ["events-eventpages"],
@@ -37,33 +41,12 @@ const EventsHero = () => {
   const transformedData = useMemo(() => {
     if (!apiResponse?.data?.events) return [];
 
-    // Define all 7 ornament paths
-    const allOrnaments = [
-      { url: "/footer/ornament1_crop.png" },
-      { url: "/footer/ornament2_crop.png" },
-      { url: "/footer/ornament3_crop.png" },
-      { url: "/footer/ornament4_crop.png" },
-      { url: "/footer/ornament5_crop.png" },
-      { url: "/footer/ornament6_crop.png" },
-      { url: "/footer/ornament7_crop.png" },
-    ];
-
     return apiResponse.data.events.map((event, index) => {
       // Determine if file is a video based on mime type or extension
       const isVideo =
         event.file?.mime?.includes("video") ||
         event.file?.ext?.toLowerCase().includes(".mp4") ||
         event.file?.url?.toLowerCase().endsWith(".mp4");
-
-      // Calculate the starting ornament index for this slide (wrapping around if needed)
-      const startOrnamentIndex = index % 7;
-
-      // Get 4 sequential ornaments starting from the calculated index (wrapping around if needed)
-      const slideOrnaments = [];
-      for (let i = 0; i < 4; i++) {
-        const ornamentIndex = (startOrnamentIndex + i) % 7;
-        slideOrnaments.push(allOrnaments[ornamentIndex]);
-      }
 
       return {
         title: event.eventName,
@@ -74,16 +57,23 @@ const EventsHero = () => {
         logo: event.logo?.url
           ? process.env.NEXT_PUBLIC_STRAPI_URL + "/" + event.logo.url
           : "",
-        // Extract button labels as tags or use empty array if none
         tags: event.buttons?.map((button) => button.label) || [],
-        // For demonstration, we'll use placeholder icons if needed
-        icons: slideOrnaments,
       };
     });
   }, [apiResponse]);
 
   // Define gradient colors for each slide (will repeat after 3)
   const gradientColors = useMemo(() => ["#C9D9E3", "#D0B0D8", "#F2ECCB"], []);
+
+  // Function to save slide reference
+  const setSlideRef = useCallback(
+    (index: number, el: HTMLDivElement | null) => {
+      if (el) {
+        slideRefs.current[index] = el;
+      }
+    },
+    []
+  );
 
   useEffect(() => {
     // Set initial gradient color when component mounts
@@ -105,6 +95,18 @@ const EventsHero = () => {
         .play()
         .catch((err) => console.log("Autoplay prevented:", err));
     }
+
+    // Set initial sizes for all slides
+    Object.entries(slideRefs.current).forEach(([indexStr, slideEl]) => {
+      const index = parseInt(indexStr);
+      if (index === 0) {
+        // Active slide (initial)
+        gsap.set(slideEl, { width: "926px", height: "480px" });
+      } else {
+        // Inactive slides
+        gsap.set(slideEl, { width: "254px", height: "254px" });
+      }
+    });
   }, [gradientColors, transformedData]);
 
   // Control video playback when active index changes
@@ -121,13 +123,19 @@ const EventsHero = () => {
     if (activeVideo && transformedData[activeIndex]?.isVideo) {
       activeVideo.play().catch((err) => {
         console.log("Autoplay prevented:", err);
-        // You might want to add a play button if autoplay is blocked
       });
     }
   }, [activeIndex, transformedData]);
 
   const animateOutNext = (onComplete?: () => void) => {
     setIsAnimating(true);
+    const currentIndex = sliderRef.current?.swiper.realIndex || 0;
+    const nextIndex = (currentIndex + 1) % transformedData.length;
+
+    const currentSlide = slideRefs.current[currentIndex];
+    const buttonPrev = document.querySelector(".button-prev");
+    const buttonNext = document.querySelector(".button-next");
+    const revealElements = document.querySelectorAll(".reveal-swiper-anim");
 
     const outNextTl = gsap.timeline({
       onComplete: () => {
@@ -136,14 +144,14 @@ const EventsHero = () => {
     });
 
     outNextTl
-      .to(".circle-swiper-anim", {
+      .to(currentSlide, {
         width: "254px",
         height: "254px",
         duration: 1.2,
         ease: "power1.inOut",
       })
       .to(
-        ".reveal-swiper-anim",
+        revealElements,
         {
           yPercent: 100,
           clipPath: "inset(0% 0% 100% 0%)",
@@ -162,7 +170,7 @@ const EventsHero = () => {
         "<"
       )
       .to(
-        ".button-prev",
+        buttonPrev,
         {
           xPercent: -50,
           opacity: 0,
@@ -172,58 +180,10 @@ const EventsHero = () => {
         "<"
       )
       .to(
-        ".button-next",
+        buttonNext,
         {
           xPercent: 50,
           opacity: 0,
-          duration: 0.8,
-          ease: "power1.inOut",
-        },
-        "<"
-      )
-      .to(
-        ".ornament-swiper1",
-        {
-          scale: 0.5,
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          duration: 0.8,
-          ease: "power1.inOut",
-        },
-        "<"
-      )
-      .to(
-        ".ornament-swiper2",
-        {
-          scale: 0.5,
-          bottom: "50%",
-          left: "50%",
-          transform: "translate(-50%, 50%)",
-          duration: 0.8,
-          ease: "power1.inOut",
-        },
-        "<"
-      )
-      .to(
-        ".ornament-swiper3",
-        {
-          scale: 0.5,
-          top: "50%",
-          right: "50%",
-          transform: "translate(50%, -50%)",
-          duration: 0.8,
-          ease: "power1.inOut",
-        },
-        "<"
-      )
-      .to(
-        ".ornament-swiper4",
-        {
-          scale: 0.5,
-          bottom: "50%",
-          right: "50%",
-          transform: "translate(50%, 50%)",
           duration: 0.8,
           ease: "power1.inOut",
         },
@@ -233,6 +193,15 @@ const EventsHero = () => {
 
   const animateOutPrev = (onComplete?: () => void) => {
     setIsAnimating(true);
+    const currentIndex = sliderRef.current?.swiper.realIndex || 0;
+    const prevIndex =
+      (currentIndex - 1 + transformedData.length) % transformedData.length;
+
+    const currentSlide = slideRefs.current[currentIndex];
+    const buttonPrev = document.querySelector(".button-prev");
+    const buttonNext = document.querySelector(".button-next");
+    const revealElements = document.querySelectorAll(".reveal-swiper-anim");
+
     const outPrevTl = gsap.timeline({
       onComplete: () => {
         if (onComplete) onComplete();
@@ -240,14 +209,14 @@ const EventsHero = () => {
     });
 
     outPrevTl
-      .to(".circle-swiper-anim", {
+      .to(currentSlide, {
         width: "254px",
         height: "254px",
         duration: 1.2,
         ease: "power1.inOut",
       })
       .to(
-        ".reveal-swiper-anim",
+        revealElements,
         {
           yPercent: 100,
           clipPath: "inset(0% 0% 100% 0%)",
@@ -266,7 +235,7 @@ const EventsHero = () => {
         "<"
       )
       .to(
-        ".button-prev",
+        buttonPrev,
         {
           xPercent: -50,
           opacity: 0,
@@ -276,58 +245,10 @@ const EventsHero = () => {
         "<"
       )
       .to(
-        ".button-next",
+        buttonNext,
         {
           xPercent: 50,
           opacity: 0,
-          duration: 0.8,
-          ease: "power1.inOut",
-        },
-        "<"
-      )
-      .to(
-        ".ornament-swiper1",
-        {
-          scale: 0.5,
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          duration: 0.8,
-          ease: "power1.inOut",
-        },
-        "<"
-      )
-      .to(
-        ".ornament-swiper2",
-        {
-          scale: 0.5,
-          bottom: "50%",
-          left: "50%",
-          transform: "translate(-50%, 50%)",
-          duration: 0.8,
-          ease: "power1.inOut",
-        },
-        "<"
-      )
-      .to(
-        ".ornament-swiper3",
-        {
-          scale: 0.5,
-          top: "50%",
-          right: "50%",
-          transform: "translate(50%, -50%)",
-          duration: 0.8,
-          ease: "power1.inOut",
-        },
-        "<"
-      )
-      .to(
-        ".ornament-swiper4",
-        {
-          scale: 0.5,
-          bottom: "50%",
-          right: "50%",
-          transform: "translate(50%, 50%)",
           duration: 0.8,
           ease: "power1.inOut",
         },
@@ -343,19 +264,11 @@ const EventsHero = () => {
     // Get the color using the newIndex directly instead of relying on state
     const currentColor = gradientColors[newIndex % gradientColors.length];
 
-    const computedLeftRight = () => {
-      const bw = parseFloat(
-        getComputedStyle(document.documentElement).getPropertyValue("--bw")
-      );
-      return `${(120 / bw) * 100}vw`;
-    };
-
-    const computedBottom = () => {
-      const bw = parseFloat(
-        getComputedStyle(document.documentElement).getPropertyValue("--bw")
-      );
-      return `${(-60 / bw) * 100}vw`;
-    };
+    // Get the new active slide element
+    const newActiveSlide = slideRefs.current[newIndex];
+    const buttonPrev = document.querySelector(".button-prev");
+    const buttonNext = document.querySelector(".button-next");
+    const revealElements = document.querySelectorAll(".reveal-swiper-anim");
 
     const inNextTl = gsap.timeline({
       onComplete: () => {
@@ -364,14 +277,14 @@ const EventsHero = () => {
     });
 
     inNextTl
-      .to(".circle-swiper-anim", {
+      .to(newActiveSlide, {
         width: "926px",
         height: "480px",
         duration: 1.2,
         ease: "power1.inOut",
       })
       .fromTo(
-        ".reveal-swiper-anim",
+        revealElements,
         {
           yPercent: 100,
           clipPath: "inset(0% 0% 100% 0%)",
@@ -396,7 +309,7 @@ const EventsHero = () => {
         "<"
       )
       .to(
-        ".button-prev",
+        buttonPrev,
         {
           xPercent: 0,
           opacity: 1,
@@ -406,57 +319,12 @@ const EventsHero = () => {
         "<"
       )
       .to(
-        ".button-next",
+        buttonNext,
         {
           xPercent: 0,
           opacity: 1,
           duration: 0.8,
           ease: "power1.inOut",
-        },
-        "<"
-      )
-      // Return each ornament to its original position
-      .to(".ornament-swiper1", {
-        scale: 1,
-        top: computedBottom(),
-        left: computedLeftRight(),
-        transform: "none",
-        duration: 1.2,
-        ease: "elastic.out(1, 0.9)",
-      })
-      .to(
-        ".ornament-swiper2",
-        {
-          scale: 1,
-          bottom: "0",
-          left: computedLeftRight(),
-          transform: "none",
-          duration: 1.2,
-          ease: "elastic.out(1, 0.9)",
-        },
-        "<"
-      )
-      .to(
-        ".ornament-swiper3",
-        {
-          scale: 1,
-          top: computedBottom(),
-          right: computedLeftRight(),
-          transform: "none",
-          duration: 1.2,
-          ease: "elastic.out(1, 0.9)",
-        },
-        "<"
-      )
-      .to(
-        ".ornament-swiper4",
-        {
-          scale: 1,
-          bottom: "0",
-          right: computedLeftRight(),
-          transform: "none",
-          duration: 1.2,
-          ease: "elastic.out(1, 0.9)",
         },
         "<"
       );
@@ -470,20 +338,11 @@ const EventsHero = () => {
     // Get the color using the newIndex directly instead of relying on state
     const currentColor = gradientColors[newIndex % gradientColors.length];
 
-    // Before animation, calculate the value
-    const computedLeftRight = () => {
-      const bw = parseFloat(
-        getComputedStyle(document.documentElement).getPropertyValue("--bw")
-      );
-      return `${(120 / bw) * 100}vw`;
-    };
-
-    const computedBottom = () => {
-      const bw = parseFloat(
-        getComputedStyle(document.documentElement).getPropertyValue("--bw")
-      );
-      return `${(-60 / bw) * 100}vw`;
-    };
+    // Get the new active slide element
+    const newActiveSlide = slideRefs.current[newIndex];
+    const buttonPrev = document.querySelector(".button-prev");
+    const buttonNext = document.querySelector(".button-next");
+    const revealElements = document.querySelectorAll(".reveal-swiper-anim");
 
     const inPrevTl = gsap.timeline({
       onComplete: () => {
@@ -492,14 +351,14 @@ const EventsHero = () => {
     });
 
     inPrevTl
-      .to(".circle-swiper-anim", {
+      .to(newActiveSlide, {
         width: "926px",
         height: "480px",
         duration: 1.2,
         ease: "power1.inOut",
       })
       .fromTo(
-        ".reveal-swiper-anim",
+        revealElements,
         {
           yPercent: 100,
           clipPath: "inset(0% 0% 100% 0%)",
@@ -524,7 +383,7 @@ const EventsHero = () => {
         "<"
       )
       .to(
-        ".button-prev",
+        buttonPrev,
         {
           xPercent: 0,
           opacity: 1,
@@ -534,57 +393,12 @@ const EventsHero = () => {
         "<"
       )
       .to(
-        ".button-next",
+        buttonNext,
         {
           xPercent: 0,
           opacity: 1,
           duration: 0.8,
           ease: "power1.inOut",
-        },
-        "<"
-      )
-      // Return each ornament to its original position
-      .to(".ornament-swiper1", {
-        scale: 1,
-        top: computedBottom(),
-        left: computedLeftRight(),
-        transform: "none",
-        duration: 1.2,
-        ease: "elastic.out(1, 0.9)",
-      })
-      .to(
-        ".ornament-swiper2",
-        {
-          scale: 1,
-          bottom: "0",
-          left: computedLeftRight(),
-          transform: "none",
-          duration: 1.2,
-          ease: "elastic.out(1, 0.9)",
-        },
-        "<"
-      )
-      .to(
-        ".ornament-swiper3",
-        {
-          scale: 1,
-          top: computedBottom(),
-          right: computedLeftRight(),
-          transform: "none",
-          duration: 1.2,
-          ease: "elastic.out(1, 0.9)",
-        },
-        "<"
-      )
-      .to(
-        ".ornament-swiper4",
-        {
-          scale: 1,
-          bottom: "0",
-          right: computedLeftRight(),
-          transform: "none",
-          duration: 1.2,
-          ease: "elastic.out(1, 0.9)",
         },
         "<"
       );
@@ -628,7 +442,10 @@ const EventsHero = () => {
   }
 
   return (
-    <div className="hero-events-bg min-h-screen text-ruby-red text-96d pt-115d bg-gradient-to-b from-white to-pale-sky-blue relative">
+    <div
+      ref={containerRef}
+      className="hero-events-bg min-h-screen text-ruby-red text-96d pt-115d bg-gradient-to-b from-white to-pale-sky-blue relative"
+    >
       <p className="absolute top-115d left-20d font-abc font-bold uppercase text-16d">
         Our Events
       </p>
@@ -638,7 +455,7 @@ const EventsHero = () => {
           ref={sliderRef}
           slidesPerView={1}
           speed={800}
-          spaceBetween={140}
+          spaceBetween={-700}
           loop={true}
           centeredSlides={true}
           onSlideNextTransitionEnd={animateInNext}
@@ -646,7 +463,7 @@ const EventsHero = () => {
           draggable={false}
           allowTouchMove={false}
         >
-          {transformedData.map((item, index) => {
+          {[...transformedData, ...transformedData].map((item, index) => {
             return (
               <SwiperSlide
                 key={`hero-${index}`}
@@ -656,7 +473,7 @@ const EventsHero = () => {
                   <h1 className="reveal-swiper-anim text-center text-96d font-bold font-span leading-none pb-16d">
                     {item.title}
                   </h1>
-                  <div className="reveal-swiper-anim flex justify-center items-center gap-20d mt-12d">
+                  <div className="reveal-swiper-anim flex justify-center items-center gap-20d mt-12d min-h-33d">
                     {item.tags.map((tag, index) => {
                       return (
                         <div
@@ -670,35 +487,17 @@ const EventsHero = () => {
                   </div>
                 </div>
                 <div className="h-480d flex relative">
-                  <Image
-                    className="ornament-swiper ornament-swiper1 absolute -top-60d left-120d"
-                    width={144}
-                    height={144}
-                    src={item.icons[0].url}
-                    alt="ornament"
-                  />
-                  <Image
-                    className="ornament-swiper ornament-swiper2 absolute bottom-0 left-120d"
-                    width={144}
-                    height={144}
-                    src={item.icons[1].url}
-                    alt="ornament"
-                  />
-                  <Image
-                    className="ornament-swiper ornament-swiper3 absolute -top-60d right-120d"
-                    width={144}
-                    height={144}
-                    src={item.icons[2].url}
-                    alt="ornament"
-                  />
-                  <Image
-                    className="ornament-swiper ornament-swiper4 absolute bottom-0 right-120d"
-                    width={144}
-                    height={144}
-                    src={item.icons[3].url}
-                    alt="ornament"
-                  />
-                  <div className="circle-swiper-anim w-926d h-480d relative rounded-full overflow-hidden m-auto">
+                  <div
+                    ref={(el) => setSlideRef(index, el)}
+                    className={clsx(
+                      "relative rounded-full overflow-hidden m-auto",
+                      "cursor-follow-active"
+                    )}
+                    style={{
+                      width: index === 0 ? "926px" : "254px",
+                      height: index === 0 ? "480px" : "254px",
+                    }}
+                  >
                     {item.isVideo ? (
                       <video
                         ref={(el) => setVideoRef(index, el)}

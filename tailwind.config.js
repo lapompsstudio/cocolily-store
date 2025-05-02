@@ -287,6 +287,9 @@ module.exports = {
         "768d": "calc((768/var(--bw)*100vw))",
         "935d": "calc((935/var(--bw)*100vw))",
       },
+      minHeight: {
+        "33d": "calc((33/var(--bw)*100vw))",
+      },
       maxWidth: {
         "225d": "calc((225/var(--bw)*100vw))",
         "335d": "calc((335/var(--bw)*100vw))",
