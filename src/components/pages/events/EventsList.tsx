@@ -11,6 +11,7 @@ import { SplitText } from "gsap/all";
 
 import GradientImage from "@/components/ui/GradientImage";
 import { EventResponse } from "@/types/api";
+import useColorStore from "@/store/colorStore";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
@@ -40,6 +41,15 @@ const HoverVideo = ({
 
 const EventsList = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const { customCurrentColor } = useColorStore();
+
+  useGSAP(() => {
+    gsap.to(".dynamic-eventlist-bg", {
+      backgroundImage: `linear-gradient(to bottom, ${customCurrentColor} 0%, rgba(255,255,255,0) 100%)`,
+      duration: 1.2,
+      ease: "power1.inOut",
+    });
+  }, [customCurrentColor]);
 
   const [allEvents, setAllEvents] = useState<EventResponse | null>(null);
 
@@ -198,11 +208,11 @@ const EventsList = () => {
   return (
     <section
       className={clsx(
-        "text-ruby-red text-96d relative min-h-screen md:landscape:pb-60d"
+        "text-ruby-red text-96d relative min-h-screen md:landscape:pb-60d bg-ivory-blush"
       )}
       ref={containerRef}
     >
-      <div className="w-full h-264d bg-gradient-to-t from-transparent to-pale-sky-blue absolute top-0 left-0"></div>
+      <div className="dynamic-eventlist-bg w-full h-264d bg-gradient-to-t from-transparent to-pale-sky-blue absolute top-0 left-0"></div>
 
       <div className="md:landscape:px-20d md:landscape:pt-114d z-10 relative">
         <div
