@@ -42,7 +42,7 @@ export default async function ArticlePage() {
               <div className="mt-auto flex items-center justify-between">
                 <a
                   href={`/articles/${article.handle}`}
-                  className="font-medium text-red-400 hover:text-red-500"
+                  className="font-medium text-red-400 hover:text-ruby-red"
                 >
                   Read more →
                 </a>
