@@ -194,3 +194,10 @@ textarea:focus {
   color: #fff;
   transition: color 0.3s ease-in-out;
 }
+
+.reveal-swiper-anim {
+  opacity: 0;
+}
+.swiper-slide-active .reveal-swiper-anim {
+  opacity: 1;
+}
