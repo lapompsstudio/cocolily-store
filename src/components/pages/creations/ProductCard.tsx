@@ -2,12 +2,17 @@ import React from "react";
 import { HeartIcon } from "lucide-react";
 import { Product } from "./types";
 import GradientImage from "@/components/ui/GradientImage";
+import clsx from "clsx";
 
 interface ProductCardProps {
   product: Product;
+  imageWrapperClass?: string;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+const ProductCard: React.FC<ProductCardProps> = ({
+  product,
+  imageWrapperClass = "",
+}) => {
   const handleAddToCart = () => {
     console.log("Adding to cart:", product);
   };
@@ -20,7 +25,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     <div className="relative flex flex-col">
       {/* Product Image */}
       <div className="relative rounded-lg overflow-hidden mb-3">
-        <div className="w-full h-246d rounded-32d overflow-hidden">
+        <div
+          className={clsx(
+            "w-full h-246d rounded-32d overflow-hidden",
+            imageWrapperClass
+          )}
+        >
           <GradientImage src={product.image} />
         </div>
         {product.isBestSeller && (

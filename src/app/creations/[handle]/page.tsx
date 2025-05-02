@@ -1,15 +1,13 @@
 import React from "react";
 
-import CreationProductDetail from "@/components/pages/creations/details/CreationProductDetail";
-import CreationProductRelated from "@/components/pages/creations/details/CreationProductRelated";
+import CreationsDetailPage from "@/components/pages/creations/details/CreationsDetailPage";
 
-const CreationsDetailPage = () => {
+const page = () => {
   return (
     <>
-      <CreationProductDetail />
-      <CreationProductRelated />
+      <CreationsDetailPage />
     </>
   );
 };
 
-export default CreationsDetailPage;
+export default page;
