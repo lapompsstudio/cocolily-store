@@ -19,6 +19,7 @@ import "swiper/css";
 import ArrowButton from "@/components/ui/ArrowButton";
 import { APIResponse } from "@/types/events-eventspage";
 import clsx from "clsx";
+import useColorStore from "@/store/colorStore";
 
 const EventsHero = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -27,6 +28,7 @@ const EventsHero = () => {
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const slideRefs = useRef<{ [key: number]: HTMLDivElement }>({});
+  const { setCustomColor } = useColorStore();
 
   const { data: apiResponse } = useQuery<APIResponse>({
     queryKey: ["events-eventpages"],
@@ -166,6 +168,9 @@ const EventsHero = () => {
           backgroundImage: `linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 100%)`,
           duration: 1.2,
           ease: "power1.inOut",
+          onStart: () => {
+            setCustomColor("#FFFFFF");
+          },
         },
         "<"
       )
@@ -231,6 +236,9 @@ const EventsHero = () => {
           backgroundImage: `linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 100%)`,
           duration: 1.2,
           ease: "power1.inOut",
+          onStart: () => {
+            setCustomColor("#FFFFFF");
+          },
         },
         "<"
       )
@@ -305,6 +313,9 @@ const EventsHero = () => {
           backgroundImage: `linear-gradient(to bottom, rgba(255,255,255,0) 0%, ${currentColor} 100%)`,
           duration: 1.2,
           ease: "power1.inOut",
+          onStart: () => {
+            setCustomColor(currentColor);
+          },
         },
         "<"
       )
@@ -379,6 +390,9 @@ const EventsHero = () => {
           backgroundImage: `linear-gradient(to bottom, rgba(255,255,255,0) 0%, ${currentColor} 100%)`,
           duration: 1.2,
           ease: "power1.inOut",
+          onStart: () => {
+            setCustomColor(currentColor);
+          },
         },
         "<"
       )
