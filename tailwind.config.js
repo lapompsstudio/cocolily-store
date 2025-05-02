@@ -17,6 +17,7 @@ module.exports = {
       },
       aspectRatio: { wide: "16/9" },
       borderRadius: {
+        "12d": "calc((12/var(--bw)*100vw))",
         "32d": "calc((32/var(--bw)*100vw))",
       },
       colors: {
@@ -156,6 +157,7 @@ module.exports = {
         "90d": "calc((90/var(--bw)*100vw))",
         "124d": "calc((124/var(--bw)*100vw))",
         "142d": "calc((142/var(--bw)*100vw))",
+        "163d": "calc((163/var(--bw)*100vw))",
         "500d": "calc((500/var(--bw)*100vw))",
       },
       height: {
@@ -178,6 +180,7 @@ module.exports = {
         "100d": "calc((100/var(--bw)*100vw))",
         "111d": "calc((111/var(--bw)*100vw))",
         "125d": "calc((125/var(--bw)*100vw))",
+        "151d": "calc((151/var(--bw)*100vw))",
         "200d": "calc((200/var(--bw)*100vw))",
         "217d": "calc((217/var(--bw)*100vw))",
         "225d": "calc((225/var(--bw)*100vw))",
@@ -268,6 +271,7 @@ module.exports = {
         "30d": "calc((30/var(--bw)*100vw))",
         "32d": "calc((32/var(--bw)*100vw))",
         "40d": "calc((40/var(--bw)*100vw))",
+        "42d": "calc((42/var(--bw)*100vw))",
         "45d": "calc((45/var(--bw)*100vw))",
         "48d": "calc((48/var(--bw)*100vw))",
         "55d": "calc((55/var(--bw)*100vw))",
