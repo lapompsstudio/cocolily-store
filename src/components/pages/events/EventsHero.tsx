@@ -10,7 +10,6 @@ import React, {
 import Image from "next/image";
 
 import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useQuery } from "@tanstack/react-query";
 
@@ -29,6 +28,61 @@ const EventsHero = () => {
   const [activeIndex, setActiveIndex] = useState<number>(0);
   const slideRefs = useRef<{ [key: number]: HTMLDivElement }>({});
   const { setCustomColor } = useColorStore();
+  const [windowWidth, setWindowWidth] = useState<number>(0);
+  const [baseWidth, setBaseWidth] = useState<number>(1440);
+
+  // Calculate responsive values based on viewport width
+  const responsiveValues = useMemo(() => {
+    if (windowWidth === 0)
+      return {
+        activeWidth: "926px",
+        activeHeight: "480px",
+        inactiveWidth: "254px",
+        inactiveHeight: "254px",
+      };
+
+    const activeWidthValue = (926 / baseWidth) * windowWidth;
+    const activeHeightValue = (480 / baseWidth) * windowWidth;
+    const inactiveWidthValue = (254 / baseWidth) * windowWidth;
+    const inactiveHeightValue = (254 / baseWidth) * windowWidth;
+
+    return {
+      activeWidth: `${activeWidthValue}px`,
+      activeHeight: `${activeHeightValue}px`,
+      inactiveWidth: `${inactiveWidthValue}px`,
+      inactiveHeight: `${inactiveHeightValue}px`,
+    };
+  }, [windowWidth, baseWidth]);
+
+  // Handle window resize and update responsive values
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+
+      // Set base width based on viewport width
+      if (window.innerWidth < 768) {
+        setBaseWidth(375);
+      } else if (
+        window.innerWidth < 1024 &&
+        window.matchMedia("(orientation: portrait)").matches
+      ) {
+        setBaseWidth(480);
+      } else {
+        setBaseWidth(1440);
+      }
+    };
+
+    // Initialize on mount
+    handleResize();
+
+    // Add event listener
+    window.addEventListener("resize", handleResize);
+
+    // Clean up on unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const { data: apiResponse } = useQuery<APIResponse>({
     queryKey: ["events-eventpages"],
@@ -53,12 +107,13 @@ const EventsHero = () => {
       return {
         title: event.eventName,
         image: event.file?.url
-          ? process.env.NEXT_PUBLIC_STRAPI_URL + "/" + event.file.url
+          ? process.env.NEXT_PUBLIC_STRAPI_URL + event.file.url
           : "",
         isVideo,
-        logo: event.logo?.url
-          ? process.env.NEXT_PUBLIC_STRAPI_URL + "/" + event.logo.url
-          : "",
+        // logo: event.logo?.url
+        //   ? process.env.NEXT_PUBLIC_STRAPI_URL + "/" + event.logo.url
+        //   : "",
+        logo: null, // uncoment above if you want to use logo
         tags: event.buttons?.map((button) => button.label) || [],
       };
     });
@@ -103,13 +158,19 @@ const EventsHero = () => {
       const index = parseInt(indexStr);
       if (index === 0) {
         // Active slide (initial)
-        gsap.set(slideEl, { width: "926px", height: "480px" });
+        gsap.set(slideEl, {
+          width: responsiveValues.activeWidth,
+          height: responsiveValues.activeHeight,
+        });
       } else {
         // Inactive slides
-        gsap.set(slideEl, { width: "254px", height: "254px" });
+        gsap.set(slideEl, {
+          width: responsiveValues.inactiveWidth,
+          height: responsiveValues.inactiveHeight,
+        });
       }
     });
-  }, [gradientColors, transformedData]);
+  }, [gradientColors, transformedData, responsiveValues]);
 
   // Control video playback when active index changes
   useEffect(() => {
@@ -147,8 +208,8 @@ const EventsHero = () => {
 
     outNextTl
       .to(currentSlide, {
-        width: "254px",
-        height: "254px",
+        width: responsiveValues.inactiveWidth,
+        height: responsiveValues.inactiveHeight,
         duration: 1.2,
         ease: "power1.inOut",
       })
@@ -215,8 +276,8 @@ const EventsHero = () => {
 
     outPrevTl
       .to(currentSlide, {
-        width: "254px",
-        height: "254px",
+        width: responsiveValues.inactiveWidth,
+        height: responsiveValues.inactiveHeight,
         duration: 1.2,
         ease: "power1.inOut",
       })
@@ -286,8 +347,8 @@ const EventsHero = () => {
 
     inNextTl
       .to(newActiveSlide, {
-        width: "926px",
-        height: "480px",
+        width: responsiveValues.activeWidth,
+        height: responsiveValues.activeHeight,
         duration: 1.2,
         ease: "power1.inOut",
       })
@@ -363,8 +424,8 @@ const EventsHero = () => {
 
     inPrevTl
       .to(newActiveSlide, {
-        width: "926px",
-        height: "480px",
+        width: responsiveValues.activeWidth,
+        height: responsiveValues.activeHeight,
         duration: 1.2,
         ease: "power1.inOut",
       })
@@ -474,10 +535,11 @@ const EventsHero = () => {
           centeredSlides={true}
           onSlideNextTransitionEnd={animateInNext}
           onSlidePrevTransitionEnd={animateInPrev}
+          loopAdditionalSlides={1}
           draggable={false}
           allowTouchMove={false}
         >
-          {[...transformedData, ...transformedData].map((item, index) => {
+          {transformedData.map((item, index) => {
             return (
               <SwiperSlide
                 key={`hero-${index}`}
@@ -508,8 +570,14 @@ const EventsHero = () => {
                       "cursor-follow-active"
                     )}
                     style={{
-                      width: index === 0 ? "926px" : "254px",
-                      height: index === 0 ? "480px" : "254px",
+                      width:
+                        index === 0
+                          ? responsiveValues.activeWidth
+                          : responsiveValues.inactiveWidth,
+                      height:
+                        index === 0
+                          ? responsiveValues.activeHeight
+                          : responsiveValues.inactiveHeight,
                     }}
                   >
                     {item.isVideo ? (
