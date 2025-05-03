@@ -1,3 +1,4 @@
+import gsap from "gsap";
 import React from "react";
 
 interface ViewOptionsProps {
@@ -11,8 +12,26 @@ const ViewOptions: React.FC<ViewOptionsProps> = ({
   setViewMode,
   itemCount,
 }) => {
+  const handleViewModeChange = (mode: "small" | "large") => {
+    gsap.to(".grid-anim", {
+      opacity: 0,
+      y: "2%",
+      duration: 0.6,
+      ease: "power1.inOut",
+      onComplete: () => {
+        setViewMode(mode);
+        gsap.to(".grid-anim", {
+          opacity: 1,
+          y: "0%",
+          duration: 0.6,
+          ease: "power1.inOut",
+        });
+      },
+    });
+  };
+
   return (
-    <div className="mb-40d grid grid-cols-4 gap-20d">
+    <div className="mb-40d grid grid-cols-4 gap-20d creations-anim">
       <p className="text-10d text-ruby-red col-span-2">
         {itemCount} ITEMS FOUND
       </p>
@@ -28,7 +47,7 @@ const ViewOptions: React.FC<ViewOptionsProps> = ({
                 name="viewMode"
                 value="small"
                 checked={viewMode === "small"}
-                onChange={() => setViewMode("small")}
+                onChange={() => handleViewModeChange("small")}
                 className="accent-ruby-red"
               />
               <span className="ml-2 text-10d text-ruby-red">SMALL VIEW</span>
@@ -40,7 +59,7 @@ const ViewOptions: React.FC<ViewOptionsProps> = ({
                 name="viewMode"
                 value="large"
                 checked={viewMode === "large"}
-                onChange={() => setViewMode("large")}
+                onChange={() => handleViewModeChange("large")}
                 className="accent-ruby-red"
               />
               <span className="ml-2 text-10d text-ruby-red">LARGE VIEW</span>

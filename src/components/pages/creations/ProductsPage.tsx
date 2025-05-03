@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import SearchBar from "./SearchBar";
 import CategoryFilter from "./CategoryFilter";
 import PriceRange from "./PriceRange";
-import ViewOptions from "./ViewOptions";
 import ProductsGrid from "./ProductsGrid";
-import ScrollToTop from "./ScrollToTop";
-import { products, categories } from "./productData";
+import SearchBar from "./SearchBar";
+import ViewOptions from "./ViewOptions";
+import { categories, products } from "./productData";
 
 const ProductsPage: React.FC = () => {
   const [viewMode, setViewMode] = useState<"small" | "large">("small");
@@ -59,7 +58,7 @@ const ProductsPage: React.FC = () => {
                 itemCount={filteredProducts.length}
               />
 
-              <ProductsGrid products={filteredProducts} />
+              <ProductsGrid viewMode={viewMode} products={filteredProducts} />
             </div>
           </div>
         </div>

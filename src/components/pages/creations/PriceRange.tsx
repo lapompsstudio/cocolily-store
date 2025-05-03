@@ -93,10 +93,12 @@ const PriceRange: React.FC<PriceRangeProps> = ({
 
   return (
     <div>
-      <p className="font-bold mb-24d font-abc text-ruby-red">PRICE</p>
-      <div className="pl-20d">
+      <p className="font-bold mb-24d font-abc text-ruby-red creations-anim">
+        PRICE
+      </p>
+      <div className="pl-20d flex flex-col gap-16d">
         {/* Custom Range Slider */}
-        <div className="relative h-6" ref={sliderRef}>
+        <div className="relative h-6 creations-anim" ref={sliderRef}>
           {/* Track Line - Lower opacity before selected range */}
           <div className="absolute top-3 left-0 right-0 h-0.5 bg-red-200"></div>
 
@@ -129,14 +131,14 @@ const PriceRange: React.FC<PriceRangeProps> = ({
         </div>
 
         {/* Price Inputs */}
-        <div className="flex justify-between items-center mt-6 gap-12d">
+        <div className="flex justify-between items-center creations-anim">
           <div className="border border-red-600 rounded-full px-3 py-2 flex items-center">
             <span className="text-red-600 text-10d mr-2">AED</span>
             <input
               type="text"
               value={priceRange[0]}
               onChange={handleInputChange(0)}
-              className="w-5 text-red-600 bg-transparent focus:outline-none text-10d"
+              className="w-5 text-red-600 bg-transparent focus:outline-none text-10d text-end"
             />
           </div>
           <span className="text-red-600 font-medium text-10d">TO</span>
@@ -146,7 +148,7 @@ const PriceRange: React.FC<PriceRangeProps> = ({
               type="text"
               value={priceRange[1]}
               onChange={handleInputChange(1)}
-              className="w-5 text-red-600 bg-transparent focus:outline-none text-10d"
+              className="w-5 text-red-600 bg-transparent focus:outline-none text-10d text-end"
             />
           </div>
         </div>

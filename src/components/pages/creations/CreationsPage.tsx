@@ -2,13 +2,13 @@
 
 import Footer from "@/components/layout/footer";
 import useColorStore from "@/store/colorStore";
-import React, { useEffect } from "react";
+import { useFooterStore } from "@/store/footerStore";
+import { useEffect } from "react";
 import Hero from "./Hero";
 import Products from "./Products";
-import { useFooterStore } from "@/store/footerStore";
 
 export default function CreationsPage() {
-  const { isRenderFooter, initFooter } = useFooterStore();
+  const { initFooter } = useFooterStore();
   const { setColor } = useColorStore();
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export default function CreationsPage() {
         <Hero />
         <Products />
       </div>
-      {isRenderFooter && <Footer />}
+      <Footer />
     </div>
   );
 }
