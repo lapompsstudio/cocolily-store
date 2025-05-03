@@ -1,17 +1,19 @@
-import React from "react";
-import { HeartIcon } from "lucide-react";
-import { Product } from "./types";
 import GradientImage from "@/components/ui/GradientImage";
 import clsx from "clsx";
+import { HeartIcon } from "lucide-react";
+import React from "react";
+import { Product } from "./types";
 
 interface ProductCardProps {
   product: Product;
   imageWrapperClass?: string;
+  small?: boolean;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
   product,
-  imageWrapperClass = "",
+  small = true,
+  imageWrapperClass,
 }) => {
   const handleAddToCart = () => {
     console.log("Adding to cart:", product);
@@ -22,12 +24,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
   };
 
   return (
-    <div className="relative flex flex-col">
+    <div className="relative flex flex-col creations-anim-product">
       {/* Product Image */}
       <div className="relative rounded-lg overflow-hidden mb-3">
         <div
           className={clsx(
-            "w-full h-246d rounded-32d overflow-hidden",
+            "w-full rounded-32d overflow-hidden",
+            small ? "h-246d" : "h-512d",
             imageWrapperClass
           )}
         >
@@ -47,7 +50,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
       {/* Product Title with Heart */}
       <div className="flex justify-between items-start">
-        <p className="text-12d font-abc leading-tight font-bold text-ruby-red uppercase max-w-[80%]">
+        <p
+          className={clsx(
+            "font-abc leading-tight font-bold text-ruby-red uppercase max-w-[80%]",
+            small ? "text-12d" : "text-24d"
+          )}
+        >
           {product.name}
         </p>
         <button
@@ -61,7 +69,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
       <div className="flex justify-between items-end">
         {/* Price Info */}
         <div className="flex flex-col gap-0 text-12d mt-12d">
-          <span className="font-bold text-ruby-red">
+          <span
+            className={clsx("text-ruby-red", small ? "text-12d" : "text-16d")}
+          >
             AED {product.price.toFixed(2)}
           </span>
           <div className="flex items-center gap-8d">
@@ -73,7 +83,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </div>
 
         {/* Add to Cart Button */}
-        <button className="text-ruby-red text-10d" onClick={handleAddToCart}>
+        <button
+          className={clsx("text-ruby-red", small ? "text-10d" : "text-12d")}
+          onClick={handleAddToCart}
+        >
           ADD TO CART
         </button>
       </div>

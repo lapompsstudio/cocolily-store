@@ -1,3 +1,4 @@
+import useRevealAnimation from "@/app/hooks/useRevealAnimation";
 import React from "react";
 
 interface CategoryFilterProps {
@@ -11,6 +12,12 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
   selectedCategory,
   onCategoryChange,
 }) => {
+  useRevealAnimation({ selector: ".creations-anim", startMd: "top 150%" });
+  useRevealAnimation({
+    selector: ".creations-anim-product",
+    startMd: "top 130%",
+    // markers: true,
+  });
   return (
     <div>
       <p className="font-bold mb-24d font-abc text-ruby-red hero-creations">
@@ -18,7 +25,10 @@ const CategoryFilter: React.FC<CategoryFilterProps> = ({
       </p>
       <div className="flex flex-col gap-10d pl-20d">
         {categories.map((category) => (
-          <label key={category} className="flex items-center space-x-2">
+          <label
+            key={category}
+            className="flex items-center space-x-2 creations-anim"
+          >
             <input
               type="radio"
               name="category"
