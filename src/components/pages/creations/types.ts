@@ -3,8 +3,9 @@ export interface Product {
   name: string;
   price: number;
   originalPrice: number;
-  discount: string;
+  discount?: string;
   image: string;
   isBestSeller?: boolean;
   isSoldOut?: boolean;
+  category?: string;
 }
