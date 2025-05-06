@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { products } from "./productData"; // Import products to get the max price
 
 interface PriceRangeProps {
   priceRange: [number, number];
@@ -11,10 +12,19 @@ const PriceRange: React.FC<PriceRangeProps> = ({
   priceRange,
   setPriceRange,
   min = 0,
-  max = 500,
+  // Calculate the max price dynamically from the products data
+  max = Math.max(...products.map((product) => product.price)),
 }) => {
   const [isDragging, setIsDragging] = useState<number | null>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
+
+  // Initialize price range with min and the calculated max when component mounts
+  useEffect(() => {
+    // Only initialize if the current priceRange doesn't make sense
+    if (priceRange[1] > max || priceRange[0] < min) {
+      setPriceRange([min, max]);
+    }
+  }, []);
 
   const handleDragStart = (index: number) => (e: React.MouseEvent) => {
     e.preventDefault();
@@ -98,7 +108,7 @@ const PriceRange: React.FC<PriceRangeProps> = ({
       </p>
       <div className="pl-20d flex flex-col gap-16d">
         {/* Custom Range Slider */}
-        <div className="relative h-6 creations-anim" ref={sliderRef}>
+        <div className="relative h-6" ref={sliderRef}>
           {/* Track Line - Lower opacity before selected range */}
           <div className="absolute top-3 left-0 right-0 h-0.5 bg-red-200"></div>
 
@@ -131,24 +141,24 @@ const PriceRange: React.FC<PriceRangeProps> = ({
         </div>
 
         {/* Price Inputs */}
-        <div className="flex justify-between items-center creations-anim">
+        <div className="flex justify-between items-center">
           <div className="border border-red-600 rounded-full px-3 py-2 flex items-center">
-            <span className="text-red-600 text-10d mr-2">AED</span>
+            <span className="text-red-600 text-10d">AED</span>
             <input
               type="text"
               value={priceRange[0]}
               onChange={handleInputChange(0)}
-              className="w-5 text-red-600 bg-transparent focus:outline-none text-10d text-end"
+              className="w-7 text-red-600 bg-transparent focus:outline-none text-10d text-end"
             />
           </div>
           <span className="text-red-600 font-medium text-10d">TO</span>
           <div className="border border-red-600 rounded-full px-3 py-2 flex items-center">
-            <span className="text-red-600 text-10d mr-2">AED</span>
+            <span className="text-red-600 text-10d">AED</span>
             <input
               type="text"
               value={priceRange[1]}
               onChange={handleInputChange(1)}
-              className="w-5 text-red-600 bg-transparent focus:outline-none text-10d text-end"
+              className="w-7 text-red-600 bg-transparent focus:outline-none text-10d text-end"
             />
           </div>
         </div>

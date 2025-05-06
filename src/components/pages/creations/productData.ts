@@ -9,6 +9,7 @@ export const products: Product[] = [
     discount: "24%",
     image: "/product-grid/1.png",
     isBestSeller: true,
+    category: "SIGNATURE BOX",
   },
   {
     id: 2,
@@ -17,6 +18,7 @@ export const products: Product[] = [
     originalPrice: 395.0,
     discount: "24%",
     image: "/product-grid/2.png",
+    category: "CHOCOLATE BARS",
   },
   {
     id: 3,
@@ -25,6 +27,7 @@ export const products: Product[] = [
     originalPrice: 395.0,
     discount: "24%",
     image: "/product-grid/3.png",
+    category: "CHOCOLATE BARS",
   },
   {
     id: 4,
@@ -34,6 +37,7 @@ export const products: Product[] = [
     discount: "24%",
     image: "/product-grid/4.png",
     isSoldOut: true,
+    category: "CHOCOLATE BARS",
   },
   {
     id: 5,
@@ -43,6 +47,7 @@ export const products: Product[] = [
     discount: "24%",
     image: "/product-grid/5.png",
     isBestSeller: true,
+    category: "SIGNATURE BOX",
   },
   {
     id: 6,
@@ -51,6 +56,7 @@ export const products: Product[] = [
     originalPrice: 395.0,
     discount: "24%",
     image: "/product-grid/6.png",
+    category: "CHOCOLATE BARS",
   },
   {
     id: 7,
@@ -60,6 +66,7 @@ export const products: Product[] = [
     discount: "24%",
     image: "/product-grid/7.png",
     isSoldOut: true,
+    category: "CHOCOLATE BARS",
   },
   {
     id: 8,
@@ -68,6 +75,7 @@ export const products: Product[] = [
     originalPrice: 395.0,
     discount: "24%",
     image: "/product-grid/1.png",
+    category: "CHOCOLATE BARS",
   },
   {
     id: 9,
@@ -77,31 +85,32 @@ export const products: Product[] = [
     discount: "24%",
     image: "/product-grid/2.png",
     isBestSeller: true,
+    category: "SIGNATURE BOX",
   },
   {
     id: 10,
-    name: "HOLOGRAPHIC CHOCOLATE",
+    name: "CHOCOLATE CLUSTERS",
     price: 300.0,
-    originalPrice: 395.0,
-    discount: "24%",
+    originalPrice: 300.0, // No discount
     image: "/product-grid/3.png",
+    category: "CLUSTERS",
   },
   {
     id: 11,
-    name: "HOLOGRAPHIC CHOCOLATE",
-    price: 300.0,
-    originalPrice: 395.0,
-    discount: "24%",
+    name: "GANACHE SELECTION",
+    price: 250.0,
+    originalPrice: 250.0, // No discount
     image: "/product-grid/4.png",
     isSoldOut: true,
+    category: "CUT GANACHE",
   },
   {
     id: 12,
-    name: "HOLOGRAPHIC CHOCOLATE",
-    price: 300.0,
-    originalPrice: 395.0,
-    discount: "24%",
+    name: "LUXURY PRALINE BOX",
+    price: 395.0,
+    originalPrice: 395.0, // No discount
     image: "/product-grid/5.png",
+    category: "GIFTING TRAYS",
   },
 ];
 

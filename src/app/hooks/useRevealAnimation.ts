@@ -45,7 +45,7 @@ export default function useRevealAnimation({
         elements.forEach((element) => {
           gsap.set(element, {
             clipPath: "inset(0% 0% 100% 0%)",
-            yPercent: 100,
+            y: "100%",
           });
 
           // Create the ScrollTrigger
@@ -56,7 +56,7 @@ export default function useRevealAnimation({
             onEnter: () => {
               gsap.to(element, {
                 clipPath: "inset(0% 0% 0% 0%)",
-                yPercent: 0,
+                y: "0%",
                 duration: 0.8,
                 stagger: stagger,
                 delay: md ? delay : delayMobile,

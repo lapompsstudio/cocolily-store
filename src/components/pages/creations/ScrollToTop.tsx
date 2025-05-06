@@ -11,7 +11,7 @@ const ScrollToTop: React.FC = () => {
 
   return (
     <button
-      className="fixed bottom-6 right-6 bg-white rounded-full p-3 shadow-md"
+      className="bg-white rounded-full p-3 shadow-md"
       onClick={scrollToTop}
     >
       <ArrowUpIcon size={20} />
