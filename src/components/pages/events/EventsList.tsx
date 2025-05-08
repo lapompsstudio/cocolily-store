@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 
 import clsx from "clsx";
 import { useGSAP } from "@gsap/react";
@@ -227,7 +228,8 @@ const EventsList = () => {
 
         <div className="w-full grid grid-cols-2 gap-x-20d gap-y-64d md:landscape:mt-48d">
           {allEvents?.data.map((data, index) => (
-            <div
+            <Link
+              href={`events/${data.documentId}`}
               className={clsx(
                 "w-full flex flex-col gap-y-36d relative",
                 "cursor-follow-active"
@@ -288,7 +290,7 @@ const EventsList = () => {
                   ))}
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
