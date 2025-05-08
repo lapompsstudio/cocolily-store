@@ -11,6 +11,7 @@ import EventDetailExperience from "./EventDetailExperience";
 import EventDetailGallery from "./EventDetailGallery";
 import EventDetailSummary from "./EventDetailSummary";
 import Footer from "@/components/layout/footer";
+import EventDetailHighlightDesc from "./EventDetailHighlightDesc";
 
 const EventDetailPage = () => {
   const { isRenderFooter, initFooter } = useFooterStore();
@@ -25,6 +26,7 @@ const EventDetailPage = () => {
     <div className="bg-ivory-blush">
       <EventDetailHero />
       <EventDetailHighlight />
+      <EventDetailHighlightDesc />
       <EventDetailExperience />
       <EventDetailGallery />
       <EventDetailSummary />

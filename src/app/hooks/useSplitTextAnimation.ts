@@ -14,6 +14,7 @@ export default function useSplitTextAnimation({
   startMobile = "top 75%",
   delay = 0,
   delayMobile = 0,
+  markers = false,
 }: {
   selector: string;
   type?: "lines" | "words" | "chars";
@@ -22,6 +23,7 @@ export default function useSplitTextAnimation({
   startMobile?: string;
   delay?: number;
   delayMobile?: number;
+  markers?: boolean;
 }) {
   useGSAP(() => {
     const mm = gsap.matchMedia();
@@ -58,6 +60,7 @@ export default function useSplitTextAnimation({
           const scrollTrigger = ScrollTrigger.create({
             trigger: element, // Set the trigger for this specific element
             start: md ? startMd : startMobile, // Adjust this if necessary
+            markers: markers,
             onEnter: () => {
               gsap.to(splitElements, {
                 clipPath: "inset(0% 0% 0% 0%)",
