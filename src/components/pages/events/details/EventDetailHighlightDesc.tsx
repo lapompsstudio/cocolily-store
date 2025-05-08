@@ -11,7 +11,7 @@ export default function EventDetailHighlightDesc() {
   useRevealAnimation({
     selector: ".event-detail-highlight-anim-icon",
     startMd: "top bottom",
-    markers: true,
+    // markers: true,
   });
   return (
     <>
