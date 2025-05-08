@@ -124,6 +124,10 @@ const EventDetailExperience = ({ data }: { data: EventDetail }) => {
             x: -scrollAmount,
           });
         }
+
+        tl.to(`.experience-img-${index}`, {
+          translateY: "-15%",
+        });
       });
     },
     { scope: containerRef, dependencies: [data] }
