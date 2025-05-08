@@ -1,5 +1,7 @@
 "use client";
 
+import { useRef } from "react";
+
 import Link from "next/link";
 import MobileMenu from "./mobile-menu";
 import Logo from "@/components/logo";
@@ -13,13 +15,31 @@ import AuthBtn from "@/components/layout/navbar/auth-btn";
 import { useNavbarColorStore } from "@/store/navbarColorStore";
 import clsx from "clsx";
 
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+
 export function Navbar() {
+  const navbarRef = useRef<HTMLDivElement>(null);
   const { isNavbarWhite } = useNavbarColorStore();
+
+  useGSAP(
+    () => {
+      if (!navbarRef.current) return;
+      gsap.to(navbarRef.current, {
+        y: "0%",
+        duration: 1.2,
+        ease: "power1.inOut",
+        delay: 2.2,
+      });
+    },
+    { scope: navbarRef }
+  );
 
   return (
     <nav
+      ref={navbarRef}
       className={clsx(
-        "flex items-center justify-between p-20d fixed top-0 backdrop-blur-sm z-[999] w-full",
+        "flex items-center justify-between p-20d fixed top-0 backdrop-blur-sm z-navbar w-full -translate-y-full",
         {
           "navbar-white": isNavbarWhite,
         }
