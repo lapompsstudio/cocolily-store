@@ -8,7 +8,7 @@ const LogoPreloader = () => {
       viewBox="0 0 216 73"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="preloader-logo absolute top-68d left-1/2 -translate-x-1/2"
+      className="preloader-logo absolute top-48d left-1/2 -translate-x-1/2"
     >
       <g clipPath="url(#clip1_463_15435)" className="preloader-text clipped">
         <path

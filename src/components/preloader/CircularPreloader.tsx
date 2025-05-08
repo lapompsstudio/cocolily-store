@@ -17,12 +17,12 @@ interface LineCircleProps {
 
 const LineCircle: React.FC<LineCircleProps> = ({ className = "" }) => (
   <div
-    className={`line-circle h-300d w-2d bg-ruby-red absolute inset-0 m-auto ${className}`}
+    className={`line-circle h-173d md:landscape:h-300d w-2d bg-ruby-red absolute inset-0 m-auto ${className}`}
   />
 );
 
 const BackgroundCircle: React.FC = () => (
-  <div className="background-cirlce scale-0 h-300d w-300d bg-baby-pink rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+  <div className="background-cirlce scale-0 h-173d w-173d md:landscape:h-300d md:landscape:w-300d bg-baby-pink rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
     <div className="line-wrapper w-full h-full relative">
       <LineCircle />
       <LineCircle />
@@ -33,7 +33,7 @@ const BackgroundCircle: React.FC = () => (
 );
 
 const CircleWrapper: React.FC = () => (
-  <div className="circle-wrapper w-454d h-454d">
+  <div className="circle-wrapper w-256d h-256d md:landscape:w-454d md:landscape:h-454d">
     <Circle1 />
     <Circle2 />
     <Circle3 />

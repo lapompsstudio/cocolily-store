@@ -138,14 +138,14 @@ const Preloader = () => {
           "<"
         )
         .to([".preloader-top-sheet", ".circular-wrapper"], {
-          y: "-175%",
+          y: "-225%",
           duration: 1.2,
           ease: "power1.inOut",
         })
         .to(
           ".preloader-bottom-sheet",
           {
-            y: "175%",
+            y: "225%",
             duration: 1.2,
             ease: "power1.inOut",
           },
@@ -173,13 +173,13 @@ const Preloader = () => {
 
       <div className="circular-wrapper absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30">
         <CircularPreloader />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-45d h-45d bg-ruby-red rounded-full z-20"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-25d h-25d md:landscape:w-45d md:landscape:h-45d bg-ruby-red rounded-full z-20"></div>
       </div>
 
       <div className="preloader-bottom-sheet flex-1 bg-white relative z-10">
         <div className="h-full w-full bg-gradient-to-b from-[#92649C] from-0% to-transparent to-100%"></div>
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 text-center space-y-32d pb-55d">
-          <p className="preloader-text clipped text-ruby-red font-abc text-16d font-bold">
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 text-center space-y-16d pb-32d">
+          <p className="preloader-text clipped text-ruby-red font-abc text-16d max-xl:portrait:leading-none font-bold">
             LOADING SWEET CELEBRATION
           </p>
           <div className="preloader-text clipped flex justify-center text-ruby-red font-abc text-16d font-bold">
