@@ -147,27 +147,44 @@ const Hero = () => {
 
   return (
     <div
-      className={clsx("h-1269d overflow-hidden bg-white z-10", "relative")}
+      className={clsx(
+        "md:landscape:h-1269d overflow-hidden bg-white z-10",
+        "max-xl:portrait:h-1033d",
+        "relative"
+      )}
       ref={containerRef}
     >
-      <div className="absolute md:landscape:top-82d left-1/2 -translate-x-1/2 w-full z-[100]">
+      <div
+        className={clsx(
+          "md:landscape:absolute md:landscape:top-82d md:landscape:left-1/2 md:landscape:-translate-x-1/2 w-full z-[100] max-xl:portrait:pt-160d max-xl:portrait:px-20d"
+        )}
+      >
         <div className="relative">
           <div
             className={clsx(
-              "absolute top-33d left-20d flex md:landscape:gap-x-124d md:landscape:text-16d ",
+              "md:landscape:absolute md:landscape:top-33d md:landscape:left-20d flex md:landscape:gap-x-124d md:landscape:text-16d",
+              "max-xl:portrait:text-12d max-xl:portrait:flex max-xl:portrait:justify-between",
               "font-abc font-bold uppercase leading-none text-ruby-red"
             )}
           >
             <span className="chocolate opacity-0">More than Chocolate</span>
             <span className="sweet-moments opacity-0">
-              it&apos;s a celebration of <br />
+              it&apos;s a celebration <br className="md:landscape:hidden" />
+              of <br className="hidden md:landscape:block" />
               sweet moments
             </span>
           </div>
-          <div className="w-full flex justify-center items-end">
+          <div
+            className={clsx(
+              "w-full flex justify-center items-end",
+              "max-xl:portrait:mt-60d"
+            )}
+          >
             <div
               className={clsx(
                 "relative md:landscape:w-200d md:landscape:h-230d",
+                "md:portrait:w-61d md:portrait:h-66d",
+                "w-48d h-55d",
                 "alphabet clipped"
               )}
             >
@@ -181,6 +198,8 @@ const Hero = () => {
             <div
               className={clsx(
                 "relative md:landscape:w-224d md:landscape:h-231d",
+                "md:portrait:w-67d md:portrait:h-70d",
+                "w-53d h-55d",
                 "alphabet clipped"
               )}
             >
@@ -194,6 +213,8 @@ const Hero = () => {
             <div
               className={clsx(
                 "relative md:landscape:w-200d md:landscape:h-230d md:landscape:ml-18d",
+                "md:portrait:w-61d md:portrait:h-66d",
+                "w-48d h-55d ml-3d",
                 "alphabet clipped"
               )}
             >
@@ -207,6 +228,8 @@ const Hero = () => {
             <div
               className={clsx(
                 "relative md:landscape:w-224d md:landscape:h-231d",
+                "md:portrait:w-67d md:portrait:h-70d",
+                "w-53d h-55d",
                 "alphabet clipped"
               )}
             >
@@ -220,6 +243,8 @@ const Hero = () => {
             <div
               className={clsx(
                 "relative md:landscape:w-29d md:landscape:h-334d md:landscape:ml-60d",
+                "md:portrait:w-9d md:portrait:h-102d",
+                "w-7d h-80d ml-15d",
                 "alphabet clipped"
               )}
             >
@@ -233,6 +258,8 @@ const Hero = () => {
             <div
               className={clsx(
                 "relative md:landscape:w-29d md:landscape:h-315d md:landscape:ml-67d",
+                "md:portrait:w-9d md:portrait:h-95d",
+                "w-7d h-74d ml-15d",
                 "alphabet clipped"
               )}
             >
@@ -246,6 +273,8 @@ const Hero = () => {
             <div
               className={clsx(
                 "relative md:landscape:w-29d md:landscape:h-334d md:landscape:ml-67d",
+                "md:portrait:w-9d md:portrait:h-102d",
+                "w-7d h-80d ml-15d",
                 "alphabet clipped"
               )}
             >
@@ -257,10 +286,17 @@ const Hero = () => {
               />
             </div>
 
-            <div className="md:landscape:translate-y-113d">
+            <div
+              className={clsx(
+                "md:landscape:translate-y-113d",
+                "max-xl:portrait:translate-y-27d"
+              )}
+            >
               <div
                 className={clsx(
-                  "relative md:landscape:w-221d md:landscape:h-353d   md:landscape:ml-30d",
+                  "relative md:landscape:w-221d md:landscape:h-353d md:landscape:ml-30d",
+                  "md:portrait:w-68d md:portrait:h-109d",
+                  "w-53d h-85d ml-7d",
                   "alphabet clipped"
                 )}
               >
@@ -276,13 +312,18 @@ const Hero = () => {
         </div>
       </div>
 
-      <div className="mt-278d">
+      <div className={clsx("md:landscape:mt-278d", "max-xl:portrait:mt-100d")}>
         <CircleSlider />
       </div>
 
       {/* gradient */}
 
-      <div className="w-full  absolute h-264d bottom-0 z-10 bg-gradient-to-b to-ruby-red from-transparent"></div>
+      <div
+        className={clsx(
+          "w-full absolute md:landscape:h-264d bottom-0 z-10 bg-gradient-to-b to-ruby-red from-transparent",
+          "h-200d"
+        )}
+      ></div>
 
       {/* gradient */}
     </div>

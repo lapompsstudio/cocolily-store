@@ -138,7 +138,7 @@ const CursorFollow = ({
   return (
     <div
       ref={cursorRef}
-      className={`w-80d h-80d bg-seashell backdrop-blur-[4px] bg-opacity-30 rounded-full fixed top-0 left-0 transition-opacity duration-500 pointer-events-none z-50 flex justify-center items-center ${
+      className={`hidden  w-80d h-80d bg-seashell backdrop-blur-[4px] bg-opacity-30 rounded-full fixed top-0 left-0 transition-opacity duration-500 pointer-events-none z-50 md:landscape:flex justify-center items-center ${
         isVisible ? "opacity-100" : "opacity-0"
       }`}
       style={{ willChange: "transform" }} // Optimisasi performa animasi

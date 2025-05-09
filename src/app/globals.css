@@ -16,6 +16,7 @@
 @media (min-width: 768px) and (orientation: portrait) {
   :root {
     --bw: 480;
+    /* --bw: 375; */
   }
 }
 
