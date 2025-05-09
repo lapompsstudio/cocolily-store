@@ -31,7 +31,7 @@ const Template = ({ children }: { children: React.ReactNode }) => {
             appendTo: "head",
           }}
         >
-          {/* <Navbar /> */}
+          <Navbar />
           <main>{children}</main>
         </GoogleReCaptchaProvider>
       </QueryClientProvider>
