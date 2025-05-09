@@ -73,7 +73,6 @@ const CircleSlider: React.FC = () => {
   // // Initialize visible items
 
   useEffect(() => {
-    console.log({ isMobile });
     const updateRadius = () => {
       const viewportWidth = window.innerWidth;
 
