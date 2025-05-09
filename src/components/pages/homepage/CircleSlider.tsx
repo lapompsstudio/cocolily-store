@@ -7,6 +7,7 @@ import clsx from "clsx";
 import { useQuery } from "@tanstack/react-query";
 
 import { HeroSliderResponse } from "@/types/api";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 interface SliderItem {
   file: string;
@@ -39,6 +40,7 @@ const CircleSlider: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const [dataFromApi, setDataFromApi] = useState<EventsType | null>(null);
+  const { isMobile, isDesktop } = useMediaQueries();
 
   const { data } = useQuery<HeroSliderResponse>({
     queryKey: ["hero-slider"],
@@ -71,15 +73,22 @@ const CircleSlider: React.FC = () => {
   // // Initialize visible items
 
   useEffect(() => {
+    console.log({ isMobile });
     const updateRadius = () => {
       const viewportWidth = window.innerWidth;
-      setRadius((680 / BASE_WIDTH) * viewportWidth);
+
+      if (isMobile === true && isDesktop === false) {
+        setRadius((1330 / BASE_WIDTH) * viewportWidth);
+      } else if (isMobile === false && isDesktop === true) {
+        setRadius((680 / BASE_WIDTH) * viewportWidth);
+      }
     };
 
+    // 680
     updateRadius();
     window.addEventListener("resize", updateRadius);
     return () => window.removeEventListener("resize", updateRadius);
-  }, []);
+  }, [isDesktop, isMobile]);
 
   // Handle video play/pause when currentIndex changes
   useEffect(() => {
@@ -200,6 +209,7 @@ const CircleSlider: React.FC = () => {
             key={i}
             className={clsx(
               `font-bold font-abc md:landscape:text-16d text-ruby-red uppercase desc-circle-${i} leading-none`,
+              "max-xl:portrait:text-16d",
               "absolute top-0 left-0",
               {
                 "translate-y-[300%]": i !== 0,
@@ -224,7 +234,9 @@ const CircleSlider: React.FC = () => {
           <div
             key={i}
             className={clsx(
-              "absolute w-672d h-672d rounded-full flex items-center justify-center text-white font-bold overflow-hidden",
+              "absolute md:landscape:w-672d md:landscape:h-672d rounded-full flex items-center justify-center text-white font-bold overflow-hidden",
+              "md:portrait:w-430d md:portrait:h-430d",
+              "w-345d h-345d",
               `circle-item-${i}`,
               {
                 "cursor-follow-active": i === currentIndex,
@@ -238,7 +250,13 @@ const CircleSlider: React.FC = () => {
               {/* logo */}
               {data.logo && (
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 z-10">
-                  <div className="w-537d h-537d relative">
+                  <div
+                    className={clsx(
+                      "md:landscape:w-537d md:landscape:h-537d relative",
+
+                      "w-276d h-276d"
+                    )}
+                  >
                     <Image
                       src={process.env.NEXT_PUBLIC_STRAPI_URL + data.logo.url}
                       alt="logo"
@@ -277,15 +295,23 @@ const CircleSlider: React.FC = () => {
 
   return (
     <>
-      <div className="w-217d absolute left-141d top-510d z-10 flex flex-col gap-y-20d">
+      <div
+        className={clsx(
+          "w-217d md:landscape:absolute left-141d top-510d z-10 flex flex-col gap-y-20d",
+          "max-xl:portrait:px-20d"
+        )}
+      >
         <div
-          className="uppercase font-sans text-10d text-ruby-red title-desc "
+          className={clsx(
+            "uppercase font-sans md:landscape:text-10d text-ruby-red title-desc",
+            "max-xl:portrait:text-14d"
+          )}
           style={{
             transform: "translateY(100%)",
             clipPath: "inset(0% 0% 100% 0%)",
           }}
         >
-          Cocolily sweet moments
+          OUR CELEBRATIONS
         </div>
 
         <div className="w-full h-36d overflow-hidden relative">
@@ -294,8 +320,19 @@ const CircleSlider: React.FC = () => {
         <div className="uppercase font-abc font-bold text-16d text-ruby-red leading-none"></div>
       </div>
 
-      <div className="flex flex-col items-center gap-4 relative circle-slider-container">
-        <div className="w-2223d h-2223d rounded-full flex items-center justify-center relative overflow-hidden">
+      <div
+        className={clsx(
+          "flex flex-col items-center gap-4 relative circle-slider-container",
+          "max-md:portrait:-mt-74d"
+        )}
+      >
+        <div
+          className={clsx(
+            "md:landscape:w-2223d md:landscape:h-2223d rounded-full flex items-center justify-center relative overflow-hidden",
+            "md:portrait:w-1385d md:portrait:h-1385d",
+            "w-1193d h-1193d"
+          )}
+        >
           <div
             ref={circleRef}
             className="absolute w-full h-full flex items-center justify-center"
@@ -306,13 +343,19 @@ const CircleSlider: React.FC = () => {
         </div>
 
         <div
-          className="absolute left-365d top-387d z-10 cursor-pointer button-prev opacity-0"
+          className={clsx(
+            "absolute md:landscape:left-365d md:landscape:top-387d z-10 cursor-pointer button-prev opacity-0",
+            "left-20d top-224d"
+          )}
           onClick={() => !isAnimating && rotateCircle("prev")}
         >
           <ArrowButton variant="secondary" icon="arrow-left" />
         </div>
         <div
-          className="absolute right-365d top-387d z-10 cursor-pointer button-next opacity-0"
+          className={clsx(
+            "absolute md:landscape:right-365d md:landscape:top-387d z-10 cursor-pointer button-next opacity-0",
+            "right-20d top-224d"
+          )}
           onClick={() => !isAnimating && rotateCircle("next")}
         >
           <ArrowButton variant="secondary" />

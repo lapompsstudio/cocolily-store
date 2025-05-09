@@ -12,6 +12,7 @@ const ArrowButton = ({
       <div
         className={clsx(
           "md:landscape:w-62d md:landscape:h-62d rounded-full flex justify-center items-center relative border-[2px] border-ruby-red overflow-hidden",
+          "w-52d h-52d",
           {
             "group-hover:translate-x-[20%] transition-all duration-300":
               icon !== "arrow-left",

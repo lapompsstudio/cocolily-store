@@ -57,10 +57,10 @@ const Homepage = () => {
         isManyElement={false}
       />
       <Hero />
-      <OurMission />
+      {/* <OurMission />
       <ShopOurProducts />
       <EventsHomepage />
-      {isRenderFooter && <Footer />}
+      {isRenderFooter && <Footer />} */}
     </>
   );
 };
