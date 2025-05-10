@@ -7,7 +7,7 @@
   --bw: 1440;
 
   .swiper-slide-event-detail {
-    width: calc((325 / 1440) * 100 * 1vw) !important;
+    width: calc((325 / var(--bw) * 100vw)) !important;
     height: 60vh !important;
   }
 }
