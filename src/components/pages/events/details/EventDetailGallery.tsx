@@ -53,7 +53,7 @@ interface InitialPosition {
 export default function EventDetailGallery() {
   useSplitTextAnimation({
     selector: ".event-gallery-detail-highlight-anim-text",
-    markers: true,
+    // markers: true,
   });
 
   const container = useRef<HTMLDivElement>(null);
