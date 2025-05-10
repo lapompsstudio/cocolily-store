@@ -7,10 +7,12 @@ import clsx from "clsx";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText";
 import gsap from "gsap";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 const AboutHero = () => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const stickyRef = useRef<HTMLDivElement | null>(null);
+  const { isTablet } = useMediaQueries();
 
   useGSAP(() => {
     const scrollDownText = new SplitText(".text-scroll-down", {
@@ -21,13 +23,39 @@ const AboutHero = () => {
       type: "lines",
     });
 
-    gsap.to(".reveal-text", {
-      transform: "translateY(0)",
-      clipPath: "inset(0% 0% 0% 0%)",
-      ease: "power1.inOut",
-      duration: 1,
-      stagger: 0.1,
+    const title = new SplitText(".reveal-text-title", {
+      type: "lines",
+      linesClass: "pb-12 -mb-12",
     });
+
+    gsap.fromTo(
+      title.lines,
+      { transform: "translateY(100%)", clipPath: "inset(0% 0% 100% 0%)" },
+      {
+        transform: "translateY(0)",
+        clipPath: "inset(0% 0% 0% 0%)",
+        ease: "power1.inOut",
+        duration: 1,
+        stagger: 0.1,
+        onStart: () => {
+          gsap.set(".reveal-text-title", { opacity: 1 });
+        },
+      }
+    );
+
+    gsap.fromTo(
+      ".about-us",
+      { transform: "translateY(100%)", clipPath: "inset(0% 0% 100% 0%)" },
+      {
+        transform: "translateY(0)",
+        clipPath: "inset(0% 0% 0% 0%)",
+        ease: "power1.inOut",
+        duration: 1,
+        onStart: () => {
+          gsap.set(".about-us", { opacity: 1 });
+        },
+      }
+    );
 
     gsap.fromTo(
       textTheCocolilyStore.lines,
@@ -80,79 +108,86 @@ const AboutHero = () => {
       opacity: 1,
     });
   }, [containerRef]);
-  useGSAP(() => {
-    const parent = containerRef.current;
-    const sticky = stickyRef.current;
 
-    const parentHeight = parent!.offsetHeight;
-    const stickyHeight = sticky!.offsetHeight;
-    const endValue = parentHeight - stickyHeight;
+  useGSAP(
+    () => {
+      if (isTablet === null) return;
 
-    const vw = (90 / 1440) * 100; // 2.25vw
-    const pixelValue = (vw / 100) * window.innerWidth;
+      const parent = containerRef.current;
+      const sticky = stickyRef.current;
 
-    gsap.to(sticky, {
-      y: endValue,
-      ease: "none",
-      scrollTrigger: {
-        trigger: parent,
-        start: "top top",
-        end: () => `+=${endValue}`,
-        scrub: true,
-        pin: false,
-      },
-    });
+      const parentHeight = parent!.offsetHeight;
+      const stickyHeight = sticky!.offsetHeight;
+      const endValue = parentHeight - stickyHeight;
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: parent,
-        start: "top top",
-        end: () => `+=${endValue}`,
-        scrub: true,
-        pin: false,
-      },
-    });
+      const vw = (90 / 1440) * 100; // 2.25vw
 
-    tl.to(".chocolate-2", {
-      ease: "none",
-      top: "50%",
-      duration: 3,
-    })
-      .to(".chocolate-1", {
+      gsap.to(sticky, {
+        y: endValue,
         ease: "none",
-        bottom: 0,
-        // duration: 3,
-      })
-      .to(".chocolate-1", {
-        ease: "none",
-        translateY: "160%",
-      })
-      .to(
-        ".chocolate-2",
-        {
-          ease: "none",
-          top: "65%",
+        scrollTrigger: {
+          trigger: parent,
+          start: "top top",
+          end: () => `+=${endValue}`,
+          scrub: true,
+          pin: false,
         },
-        "<"
-      )
-      .from(".svg-coconut-tree", {
-        clipPath: "inset(0% 0% 100% 0%)",
-        yPercent: 100,
       });
-  }, []);
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: parent,
+          start: "top top",
+          end: () => `+=${endValue}`,
+          scrub: true,
+          pin: false,
+        },
+      });
+
+      tl.to(".chocolate-2", {
+        ease: "none",
+        top: "50%",
+        duration: 3,
+      })
+        .to(".chocolate-1", {
+          ease: "none",
+          bottom: 0,
+          // duration: 3,
+        })
+        .to(".chocolate-1", {
+          ease: "none",
+          translateY: "160%",
+        })
+        .to(
+          ".chocolate-2",
+          {
+            ease: "none",
+            top: isTablet ? "50%" : "65%",
+          },
+          "<"
+        )
+        .from(".svg-coconut-tree", {
+          clipPath: "inset(0% 0% 100% 0%)",
+          yPercent: 100,
+        });
+    },
+    { scope: containerRef, dependencies: [isTablet] }
+  );
 
   return (
     <section
-      className="w-full md:landscape:h-1605d  bg-ivory-blush  font-bold text-ruby-red relative overflow-hidden"
+      className="w-full h-1605d  bg-ivory-blush  font-bold text-ruby-red relative px-20d overflow-hidden"
       ref={containerRef}
     >
       <div
         className={clsx(
-          "md:landscape:pt-115d md:landscape:w-489d md:landscape:pl-20d font-abc font-bold text-16d uppercase flex justify-between"
+          "md:landscape:pt-115d md:landscape:w-489d md:landscape:pl-20d font-abc font-bold md:landscape:text-16d uppercase md:landscape:flex md:landscape:justify-between",
+          "max-xl:portrait:grid max-xl:portrait:grid-cols-2",
+          "text-12d max-xl:portrait:pt-160d"
         )}
       >
         <div
-          className="reveal-text translate-y-full"
+          className="translate-y-full about-us"
           style={{ clipPath: "inset(0% 0% 100% 0%)" }}
         >
           ABOUT US
@@ -160,38 +195,34 @@ const AboutHero = () => {
         <div
           className={clsx(" leading-none opacity-0", "text-the-cocolily-store")}
         >
-          THE COCOLILY <br />
-          STORY
+          THE BEGINNING
         </div>
       </div>
 
-      <div className="md:landscape:w-1115d md:landscape:mt-110d mx-auto font-span md:landscape:text-64d leading-none text-center">
-        <div
-          className="reveal-text translate-y-full pb-12 -mb-12"
-          style={{ clipPath: "inset(0% 0% 100% 0%)" }}
-        >
-          Cocolily <span className="font-light">is a homegrown Emirati</span>{" "}
-          owned
-        </div>
-        <div
-          className="reveal-text translate-y-full"
-          style={{ clipPath: "inset(0% 0% 100% 0%)" }}
-        >
-          <span className="font-light">business that</span> started{" "}
-          <span className="font-light">with a simple </span>
-        </div>
-        <div
-          className="reveal-text translate-y-full"
-          style={{ clipPath: "inset(0% 0% 100% 0%)" }}
-        >
-          Chocolate Bonbon <span className="font-light">in 2021.</span>
-        </div>
+      <div
+        className={clsx(
+          "md:landscape:w-1115d md:landscape:mt-110d mx-auto font-light font-span md:landscape:text-64d leading-none text-center opacity-0",
+          "text-36d max-xl:portrait:mt-60d",
+          "reveal-text-title"
+        )}
+      >
+        <span className="font-bold inline-block">Cocolily</span> is a homegrown{" "}
+        <span className="font-bold inline-block">Emirati</span> owned business
+        that <span className="font-bold inline-block">started</span> with a
+        simple <span className="font-bold inline-block">Chocolate Bonbon</span>{" "}
+        in 2021.
       </div>
 
-      <div className="w-full flex justify-center md:mt-319d relative z-10">
+      <div
+        className={clsx(
+          "w-full flex justify-center md:landscape::mt-319d relative z-10",
+          "mt-319d"
+        )}
+      >
         <div
           className={clsx(
-            "text-center font-sans  md:landscape:text-10d opacity-0",
+            "text-center font-sans font-light md:landscape:text-10d opacity-0 leading-none",
+            "text-14d",
             "text-scroll-down"
           )}
         >
@@ -201,16 +232,29 @@ const AboutHero = () => {
         </div>
       </div>
 
-      <div className="w-full text-center text-64d text-white font-span md:landscape:mt-200d relative z-10">
+      <div
+        className={clsx(
+          "w-full text-center md:landscape:text-64d text-white font-span md:landscape:mt-200d relative z-10 leading-none",
+          "mt-284d",
+          "text-36d"
+        )}
+      >
         <span className="font-light">Which, it</span> turns{" "}
         <span className="font-light">out, was never that simple.</span>
       </div>
 
-      <div className="mx-auto mt-178d w-1066d flex justify-between  z-50 relative">
+      <div
+        className={clsx(
+          "mx-auto md:landscape:mt-178d md:landscape:w-1066d flex justify-between  z-50 relative",
+          "w-full mt-125d"
+        )}
+      >
         <div className="svg-coconut-tree">
           <svg
-            width="120"
-            height="120"
+            className={clsx(
+              "md:landscape:w-120d md:landscape:h-120d",
+              "w-50d h-50d"
+            )}
             viewBox="0 0 120 120"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -248,8 +292,10 @@ const AboutHero = () => {
 
         <div className="svg-coconut-tree">
           <svg
-            width="120"
-            height="120"
+            className={clsx(
+              "md:landscape:w-120d md:landscape:h-120d",
+              "w-50d h-50d"
+            )}
             viewBox="0 0 120 120"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -286,7 +332,7 @@ const AboutHero = () => {
         </div>
       </div>
 
-      <div className="absolute bottom-0 w-full">
+      <div className="absolute left-0 bottom-0 w-full">
         <div className="w-full h-254d bg-gradient-to-b from-transparent to-ruby-red"></div>
         <div className="w-full h-532d bg-ruby-red"></div>
       </div>
@@ -304,7 +350,10 @@ const AboutHero = () => {
               )}
             >
               <div
-                className="md:landscape:w-356d md:landscape:h-356d relative chocolate-img-container"
+                className={clsx(
+                  "md:landscape:w-356d md:landscape:h-356d relative chocolate-img-container",
+                  "w-259d h-259d"
+                )}
                 style={{
                   clipPath: "inset(0% 0% 100% 0%)",
                 }}
@@ -324,7 +373,11 @@ const AboutHero = () => {
               )}
             >
               <div
-                className="md:landscape:w-356d md:landscape:h-356d relative chocolate-img-container"
+                className={clsx(
+                  "md:landscape:w-356d md:landscape:h-356d relative",
+                  "w-259d h-259d",
+                  "chocolate-img-container"
+                )}
                 style={{
                   clipPath: "inset(0% 0% 100% 0%)",
                 }}

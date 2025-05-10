@@ -15,6 +15,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import ArrowButton from "@/components/ui/ArrowButton";
 import { BeyondChocolateResponse } from "@/types/api";
+import useMediaQueries from "@/hooks/useMediaQueries";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -23,6 +24,7 @@ const AboutWhatDone = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<(HTMLDivElement | null)[]>([]);
   const [activeCategory, setActiveCategory] = useState<number>(0);
+  const { isMobile, isTablet } = useMediaQueries();
 
   const { data } = useQuery<BeyondChocolateResponse>({
     queryKey: ["beyond-chocolate"],
@@ -378,19 +380,25 @@ const AboutWhatDone = () => {
 
   return (
     <section
-      className="w-full bg-purple-dust md:landscape:py-142d font-bold text-ruby-red md:landscape:px-20d relative"
+      className="w-full bg-purple-dust md:landscape:py-142d font-bold text-ruby-red px-20d relative"
       ref={containerRef}
     >
-      <div className="md:landscape:col-span-3 sticky top-142d">
+      <div
+        className={clsx(
+          "md:landscape:col-span-3 md:landscape:sticky md:landscape:top-142d",
+          "max-xl:portrait:pt-142d"
+        )}
+      >
         <div
           className={clsx(
             "uppercase font-abc font-bold md:landscape:text-16d",
+            "text-14d",
             "beyond-chocolate"
           )}
         >
-          beyond chocolate
+          experience offerings
         </div>
-        <div className="md:landscape:mt-60d flex gap-x-16d gap-y-16d ">
+        <div className="md:landscape:mt-60d md:landscape:flex gap-x-16d gap-y-16d hidden">
           <div className="py-1.65d marker-category">
             <svg
               className="w-12d h-12d marker-svg block"
@@ -441,12 +449,13 @@ const AboutWhatDone = () => {
           </div>
         </div>
       </div>
-      <div className="w-full grid md:landscape:grid-cols-12 md:landscape:-mt-194d relative">
+      <div className="w-full md:landscape:grid md:landscape:grid-cols-12 md:landscape:-mt-194d relative">
         <div className="md:landscape:col-start-5 md:landscape:col-span-8 ">
-          <div className="border-lines bg-ruby-red h-[1px] w-0"></div>
+          <div className="border-lines bg-ruby-red h-[1px] w-0 hidden md:landscape:block"></div>
           <div
             className={clsx(
-              "mt-16d font-abc font-bold text-16d uppercase",
+              "md:landscape:mt-16d font-abc font-bold md:landscape:text-16d uppercase",
+              "max-xl:portrait:mt-60d text-14d max-xl:portrait:pb-20d  max-xl:portrait:border-ruby-red  max-xl:portrait:border-b",
               "seasonal-pop-ups-text"
             )}
           >
@@ -455,30 +464,35 @@ const AboutWhatDone = () => {
 
           <div
             className={clsx(
-              "mt-60d font-abc font-bold text-32d uppercase leading-none",
+              "mt-60d font-abc font-bold md:landscape:text-32d uppercase leading-none",
+              "text-20d",
               "seasonal-pop-ups-desc-text"
             )}
           >
-            In the world of pop-ups, we’ve developed Cocoa Bar & Ice Bar, two
-            dessert and beverage concepts tailored to summer and winter. Each
-            season, they reappear with a completely new look and menu, giving
-            customers something different to look forward to every season.
+            We've taken an artisanal approach to every part of the experience —
+            from our humble bonbon beginnings to everything we create today.
           </div>
 
           {data &&
             data.data.map((item, index) => (
               <div
-                className="mt-90d"
+                className={clsx("md:landscape:mt-90d", "")}
                 key={index}
                 ref={(el) => {
                   sectionRef.current[index] = el;
                 }}
               >
                 {item.sectionTitle && (
-                  <div className="grid grid-cols-8">
+                  <div
+                    className={clsx(
+                      "md:grid md:landscape:grid-cols-8",
+                      "flex flex-col max-xl:portrait:gap-y-60d"
+                    )}
+                  >
                     <div
                       className={clsx(
-                        "col-span-3 font-abc font-bold text-16d text-ruby-red uppercase",
+                        "md:landscape:col-span-3 font-abc font-bold text-16d text-ruby-red uppercase",
+                        "max-xl:portrait:mt-60d text-14d max-xl:portrait:pb-20d  max-xl:portrait:border-ruby-red  max-xl:portrait:border-b",
                         `title-section-${index}`
                       )}
                     >
@@ -486,7 +500,8 @@ const AboutWhatDone = () => {
                     </div>
                     <div
                       className={clsx(
-                        "col-span-4 col-start-5 font-sans text-12d font-light",
+                        "md:landscape:col-span-4 md:landscape:col-start-5 font-sans md:landscape:text-12d font-light",
+                        "text-14d",
                         `descprition-${index}`
                       )}
                     >
@@ -495,15 +510,21 @@ const AboutWhatDone = () => {
                   </div>
                 )}
 
-                <div className="mt-90d">
+                <div className={clsx("md:landscape:mt-90d", "mt-60d")}>
                   <Swiper
-                    slidesPerView={3}
+                    slidesPerView={isMobile ? 1.2 : isTablet ? 1.6 : 3}
                     spaceBetween={20}
+                    allowTouchMove={true}
                     onSwiper={(swiper) => (swiperRefs.current[index] = swiper)}
+                    className="max-xl:portrait:!overflow-visible"
                   >
                     {item.image.map((data, i) => (
                       <SwiperSlide key={i}>
-                        <div className="w-296d flex flex-col gap-y-24d">
+                        <div
+                          className={clsx(
+                            "md:landscape:w-296d flex flex-col gap-y-24d"
+                          )}
+                        >
                           {data.imageTitle && (
                             <div
                               className={clsx(
@@ -515,7 +536,12 @@ const AboutWhatDone = () => {
                             </div>
                           )}
 
-                          <div className="w-full h-369d relative rounded-32d overflow-hidden">
+                          <div
+                            className={clsx(
+                              "w-full h-369d relative md:landscape:rounded-32d overflow-hidden",
+                              "rounded-12d"
+                            )}
+                          >
                             <Image
                               src={
                                 process.env.NEXT_PUBLIC_STRAPI_URL +
@@ -523,7 +549,8 @@ const AboutWhatDone = () => {
                               }
                               alt={data.imageTitle}
                               className={clsx(
-                                "w-full h-full object-cover rounded-32d",
+                                "w-full h-full object-cover md:landscape:rounded-32d scale-110",
+                                "rounded-12d",
                                 `image-${index}-${i}`
                               )}
                               fill
@@ -534,7 +561,7 @@ const AboutWhatDone = () => {
                     ))}
                   </Swiper>
 
-                  <div className="w-full mt-20d flex justify-between z-50 relative">
+                  <div className="w-full mt-20d justify-between z-50 relative hidden md:landscape:flex">
                     <div
                       onClick={() => slidePrev(index)}
                       className={`button-slide-prev-${index}`}
