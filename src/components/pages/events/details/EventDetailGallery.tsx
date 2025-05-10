@@ -9,6 +9,7 @@ import type SwiperType from "swiper";
 
 import "swiper/css";
 import "swiper/css/autoplay";
+import useSplitTextAnimation from "@/app/hooks/useSplitTextAnimation";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -50,6 +51,11 @@ interface InitialPosition {
 }
 
 export default function EventDetailGallery() {
+  useSplitTextAnimation({
+    selector: ".event-gallery-detail-highlight-anim-text",
+    markers: true,
+  });
+
   const container = useRef<HTMLDivElement>(null);
   const swiperRef = useRef<SwiperType | null>(null);
 
@@ -265,11 +271,13 @@ export default function EventDetailGallery() {
     <div ref={container}>
       <div className="relative w-full h-screen text-ruby-red container-event-detail-gallery overflow-hidden">
         <div className="relative z-10 pt-[15vh]">
-          <p className="font-abc uppercase px-20d">OUR GALLERY</p>
-          <p className="font-abc uppercase absolute top-[15vh] left-1/2 -translate-x-1/2">
+          <p className="font-abc uppercase px-20d event-gallery-detail-highlight-anim-text">
+            OUR GALLERY
+          </p>
+          <p className="font-abc uppercase absolute top-[15vh] left-1/2 -translate-x-1/2 event-gallery-detail-highlight-anim-text">
             COCOLILY COUNTRY CLUB's
           </p>
-          <h2 className="font-span font-bold w-full text-center mt-20d">
+          <h2 className="font-span font-bold w-full text-center mt-20d event-gallery-detail-highlight-anim-text">
             Sweet Memories
           </h2>
         </div>
