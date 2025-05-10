@@ -33,7 +33,7 @@
     "react-google-recaptcha-v3": "^1.10.1",
     "react-hook-form": "^7.55.0",
     "react-markdown": "^10.1.0",
-    "swiper": "^11.2.5",
+    "swiper": "^11.2.6",
     "zod": "^3.23.8",
     "zustand": "^5.0.3"
   },
