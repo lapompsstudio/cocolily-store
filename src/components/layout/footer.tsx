@@ -2,13 +2,13 @@
 
 import React, { useRef, useState, useEffect, MouseEvent } from "react";
 import Button from "../ui/button";
-import Link from "next/link";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import useSplitTextAnimation from "@/app/hooks/useSplitTextAnimation";
 import useColorStore from "@/store/colorStore";
 import { globalStore } from "@/store/globalStore";
 import NewsletterForm from "../newsletter-form";
+import SocialBubble from "../ui/SocialBubble";
 
 gsap.registerPlugin(useGSAP);
 
@@ -533,7 +533,7 @@ const Footer: React.FC = () => {
         duration: 1.2,
         clipPath: "inset(0% 0% 100% 0%)",
         stagger: 0.01,
-        ease: "elastic.out(1, 0.5)",
+        ease: "elastic.out(1, 0.7)",
         scrollTrigger: {
           trigger: ".social-hover-animate",
           start: "top 90%",
@@ -598,10 +598,10 @@ const Footer: React.FC = () => {
               <h3 className="footer-text-anim text-32d text-ruby-red leading-1.3 font-bold font-abc relative z-20">
                 FOLLOW US
               </h3>
-              <Link
+              <SocialBubble
                 href="https://www.instagram.com/cocolily.ae/"
+                className="social-hover-animate -top-80d left-40d -rotate-[14.02deg] z-30"
                 target="_blank"
-                className="social-hover-animate bg-baby-pink absolute -top-80d left-40d w-70d h-70d rounded-full flex items-center justify-center border-[5px] border-white -rotate-[14.02deg] z-30"
               >
                 <svg
                   width="25"
@@ -617,11 +617,11 @@ const Footer: React.FC = () => {
                     fill="#DB0032"
                   />
                 </svg>
-              </Link>
-              <Link
+              </SocialBubble>
+              <SocialBubble
                 href="https://www.tiktok.com/@cocolily.ae"
+                className="social-hover-animate -top-100d left-115d rotate-[11.85deg] z-20"
                 target="_blank"
-                className="social-hover-animate bg-baby-pink absolute -top-100d left-115d w-70d h-70d rounded-full flex items-center justify-center border-[5px] border-white rotate-[11.85deg] z-20"
               >
                 <svg
                   width="24"
@@ -635,7 +635,7 @@ const Footer: React.FC = () => {
                     fill="#DB0032"
                   />
                 </svg>
-              </Link>
+              </SocialBubble>
             </div>
           </div>
         </div>
