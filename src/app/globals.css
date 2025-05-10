@@ -5,6 +5,11 @@
 :root {
   --font-span: "span", serif;
   --bw: 1440;
+
+  .swiper-slide-event-detail {
+    width: calc((325 / 1440) * 100 * 1vw) !important;
+    height: 60vh !important;
+  }
 }
 
 @media (max-width: 767.98px) {
